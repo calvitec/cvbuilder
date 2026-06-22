@@ -548,7 +548,7 @@ def create_modern_cv(data):
                             self.set_xy(self.main_x + 4, y_pos)
                             self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
                             self.set_font("Helvetica", "", 7)
-                            self.cell(3, 3.5, "▶", 0, 0, 'L')
+                            self.cell(3, 3.5, "-", 0, 0, 'L')
                             wrapped_bullet = textwrap.fill(bullet_clean, width=80)
                             self.multi_cell(self.main_width - 10, 3.5, wrapped_bullet, 0, 'L')
                             y_pos += len(wrapped_bullet.split('\n')) * 3.5 + 1
@@ -576,7 +576,7 @@ def create_modern_cv(data):
                     self.set_xy(self.main_x + 4, y_pos)
                     self.set_color(self.gold[0], self.gold[1], self.gold[2])
                     self.set_font("Helvetica", "", 7)
-                    self.cell(3, 3.5, "✦", 0, 0, 'L')
+                    self.cell(3, 3.5, "*", 0, 0, 'L')
                     self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
                     wrapped_ach = textwrap.fill(ach_clean, width=80)
                     self.multi_cell(self.main_width - 10, 3.5, wrapped_ach, 0, 'L')
