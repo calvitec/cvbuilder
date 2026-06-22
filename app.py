@@ -5,11 +5,17 @@ import re
 import tempfile
 import shutil
 import json
+from datetime import datetime
 from cv_generator import create_cv_from_dict
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'calvin-cv-builder-pro-2026'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
+
+# Inject current year into all templates to avoid undefined now() calls
+@app.context_processor
+def inject_current_year():
+    return {'current_year': datetime.now().year}
 
 GENERATED_FOLDER = 'generated'
 if not os.path.exists(GENERATED_FOLDER):
