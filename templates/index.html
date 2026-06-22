@@ -6,129 +6,191 @@
     <title>CV Pro – Professional CV Builder by Calvin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
+        :root{
+            --glass-bg: rgba(255,255,255,0.06);
+            --glass-border: rgba(255,255,255,0.08);
+            --soft-white: rgba(255,255,255,0.9);
+        }
         * { font-family: 'Inter', sans-serif; }
-        .gradient-hero { background: linear-gradient(135deg, #0c0c1d 0%, #1a1a3e 30%, #2d1b69 60%, #1a1a3e 100%); }
-        .glass-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
-        .glass-card-dark { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
-        .btn-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); transition: all 0.3s ease; }
-        .btn-gradient:hover { transform: scale(1.02); box-shadow: 0 10px 40px rgba(102,126,234,0.4); }
-        .layout-card { transition: all 0.3s ease; cursor: pointer; border: 3px solid transparent; }
-        .layout-card:hover { transform: translateY(-5px); }
-        .layout-card.active { border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.3); }
-        .preview-card { transition: all 0.5s ease; min-height: 400px; }
-        .spinner { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; }
+        body{ background: linear-gradient(135deg,#060617 0%, #0b1633 35%, #2b153b 70%); }
+        .gradient-hero { background: linear-gradient(135deg, rgba(24,24,42,0.8), rgba(35,18,62,0.7)); }
+        .glass-card { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); }
+        .glass-card-dark { background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); }
+        .btn-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); transition: all 0.25s ease; }
+        .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(118,75,162,0.24); }
+        .layout-card { transition: all 0.35s cubic-bezier(.2,.9,.2,1); cursor: pointer; border: 2px solid transparent; }
+        .layout-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 18px 50px rgba(16,24,40,0.45); }
+        .layout-card.active { border-color: rgba(255,255,255,0.12); box-shadow: 0 0 0 6px rgba(102,126,234,0.08); }
+        .preview-card { transition: all 0.5s ease; min-height: 420px; }
+        .spinner { border: 3px solid rgba(255,255,255,0.08); border-top: 3px solid #8b5cf6; border-radius: 50%; width: 44px; height: 44px; animation: spin 0.9s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .footer-gradient { background: linear-gradient(180deg, #0c0c1d 0%, #000000 100%); }
-        textarea:focus { box-shadow: 0 0 0 4px rgba(102,126,234,0.3); }
+        textarea:focus { box-shadow: 0 0 0 6px rgba(139,92,246,0.12); }
         .preview-name { font-family: 'Playfair Display', serif; }
-        .sidebar-preview { width: 35%; min-height: 400px; }
-        .main-preview { width: 65%; }
+        .fade-slide { animation: fadeSlide 0.45s ease-out; }
         @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
-        .fade-slide { animation: fadeSlide 0.4s ease-out; }
+        .hero-anim { background: linear-gradient(270deg,#0f172a,#1e293b,#4c1d95); background-size: 600% 600%; animation: GradientShift 12s ease infinite; }
+        @keyframes GradientShift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+        .glass-nav{ background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .counter { font-weight:700; font-size:1.25rem; color:var(--soft-white); }
+        .card-lift{ transition: transform .35s cubic-bezier(.2,.9,.2,1), box-shadow .35s; }
     </style>
 </head>
-<body class="gradient-hero min-h-screen">
+<body class="min-h-screen text-white">
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">CP</div>
-                    <span class="text-xl font-bold text-white">CV<span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Pro</span></span>
-                    <span class="hidden md:block text-white/40 text-xs ml-2">by Calvin</span>
+                    <div>
+                        <div class="text-xl font-bold">CV <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">Pro</span></div>
+                        <div class="text-xs text-white/40">Premium CV Builder</div>
+                    </div>
                 </div>
-                <button onclick="document.getElementById('cvForm').scrollIntoView({behavior:'smooth'})"
-                    class="px-5 py-2 rounded-full btn-gradient text-white font-semibold text-sm hover:shadow-lg transition-all">
-                    <i class="fas fa-magic mr-2"></i> Create CV
-                </button>
+                <div class="flex items-center gap-4">
+                    <a href="#howitworks" class="text-sm text-white/60 hover:text-white transition">How it works</a>
+                    <a href="#layouts" class="text-sm text-white/60 hover:text-white transition">Layouts</a>
+                    <button onclick="document.getElementById('cvForm').scrollIntoView({behavior:'smooth'})" class="px-4 py-2 rounded-full btn-gradient text-white font-semibold text-sm shadow-md">Get Started</button>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero -->
-    <section class="pt-24 pb-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-white">Choose Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">CV Layout</span></h1>
-        <p class="text-white/50 mt-2">Click any layout to see a live preview. Then paste your CV text and generate!</p>
-    </section>
-
-    <!-- Layout Selection with Live Preview -->
-    <section id="cvForm" class="py-4 pb-12">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            {% if error %}
-            <div class="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300">{{ error }}</div>
-            {% endif %}
-
-            <div class="grid lg:grid-cols-2 gap-8">
-                <!-- Left: Layout Cards & Form -->
-                <div>
-                    <!-- Layout Cards -->
-                    <div class="grid grid-cols-2 gap-3 mb-6">
-                        {% for layout in layouts %}
-                        <div class="layout-card bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all {% if loop.first %}active{% endif %}" 
-                             data-layout="{{ layout.id }}" 
-                             onclick="selectLayout('{{ layout.id }}')">
-                            <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-r {{ layout.color }} flex items-center justify-center text-white text-2xl mb-2">
-                                <i class="{{ layout.icon }}"></i>
-                            </div>
-                            <h4 class="font-bold text-white text-sm">{{ layout.name }}</h4>
-                            <p class="text-white/40 text-xs mt-1">{{ layout.desc }}</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <!-- Form -->
-                    <div class="glass-card-dark rounded-2xl p-6">
-                        <form id="cvFormSubmit" action="/generate" method="POST">
-                            <input type="hidden" name="layout" id="selectedLayout" value="classic">
-                            
-                            <div class="mb-4">
-                                <label class="block text-gray-700 font-semibold text-sm mb-2">
-                                    <i class="fas fa-paste text-purple-600 mr-2"></i> Paste Your CV Text
-                                </label>
-                                <textarea name="cv_text" id="cvText" rows="10"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all duration-200 resize-none font-mono text-sm bg-gray-50"
-                                    placeholder="Paste your CV here..."></textarea>
-                            </div>
-
-                            <button type="submit" id="generateBtn"
-                                class="w-full btn-gradient text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 text-base shadow-lg">
-                                <i class="fas fa-magic"></i> Generate CV
-                            </button>
-                        </form>
-
-                        <div id="loadingDiv" class="hidden text-center py-4">
-                            <div class="spinner mx-auto"></div>
-                            <p class="mt-3 text-gray-600 font-semibold">Generating your CV...</p>
-                        </div>
-
-                        <button onclick="loadSample()" class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-xl transition-all text-sm">
-                            <i class="fas fa-file-alt mr-2"></i> Load Sample CV
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Right: Live Preview -->
-                <div>
-                    <div class="glass-card rounded-2xl p-4 h-full">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-white font-bold text-sm"><i class="fas fa-eye mr-2"></i> Live Preview</h3>
-                            <span class="text-white/30 text-xs" id="layoutLabel">Classic</span>
-                        </div>
-                        <div id="previewContainer" class="preview-card bg-white rounded-xl overflow-hidden shadow-xl fade-slide">
-                            <!-- Preview rendered by JavaScript -->
-                        </div>
-                    </div>
-                </div>
+    <header class="pt-24 pb-10 hero-anim">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold">Build a <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">stunning</span> CV in minutes</h1>
+            <p class="mt-3 text-white/70 max-w-2xl mx-auto">Premium designs, polished interactions, and instant PDF downloads — crafted for professionals who mean business.</p>
+            <div class="mt-6 flex items-center justify-center gap-3">
+                <button onclick="document.getElementById('cvForm').scrollIntoView({behavior:'smooth'})" class="px-6 py-3 rounded-full btn-gradient text-white font-semibold shadow-lg">Get Started Now</button>
+                <button onclick="document.getElementById('cvForm').scrollIntoView({behavior:'smooth'})" class="px-6 py-3 rounded-full border border-white/10 backdrop-blur-sm text-white/90">See layouts</button>
             </div>
-
-            <!-- Calvin Credit -->
-            <div class="text-center mt-8 text-white/30 text-sm">
-                Built by <span class="text-white/60 font-semibold">Calvin Mosoba</span> — 4 Professional Layouts
+            <div class="mt-8 flex items-center justify-center gap-6 text-sm text-white/60">
+                <div><span class="counter" data-target="1250">1250</span> CVs created</div>
+                <div><span class="counter" data-target="6">6</span> layouts</div>
+                <div>⭐ <span class="counter" data-target="98">98</span>% satisfaction</div>
             </div>
         </div>
-    </section>
+    </header>
+
+    <!-- Main Form & Layouts -->
+    <main id="layouts" class="py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <section id="cvForm" class="py-4 pb-12">
+                {% if error %}
+                <div class="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300">{{ error }}</div>
+                {% endif %}
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Left: Layout Cards & Form -->
+                    <div>
+                        <!-- Layout Cards -->
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6" aria-label="Layout gallery">
+                            {% for layout in layouts %}
+                            <div class="layout-card glass-card rounded-2xl p-4 text-center card-lift {% if loop.first %}active{% endif %}" 
+                                 data-layout="{{ layout.id }}" 
+                                 onclick="selectLayout('{{ layout.id }}', this)">
+                                <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-r {{ layout.color }} flex items-center justify-center text-white text-2xl mb-2">
+                                    <i class="{{ layout.icon }}"></i>
+                                </div>
+                                <h4 class="font-bold text-white text-sm">{{ layout.name }}</h4>
+                                <p class="text-white/40 text-xs mt-1">{{ layout.desc }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Form -->
+                        <div class="glass-card-dark rounded-2xl p-6">
+                            <form id="cvFormSubmit" action="/generate" method="POST">
+                                <input type="hidden" name="layout" id="selectedLayout" value="classic">
+                                
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 font-semibold text-sm mb-2">
+                                        <i class="fas fa-paste text-purple-600 mr-2"></i> Paste Your CV Text
+                                    </label>
+                                    <textarea name="cv_text" id="cvText" rows="10"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all duration-200 resize-none" 
+                                        placeholder="Paste your CV here..."></textarea>
+                                </div>
+
+                                <div class="flex gap-3">
+                                    <button type="submit" id="generateBtn"
+                                        class="flex-1 btn-gradient text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 text-base shadow-lg">
+                                        <i class="fas fa-magic"></i> Generate CV
+                                    </button>
+                                    <button type="button" onclick="loadSample()" class="px-4 py-3 rounded-xl border border-gray-200 text-gray-700 bg-white/90">Load Sample</button>
+                                </div>
+
+                                <div id="loadingDiv" class="hidden text-center py-4">
+                                    <div class="spinner mx-auto"></div>
+                                    <p class="mt-3 text-gray-600 font-semibold">Generating your CV...</p>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Preview -->
+                    <div>
+                        <div class="glass-card rounded-2xl p-4 h-full">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-white font-bold text-sm"><i class="fas fa-eye mr-2"></i> Live Preview</h3>
+                                <span class="text-white/30 text-xs" id="layoutLabel">Classic</span>
+                            </div>
+                            <div id="previewContainer" class="preview-card bg-white rounded-xl overflow-hidden shadow-xl fade-slide">
+                                <!-- Preview rendered by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="mt-10 grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="glass-card p-6 rounded-xl text-center">
+                        <div class="w-12 h-12 mx-auto rounded-lg bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white mb-3"><i class="fas fa-robot"></i></div>
+                        <div class="font-semibold">AI-Powered Parsing</div>
+                        <div class="text-white/40 text-sm mt-2">Automatically extract skills, experience and education.</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl text-center">
+                        <div class="w-12 h-12 mx-auto rounded-lg bg-gradient-to-r from-blue-400 to-indigo-400 flex items-center justify-center text-white mb-3"><i class="fas fa-layer-group"></i></div>
+                        <div class="font-semibold">Multiple Layouts</div>
+                        <div class="text-white/40 text-sm mt-2">Six premium CV templates to choose from.</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl text-center">
+                        <div class="w-12 h-12 mx-auto rounded-lg bg-gradient-to-r from-green-400 to-teal-400 flex items-center justify-center text-white mb-3"><i class="fas fa-file-download"></i></div>
+                        <div class="font-semibold">Instant Download</div>
+                        <div class="text-white/40 text-sm mt-2">Generate and download a printable PDF in seconds.</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl text-center">
+                        <div class="w-12 h-12 mx-auto rounded-lg bg-gradient-to-r from-yellow-400 to-amber-400 flex items-center justify-center text-white mb-3"><i class="fas fa-award"></i></div>
+                        <div class="font-semibold">Professional Design</div>
+                        <div class="text-white/40 text-sm mt-2">Polished, modern, and recruiter-friendly layouts.</div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8 text-white/30 text-sm">
+                    Built by <span class="text-white/60 font-semibold">Calvin Mosoba</span> — 6 Professional Layouts
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="mt-12 py-8 text-white/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">CP</div>
+                    <div>
+                        <div class="font-bold">CV Pro</div>
+                        <div class="text-xs">Premium CV Builder • Built by Calvin</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-sm">© {{ now().year }} Calvin Mosoba. All rights reserved.</div>
+        </div>
+    </footer>
 
     <script>
         // Sample data for preview
@@ -138,8 +200,8 @@
             summary: 'Highly motivated professional with over 5 years of experience in tax administration, revenue management, and financial compliance. Currently pursuing a Master\'s degree at Moi University.',
             skills: ['Tax Laws', 'Data Analytics', 'Auditing', 'Customer Service', 'Relationship Building', 'Python', 'SQL'],
             experience: [
-                { company: 'Kenya Revenue Authority (KRA)', title: 'Compliance Account Manager', date: '2023 - Present', bullets: ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and investigations', 'Prepare detailed reports for management'] },
-                { company: 'Balkan Ltd', title: 'Research Associate', date: '2020 - 2022', bullets: ['Conducted market research and data analysis', 'Prepared comprehensive reports', 'Managed data collection processes'] }
+                { company: 'Kenya Revenue Authority (KRA)', title: 'Compliance Account Manager', date: '2023 - Present', bullets: ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and reconciliations'] },
+                { company: 'Balkan Ltd', title: 'Research Associate', date: '2020 - 2022', bullets: ['Conducted market research and data analysis', 'Prepared comprehensive reports'] }
             ],
             education: ['Master\'s Degree, Moi University (2024 - To Date)', 'Bachelor\'s Degree, Kenyatta University (2016 - 2021)'],
             references: [
@@ -149,43 +211,53 @@
 
         const layouts = {
             classic: {
-                primary: '#1a237e',
+                primary: '#122244',
                 accent: '#1565c0',
                 sidebar: '#e8eaf6',
                 text: '#1a1a2e',
                 light: '#6b7a8f'
             },
             modern: {
-                primary: '#2c3e50',
+                primary: '#1f2937',
                 accent: '#e74c3c',
                 sidebar: '#ecf0f1',
                 text: '#2c3e50',
                 light: '#7f8c8d'
             },
             elegant: {
-                primary: '#3d2b3f',
+                primary: '#40283a',
                 accent: '#c9a96e',
                 sidebar: '#f5f0eb',
                 text: '#3d2b3f',
                 light: '#8a7a7a'
             },
             professional: {
-                primary: '#004d40',
+                primary: '#0b5d4a',
                 accent: '#00897b',
                 sidebar: '#e0f2f1',
                 text: '#004d40',
                 light: '#5d7a7a'
+            },
+            creative: {
+                primary: '#6d28d9',
+                accent: '#ec4899',
+                sidebar: '#fbefff',
+                text: '#2b0735',
+                light: '#7f1d6a'
+            },
+            minimal: {
+                primary: '#0f172a',
+                accent: '#111827',
+                sidebar: '#ffffff',
+                text: '#0b0b0b',
+                light: '#6b7280'
             }
         };
 
-        function selectLayout(layoutId) {
+        function selectLayout(layoutId, el) {
             // Update active state
-            document.querySelectorAll('.layout-card').forEach(c => {
-                c.classList.remove('active');
-                if (c.dataset.layout === layoutId) {
-                    c.classList.add('active');
-                }
-            });
+            document.querySelectorAll('.layout-card').forEach(c => c.classList.remove('active'));
+            if (el) el.classList.add('active');
             
             document.getElementById('selectedLayout').value = layoutId;
             document.getElementById('layoutLabel').textContent = layoutId.charAt(0).toUpperCase() + layoutId.slice(1);
@@ -197,43 +269,49 @@
             const colors = layouts[layoutId] || layouts.classic;
             const container = document.getElementById('previewContainer');
             
-            // Simple but beautiful preview
+            // Simple but beautiful preview; adapt visuals for creative/minimal
+            const sidebarBg = colors.sidebar;
+            const mainBg = '#ffffff';
+            const primary = colors.primary;
+            const accent = colors.accent;
+            const text = colors.text;
+
             const html = `
-                <div style="display:flex;min-height:420px;background:white;font-family:'Inter',sans-serif;">
+                <div style="display:flex;min-height:420px;background:${mainBg};font-family:'Inter',sans-serif;color:${text};">
                     <!-- Sidebar -->
-                    <div style="width:35%;background:${colors.sidebar};padding:20px;border-right:2px solid ${colors.primary};">
-                        <div style="font-size:18px;font-weight:700;color:${colors.primary};margin-bottom:4px;">${data.name}</div>
-                        <div style="font-size:12px;font-weight:600;color:${colors.accent};margin-bottom:12px;">${data.title}</div>
-                        <div style="font-size:10px;font-weight:600;color:#6b7a8f;margin-bottom:4px;">SKILLS</div>
-                        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
-                            ${data.skills.slice(0,6).map(s => `<span style="background:${colors.accent};color:white;padding:2px 8px;border-radius:10px;font-size:9px;">${s}</span>`).join('')}
+                    <div style="width:35%;background:${sidebarBg};padding:22px;border-right:2px solid ${primary};">
+                        <div style="font-size:20px;font-weight:700;color:${primary};margin-bottom:6px;font-family:'Playfair Display', serif;">${data.name}</div>
+                        <div style="font-size:12px;font-weight:600;color:${accent};margin-bottom:14px;">${data.title}</div>
+                        <div style="font-size:11px;font-weight:700;color:${accent};margin-bottom:6px;">SKILLS</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                            ${data.skills.slice(0,6).map(s => `<span style="background:${accent};color:white;padding:6px 10px;border-radius:12px;font-size:11px;">${s}</span>`).join('')}
                         </div>
-                        <div style="font-size:10px;font-weight:600;color:#6b7a8f;margin-bottom:4px;">CONTACT</div>
-                        <div style="font-size:9px;color:${colors.text};">📧 ${data.email || 'john@email.com'}</div>
-                        <div style="font-size:9px;color:${colors.text};">📱 +254 712 345 678</div>
+                        <div style="font-size:11px;font-weight:700;color:${accent};margin-bottom:6px;">CONTACT</div>
+                        <div style="font-size:11px;color:${text};">📧 ${data.email || 'john@email.com'}</div>
+                        <div style="font-size:11px;color:${text};">📱 +254 712 345 678</div>
                     </div>
                     <!-- Main -->
-                    <div style="width:65%;padding:20px;background:white;">
-                        <div style="font-size:11px;font-weight:700;color:${colors.primary};border-bottom:2px solid ${colors.accent};padding-bottom:4px;margin-bottom:8px;">PROFESSIONAL SUMMARY</div>
-                        <div style="font-size:9px;color:${colors.text};line-height:1.5;margin-bottom:12px;">${data.summary.substring(0,120)}...</div>
-                        
-                        <div style="font-size:11px;font-weight:700;color:${colors.primary};border-bottom:2px solid ${colors.accent};padding-bottom:4px;margin-bottom:8px;">WORK EXPERIENCE</div>
-                        ${data.experience.slice(0,2).map(exp => `
-                            <div style="margin-bottom:8px;">
-                                <div style="font-size:10px;font-weight:700;color:${colors.text};">${exp.company}</div>
-                                <div style="display:flex;justify-content:space-between;font-size:9px;">
-                                    <span style="color:${colors.accent};">${exp.title}</span>
-                                    <span style="color:#6b7a8f;">${exp.date}</span>
+                    <div style="width:65%;padding:22px;background:${mainBg};">
+                        <div style="font-size:12px;font-weight:800;color:${primary};border-bottom:3px solid ${accent};padding-bottom:6px;margin-bottom:12px;">PROFESSIONAL SUMMARY</div>
+                        <div style="font-size:11px;color:${text};line-height:1.5;margin-bottom:14px;">${data.summary.substring(0,200)}...</div>
+
+                        <div style="font-size:12px;font-weight:800;color:${primary};border-bottom:3px solid ${accent};padding-bottom:6px;margin-bottom:8px;">WORK EXPERIENCE</div>
+                        ${data.experience.slice(0,3).map(exp => `
+                            <div style="margin-bottom:10px;">
+                                <div style="font-size:11px;font-weight:700;color:${text};">${exp.company}</div>
+                                <div style="display:flex;justify-content:space-between;font-size:11px;">
+                                    <span style="color:${accent};font-weight:600;">${exp.title}</span>
+                                    <span style="color:${colors.light};">${exp.date}</span>
                                 </div>
-                                <ul style="margin:2px 0 0 12px;font-size:8px;color:${colors.text};">
-                                    ${exp.bullets.slice(0,2).map(b => `<li>${b}</li>`).join('')}
+                                <ul style="margin:6px 0 0 16px;font-size:10px;color:${text};">
+                                    ${exp.bullets.slice(0,3).map(b => `<li>${b}</li>`).join('')}
                                 </ul>
                             </div>
                         `).join('')}
-                        
-                        <div style="font-size:11px;font-weight:700;color:${colors.primary};border-bottom:2px solid ${colors.accent};padding-bottom:4px;margin-bottom:4px;">EDUCATION</div>
-                        ${data.education.slice(0,2).map(e => `
-                            <div style="font-size:9px;color:${colors.text};">${e}</div>
+
+                        <div style="font-size:12px;font-weight:800;color:${primary};border-bottom:3px solid ${accent};padding-bottom:6px;margin-top:6px;margin-bottom:6px;">EDUCATION</div>
+                        ${data.education.slice(0,3).map(e => `
+                            <div style="font-size:11px;color:${text};margin-bottom:6px;">${e}</div>
                         `).join('')}
                     </div>
                 </div>
@@ -246,32 +324,32 @@
         }
 
         function loadSample() {
-            document.getElementById('cvText').value = `JOHN AMWAYI NGATIA
-
-I am a highly motivated and results-driven Compliance Account Manager with over 5 years of experience in tax administration, revenue management, and financial compliance. Currently pursuing a Master's degree at Moi University, I have developed strong expertise in tax laws, auditing, data analytics, and customer service.
-
-EDUCATION
-2024 – To Date: Master's Degree (Ongoing), Moi University.
-2016 – 2021: Kenyatta University – Bachelor's Degree in Economics and Finance.
-2012 – 2015: Maranda High School.
-
-EMPLOYMENT
-2023 – To Date: Compliance Account Manager – Kenya Revenue Authority (KRA), Medium Taxpayers Office (MTO).
-2020 – 2022: Balkan Ltd (Maseno, Kenya) – Research Associate and Data Analyst.
-
-SKILLS
-Tax Laws, Tax Administration, Customer Service, Data Analytics, Auditing, Relationship Building.
-
-REFERENCES
-Surbhi S. Vashisht (Mrs.)
-Head Teacher – Early Years and Preparatory
-Email: surbhi.vashisht@hillcrest.ac.ke
-Phone: +254 733 941 398`;
+            document.getElementById('cvText').value = `JOHN AMWAYI NGATIA\n\nI am a highly motivated and results-driven Compliance Account Manager with over 5 years of experience in tax administration, revenue management, and financial compliance. Currently pursuing a Master's degree at Moi University.\n\nEDUCATION\n2024 – To Date: Master's Degree (Ongoing), Moi University.\n2016 – 2021: Kenyatta University – Bachelor's Degree in Economics and Finance.\n\nEMPLOYMENT\n2023 – To Date: Compliance Account Manager – Kenya Revenue Authority (KRA), Medium Taxpayers Office (MTO).\n2020 – 2022: Balkan Ltd (Maseno, Kenya) – Research Associate and Data Analyst.\n\nSKILLS\nTax Laws, Tax Administration, Customer Service, Data Analytics, Auditing, Relationship Building.\n\nREFERENCES\nSurbhi S. Vashisht (Mrs.)\nHead Teacher – Early Years and Preparatory\nEmail: surbhi.vashisht@hillcrest.ac.ke\nPhone: +254 733 941 398`;
         }
 
         // Initialize with first layout
         document.addEventListener('DOMContentLoaded', function() {
             selectLayout('classic');
+
+            // Animate counters when in view
+            const counters = document.querySelectorAll('.counter');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = +el.getAttribute('data-target');
+                        let start = 0;
+                        const step = Math.max(1, Math.floor(target / 60));
+                        const timer = setInterval(() => {
+                            start += step;
+                            if (start >= target) { el.textContent = target; clearInterval(timer); }
+                            else el.textContent = start;
+                        }, 18);
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.6 });
+            counters.forEach(c => observer.observe(c));
         });
 
         // Form Submit

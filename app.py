@@ -17,12 +17,14 @@ if not os.path.exists(GENERATED_FOLDER):
 
 extracted_data_store = {}
 
-# 4 Layouts
+# 6 Layouts (expanded to support premium themes)
 LAYOUTS = [
-    {'id': 'classic', 'name': 'Classic', 'icon': 'fa-solid fa-crown', 'color': 'from-blue-500 to-indigo-600', 'bg': 'bg-gradient-to-br from-blue-50 to-indigo-50', 'desc': 'Traditional two-column with sidebar', 'structure': 'Sidebar + Main Content'},
-    {'id': 'modern', 'name': 'Modern', 'icon': 'fa-solid fa-bolt', 'color': 'from-purple-500 to-pink-500', 'bg': 'bg-gradient-to-br from-purple-50 to-pink-50', 'desc': 'Top header with timeline experience', 'structure': 'Header + Timeline'},
-    {'id': 'elegant', 'name': 'Elegant', 'icon': 'fa-solid fa-gem', 'color': 'from-amber-500 to-orange-500', 'bg': 'bg-gradient-to-br from-amber-50 to-orange-50', 'desc': 'Centered with gold accents', 'structure': 'Centered + Minimalist'},
-    {'id': 'professional', 'name': 'Professional', 'icon': 'fa-solid fa-briefcase', 'color': 'from-emerald-500 to-teal-500', 'bg': 'bg-gradient-to-br from-emerald-50 to-teal-50', 'desc': 'Left sidebar corporate style', 'structure': 'Corporate + Structured'}
+    {'id': 'classic', 'name': 'Classic', 'icon': 'fa-solid fa-crown', 'color': 'from-blue-500 to-indigo-600', 'bg': 'bg-gradient-to-br from-blue-50 to-indigo-50', 'desc': 'Traditional two-column layout with sidebar for contact and skills.'},
+    {'id': 'modern', 'name': 'Modern', 'icon': 'fa-solid fa-bolt', 'color': 'from-purple-500 to-pink-500', 'bg': 'bg-gradient-to-br from-purple-50 to-pink-50', 'desc': 'Top header, timeline-style experience and clean, contemporary lines.'},
+    {'id': 'elegant', 'name': 'Elegant', 'icon': 'fa-solid fa-gem', 'color': 'from-amber-500 to-orange-500', 'bg': 'bg-gradient-to-br from-amber-50 to-orange-50', 'desc': 'Centered, minimalist and sophisticated with gold accents.'},
+    {'id': 'professional', 'name': 'Professional', 'icon': 'fa-solid fa-briefcase', 'color': 'from-emerald-500 to-teal-500', 'bg': 'bg-gradient-to-br from-emerald-50 to-teal-50', 'desc': 'Corporate, structured layout ideal for business roles.'},
+    {'id': 'creative', 'name': 'Creative', 'icon': 'fa-solid fa-palette', 'color': 'from-pink-500 to-violet-500', 'bg': 'bg-gradient-to-br from-pink-50 to-violet-50', 'desc': 'Bold color blocks and playful typography for creative professionals.'},
+    {'id': 'minimal', 'name': 'Minimal', 'icon': 'fa-solid fa-ellipsis', 'color': 'from-gray-700 to-gray-900', 'bg': 'bg-gradient-to-br from-white to-gray-50', 'desc': 'Maximum white-space and clean typography for a sleek look.'}
 ]
 
 SAMPLE_DATA = {
@@ -31,7 +33,7 @@ SAMPLE_DATA = {
     'summary': 'Highly motivated professional with over 5 years of experience in tax administration, revenue management, and financial compliance.',
     'skills': ['Tax Laws', 'Data Analytics', 'Auditing', 'Customer Service', 'Relationship Building'],
     'experience': [
-        {'company': 'Kenya Revenue Authority (KRA)', 'title': 'Compliance Account Manager', 'date': '2023 - Present', 'bullets': ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and investigations']},
+        {'company': 'Kenya Revenue Authority (KRA)', 'title': 'Compliance Account Manager', 'date': '2023 - Present', 'bullets': ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and reconciliations']},
         {'company': 'Balkan Ltd', 'title': 'Research Associate', 'date': '2020 - 2022', 'bullets': ['Conducted market research and data analysis', 'Prepared comprehensive reports']}
     ],
     'education': ["Master's Degree, Moi University (2024 - To Date)", "Bachelor's Degree, Kenyatta University (2016 - 2021)"],
