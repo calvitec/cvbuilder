@@ -47,7 +47,7 @@ def create_cv_from_dict(data, layout='classic'):
 
 
 # ============================================
-# LAYOUT 1: CLASSIC - Traditional Two-Column (WORKING)
+# LAYOUT 1: CLASSIC - Traditional Two-Column
 # ============================================
 def create_classic_cv(data):
     """Classic two-column layout with sidebar"""
@@ -486,7 +486,7 @@ def create_classic_cv(data):
 
 
 # ============================================
-# LAYOUT 2: MODERN - Top Header with Timeline (FIXED)
+# LAYOUT 2: MODERN - Top Header with Timeline
 # ============================================
 def create_modern_cv(data):
     """Modern layout with header at top and timeline experience"""
@@ -625,6 +625,22 @@ def create_modern_cv(data):
                     edu_clean = clean_text(edu)
                     self.cell(self.main_width, 4.5, edu_clean, 0, 1, 'L')
                     y_pos += 5
+            
+            if achievements:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 48
+                y_pos = self.add_section_title("ACHIEVEMENTS", y_pos)
+                for ach in achievements[:4]:
+                    ach_clean = clean_text(ach)
+                    self.set_xy(self.main_x + 5, y_pos)
+                    self.set_color(self.gold[0], self.gold[1], self.gold[2])
+                    self.set_font("Helvetica", "", 8)
+                    self.cell(3, 4, "✦", 0, 0, 'L')
+                    self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                    wrapped_ach = textwrap.fill(ach_clean, width=80)
+                    self.multi_cell(self.main_width - 10, 4, wrapped_ach, 0, 'L')
+                    y_pos += len(wrapped_ach.split('\n')) * 4 + 2
         
         def add_page(self):
             super().add_page()
@@ -686,7 +702,7 @@ def create_modern_cv(data):
 
 
 # ============================================
-# LAYOUT 3: ELEGANT - Centered with Gold Accents (FIXED)
+# LAYOUT 3: ELEGANT - Centered with Gold Accents
 # ============================================
 def create_elegant_cv(data):
     """Elegant layout with centered name, gold accents, minimalist"""
@@ -828,6 +844,22 @@ def create_elegant_cv(data):
                     edu_clean = clean_text(edu)
                     self.cell(self.main_width, 4.5, edu_clean, 0, 1, 'L')
                     y_pos += 5
+            
+            if achievements:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 50
+                y_pos = self.add_section_title("ACHIEVEMENTS", y_pos)
+                for ach in achievements[:4]:
+                    ach_clean = clean_text(ach)
+                    self.set_xy(self.main_x + 5, y_pos)
+                    self.set_color(self.gold[0], self.gold[1], self.gold[2])
+                    self.set_font("Helvetica", "", 8)
+                    self.cell(3, 4, "✦", 0, 0, 'L')
+                    self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                    wrapped_ach = textwrap.fill(ach_clean, width=75)
+                    self.multi_cell(self.main_width - 10, 4, wrapped_ach, 0, 'L')
+                    y_pos += len(wrapped_ach.split('\n')) * 4 + 2
         
         def add_page(self):
             super().add_page()
@@ -889,7 +921,7 @@ def create_elegant_cv(data):
 
 
 # ============================================
-# LAYOUT 4: PROFESSIONAL - Clean Corporate (FIXED)
+# LAYOUT 4: PROFESSIONAL - Clean Corporate
 # ============================================
 def create_professional_cv(data):
     """Professional corporate layout with clean sections"""
