@@ -4,6 +4,7 @@ import uuid
 import re
 import tempfile
 import shutil
+import json
 from cv_generator import create_cv_from_dict
 
 app = Flask(__name__)
@@ -16,13 +17,61 @@ if not os.path.exists(GENERATED_FOLDER):
 
 extracted_data_store = {}
 
-# 4 Layout Options
+# 4 Professional Layouts with Preview Data
 LAYOUTS = [
-    {'id': 'classic', 'name': 'Classic', 'icon': 'fa-solid fa-crown', 'color': 'from-blue-500 to-indigo-600', 'desc': 'Traditional professional look'},
-    {'id': 'modern', 'name': 'Modern', 'icon': 'fa-solid fa-bolt', 'color': 'from-purple-500 to-pink-500', 'desc': 'Clean and contemporary'},
-    {'id': 'elegant', 'name': 'Elegant', 'icon': 'fa-solid fa-gem', 'color': 'from-amber-500 to-orange-500', 'desc': 'Sophisticated premium design'},
-    {'id': 'professional', 'name': 'Professional', 'icon': 'fa-solid fa-briefcase', 'color': 'from-emerald-500 to-teal-500', 'desc': 'Corporate executive style'}
+    {
+        'id': 'classic',
+        'name': 'Classic',
+        'icon': 'fa-solid fa-crown',
+        'color': 'from-blue-500 to-indigo-600',
+        'bg': 'bg-gradient-to-br from-blue-50 to-indigo-50',
+        'desc': 'Traditional professional look',
+        'preview_colors': {'primary': '#1a237e', 'accent': '#1565c0', 'sidebar': '#e8eaf6'}
+    },
+    {
+        'id': 'modern',
+        'name': 'Modern',
+        'icon': 'fa-solid fa-bolt',
+        'color': 'from-purple-500 to-pink-500',
+        'bg': 'bg-gradient-to-br from-purple-50 to-pink-50',
+        'desc': 'Clean and contemporary',
+        'preview_colors': {'primary': '#2c3e50', 'accent': '#e74c3c', 'sidebar': '#ecf0f1'}
+    },
+    {
+        'id': 'elegant',
+        'name': 'Elegant',
+        'icon': 'fa-solid fa-gem',
+        'color': 'from-amber-500 to-orange-500',
+        'bg': 'bg-gradient-to-br from-amber-50 to-orange-50',
+        'desc': 'Sophisticated premium design',
+        'preview_colors': {'primary': '#3d2b3f', 'accent': '#c9a96e', 'sidebar': '#f5f0eb'}
+    },
+    {
+        'id': 'professional',
+        'name': 'Professional',
+        'icon': 'fa-solid fa-briefcase',
+        'color': 'from-emerald-500 to-teal-500',
+        'bg': 'bg-gradient-to-br from-emerald-50 to-teal-50',
+        'desc': 'Corporate executive style',
+        'preview_colors': {'primary': '#004d40', 'accent': '#00897b', 'sidebar': '#e0f2f1'}
+    }
 ]
+
+# Sample data for preview
+SAMPLE_DATA = {
+    'name': 'John Amwayi Ngatia',
+    'title': 'Compliance Account Manager',
+    'summary': 'Highly motivated professional with over 5 years of experience in tax administration, revenue management, and financial compliance. Currently pursuing a Master\'s degree at Moi University.',
+    'skills': ['Tax Laws', 'Data Analytics', 'Auditing', 'Customer Service', 'Relationship Building'],
+    'experience': [
+        {'company': 'Kenya Revenue Authority', 'title': 'Compliance Account Manager', 'date': '2023 - Present', 'bullets': ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and investigations']},
+        {'company': 'Balkan Ltd', 'title': 'Research Associate', 'date': '2020 - 2022', 'bullets': ['Conducted market research and data analysis', 'Prepared comprehensive reports']}
+    ],
+    'education': ['Master\'s Degree, Moi University (2024 - To Date)', 'Bachelor\'s Degree, Kenyatta University (2016 - 2021)'],
+    'references': [
+        {'name': 'Surbhi S. Vashisht', 'position': 'Head Teacher', 'email': 'surbhi@hillcrest.ac.ke'}
+    ]
+}
 
 def parse_cv_text(text):
     """Parse CV text into structured data"""
@@ -182,7 +231,7 @@ def parse_cv_text(text):
 
 @app.route('/')
 def index():
-    return render_template('index.html', layouts=LAYOUTS)
+    return render_template('index.html', layouts=LAYOUTS, sample=SAMPLE_DATA)
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -191,7 +240,7 @@ def generate():
         layout = request.form.get('layout', 'classic')
         
         if not cv_text:
-            return render_template('index.html', error='Please paste your CV text.', layouts=LAYOUTS)
+            return render_template('index.html', error='Please paste your CV text.', layouts=LAYOUTS, sample=SAMPLE_DATA)
         
         cv_data = parse_cv_text(cv_text)
         cv_data['layout'] = layout
@@ -201,7 +250,7 @@ def generate():
         return render_template('result.html', data=cv_data, session_id=session_id, layouts=LAYOUTS)
     
     except Exception as e:
-        return render_template('index.html', error=f'Error: {str(e)}', layouts=LAYOUTS)
+        return render_template('index.html', error=f'Error: {str(e)}', layouts=LAYOUTS, sample=SAMPLE_DATA)
 
 @app.route('/generate-pdf/<session_id>')
 def generate_pdf(session_id):
@@ -240,6 +289,11 @@ def download_cv(filename):
     
     except Exception as e:
         return render_template('error.html', message=f'Error: {str(e)}')
+
+@app.route('/api/preview/<layout_id>')
+def preview_layout(layout_id):
+    """Return preview data for a layout"""
+    return jsonify(SAMPLE_DATA)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
