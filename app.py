@@ -1,30 +1,28 @@
-from flask import Flask, render_template, request, send_file, jsonify, url_for, session
+from flask import Flask, render_template, request, send_file, jsonify, session
 import os
 import uuid
 import re
 import tempfile
 import shutil
-import json
-from datetime import datetime
-from werkzeug.utils import secure_filename
 from cv_generator import create_cv_from_dict
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'calvin-cv-builder-pro-2026'
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 
 GENERATED_FOLDER = 'generated'
-UPLOAD_FOLDER = 'uploads'
-
-for folder in [GENERATED_FOLDER, UPLOAD_FOLDER]:
-    if not os.path.exists(folder):
-        os.makedirs(folder)
+if not os.path.exists(GENERATED_FOLDER):
+    os.makedirs(GENERATED_FOLDER)
 
 extracted_data_store = {}
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx'}
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+# 4 Layout Options
+LAYOUTS = [
+    {'id': 'classic', 'name': 'Classic', 'icon': 'fa-solid fa-crown', 'color': 'from-blue-500 to-indigo-600', 'desc': 'Traditional professional look'},
+    {'id': 'modern', 'name': 'Modern', 'icon': 'fa-solid fa-bolt', 'color': 'from-purple-500 to-pink-500', 'desc': 'Clean and contemporary'},
+    {'id': 'elegant', 'name': 'Elegant', 'icon': 'fa-solid fa-gem', 'color': 'from-amber-500 to-orange-500', 'desc': 'Sophisticated premium design'},
+    {'id': 'professional', 'name': 'Professional', 'icon': 'fa-solid fa-briefcase', 'color': 'from-emerald-500 to-teal-500', 'desc': 'Corporate executive style'}
+]
 
 def parse_cv_text(text):
     """Parse CV text into structured data"""
@@ -47,7 +45,7 @@ def parse_cv_text(text):
     if email_match:
         info['email'] = email_match.group()
     
-    phone_patterns = [r'\+254\s?\d{9}', r'0\d{9}', r'07\d{8}', r'01\d{8}', r'\(\d{3}\)\s?\d{3}-\d{4}']
+    phone_patterns = [r'\+254\s?\d{9}', r'0\d{9}', r'07\d{8}', r'01\d{8}']
     for pattern in phone_patterns:
         phone_match = re.search(pattern, text)
         if phone_match:
@@ -184,23 +182,26 @@ def parse_cv_text(text):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', layouts=LAYOUTS)
 
 @app.route('/generate', methods=['POST'])
 def generate():
     try:
         cv_text = request.form.get('cv_text', '')
+        layout = request.form.get('layout', 'classic')
+        
         if not cv_text:
-            return render_template('index.html', error='Please paste your CV text.')
+            return render_template('index.html', error='Please paste your CV text.', layouts=LAYOUTS)
         
         cv_data = parse_cv_text(cv_text)
+        cv_data['layout'] = layout
         session_id = uuid.uuid4().hex[:8]
         extracted_data_store[session_id] = cv_data
         
-        return render_template('result.html', data=cv_data, session_id=session_id)
+        return render_template('result.html', data=cv_data, session_id=session_id, layouts=LAYOUTS)
     
     except Exception as e:
-        return render_template('index.html', error=f'Error: {str(e)}')
+        return render_template('index.html', error=f'Error: {str(e)}', layouts=LAYOUTS)
 
 @app.route('/generate-pdf/<session_id>')
 def generate_pdf(session_id):
@@ -209,7 +210,8 @@ def generate_pdf(session_id):
             return render_template('error.html', message='Session expired. Please try again.')
         
         data = extracted_data_store[session_id]
-        pdf_path = create_cv_from_dict(data)
+        layout = data.get('layout', 'classic')
+        pdf_path = create_cv_from_dict(data, layout)
         filename = os.path.basename(pdf_path)
         extracted_data_store['pdf_path'] = pdf_path
         
@@ -221,39 +223,20 @@ def generate_pdf(session_id):
 @app.route('/download/<filename>')
 def download_cv(filename):
     try:
-        # Check stored path
         if 'pdf_path' in extracted_data_store:
             stored_path = extracted_data_store.get('pdf_path')
             if stored_path and os.path.exists(stored_path):
                 return send_file(stored_path, as_attachment=True, download_name=filename)
         
-        # Check generated folder
         filepath = os.path.join('generated', filename)
         if os.path.exists(filepath):
             return send_file(filepath, as_attachment=True, download_name=filename)
         
-        # Check temp directory
         temp_path = os.path.join(tempfile.gettempdir(), filename)
         if os.path.exists(temp_path):
             return send_file(temp_path, as_attachment=True, download_name=filename)
         
         return render_template('error.html', message='File not found. Please generate again.')
-    
-    except Exception as e:
-        return render_template('error.html', message=f'Error: {str(e)}')
-
-@app.route('/auto-download/<session_id>')
-def auto_download(session_id):
-    try:
-        if session_id not in extracted_data_store:
-            return render_template('error.html', message='Session expired.')
-        
-        data = extracted_data_store[session_id]
-        pdf_path = create_cv_from_dict(data)
-        filename = os.path.basename(pdf_path)
-        extracted_data_store['pdf_path'] = pdf_path
-        
-        return send_file(pdf_path, as_attachment=True, download_name=filename)
     
     except Exception as e:
         return render_template('error.html', message=f'Error: {str(e)}')
