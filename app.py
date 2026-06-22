@@ -1,15 +1,30 @@
-from flask import Flask, render_template, request, send_file, jsonify
+from flask import Flask, render_template, request, send_file, jsonify, url_for, session
 import os
 import uuid
 import re
 import tempfile
+import shutil
+import json
+from datetime import datetime
+from werkzeug.utils import secure_filename
 from cv_generator import create_cv_from_dict
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['SECRET_KEY'] = 'calvin-cv-builder-pro-2026'
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB
+
+GENERATED_FOLDER = 'generated'
+UPLOAD_FOLDER = 'uploads'
+
+for folder in [GENERATED_FOLDER, UPLOAD_FOLDER]:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 extracted_data_store = {}
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def parse_cv_text(text):
     """Parse CV text into structured data"""
@@ -32,7 +47,7 @@ def parse_cv_text(text):
     if email_match:
         info['email'] = email_match.group()
     
-    phone_patterns = [r'\+254\s?\d{9}', r'0\d{9}', r'07\d{8}', r'01\d{8}']
+    phone_patterns = [r'\+254\s?\d{9}', r'0\d{9}', r'07\d{8}', r'01\d{8}', r'\(\d{3}\)\s?\d{3}-\d{4}']
     for pattern in phone_patterns:
         phone_match = re.search(pattern, text)
         if phone_match:
@@ -43,10 +58,10 @@ def parse_cv_text(text):
     sections = {}
     current_section = None
     section_keywords = {
-        'education': ['education'],
+        'education': ['education', 'academic'],
         'experience': ['employment', 'experience', 'work'],
         'skills': ['skill'],
-        'achievements': ['qualification', 'additional', 'certification'],
+        'achievements': ['qualification', 'additional', 'certification', 'award'],
         'references': ['reference', 'referee']
     }
     
@@ -65,7 +80,11 @@ def parse_cv_text(text):
     
     # Extract Summary
     summary_lines = []
-    edu_start = [i for i, l in enumerate(lines) if 'education' in l.lower()][0] if any('education' in l.lower() for l in lines) else 999
+    edu_start = 999
+    for i, l in enumerate(lines):
+        if 'education' in l.lower():
+            edu_start = i
+            break
     for i, line in enumerate(lines):
         if i == 0:
             continue
@@ -187,7 +206,7 @@ def generate():
 def generate_pdf(session_id):
     try:
         if session_id not in extracted_data_store:
-            return "Session expired. Please paste your CV again.", 404
+            return render_template('error.html', message='Session expired. Please try again.')
         
         data = extracted_data_store[session_id]
         pdf_path = create_cv_from_dict(data)
@@ -197,28 +216,47 @@ def generate_pdf(session_id):
         return render_template('download.html', filename=filename, name=data.get('name', 'CV'))
     
     except Exception as e:
-        return f"Error generating CV: {str(e)}", 500
+        return render_template('error.html', message=f'Error: {str(e)}')
 
 @app.route('/download/<filename>')
 def download_cv(filename):
     try:
+        # Check stored path
         if 'pdf_path' in extracted_data_store:
             stored_path = extracted_data_store.get('pdf_path')
             if stored_path and os.path.exists(stored_path):
                 return send_file(stored_path, as_attachment=True, download_name=filename)
         
+        # Check generated folder
         filepath = os.path.join('generated', filename)
         if os.path.exists(filepath):
             return send_file(filepath, as_attachment=True, download_name=filename)
         
+        # Check temp directory
         temp_path = os.path.join(tempfile.gettempdir(), filename)
         if os.path.exists(temp_path):
             return send_file(temp_path, as_attachment=True, download_name=filename)
         
-        return jsonify({'error': 'File not found'}), 404
+        return render_template('error.html', message='File not found. Please generate again.')
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 404
+        return render_template('error.html', message=f'Error: {str(e)}')
+
+@app.route('/auto-download/<session_id>')
+def auto_download(session_id):
+    try:
+        if session_id not in extracted_data_store:
+            return render_template('error.html', message='Session expired.')
+        
+        data = extracted_data_store[session_id]
+        pdf_path = create_cv_from_dict(data)
+        filename = os.path.basename(pdf_path)
+        extracted_data_store['pdf_path'] = pdf_path
+        
+        return send_file(pdf_path, as_attachment=True, download_name=filename)
+    
+    except Exception as e:
+        return render_template('error.html', message=f'Error: {str(e)}')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
