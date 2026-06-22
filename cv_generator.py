@@ -23,10 +23,10 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text)
     return text.strip()
 
+
 def create_cv_from_dict(data, layout='classic'):
     """Generate a professional CV PDF with selected layout"""
     
-    # Clean data
     cleaned_data = {}
     for key, value in data.items():
         if isinstance(value, str):
@@ -36,7 +36,6 @@ def create_cv_from_dict(data, layout='classic'):
         else:
             cleaned_data[key] = value
     
-    # Route to appropriate layout
     if layout == 'modern':
         return create_modern_cv(cleaned_data)
     elif layout == 'elegant':
@@ -48,7 +47,7 @@ def create_cv_from_dict(data, layout='classic'):
 
 
 # ============================================
-# LAYOUT 1: CLASSIC - Traditional Two-Column
+# LAYOUT 1: CLASSIC - Traditional Two-Column (WORKING)
 # ============================================
 def create_classic_cv(data):
     """Classic two-column layout with sidebar"""
@@ -487,7 +486,7 @@ def create_classic_cv(data):
 
 
 # ============================================
-# LAYOUT 2: MODERN - Top Header with Timeline
+# LAYOUT 2: MODERN - Top Header with Timeline (FIXED)
 # ============================================
 def create_modern_cv(data):
     """Modern layout with header at top and timeline experience"""
@@ -687,7 +686,7 @@ def create_modern_cv(data):
 
 
 # ============================================
-# LAYOUT 3: ELEGANT - Centered with Gold Accents
+# LAYOUT 3: ELEGANT - Centered with Gold Accents (FIXED)
 # ============================================
 def create_elegant_cv(data):
     """Elegant layout with centered name, gold accents, minimalist"""
@@ -890,7 +889,7 @@ def create_elegant_cv(data):
 
 
 # ============================================
-# LAYOUT 4: PROFESSIONAL - Clean Corporate
+# LAYOUT 4: PROFESSIONAL - Clean Corporate (FIXED)
 # ============================================
 def create_professional_cv(data):
     """Professional corporate layout with clean sections"""
