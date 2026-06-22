@@ -40,9 +40,16 @@ SAMPLE_DATA = {
     'email': 'john.ngatia@email.com'
 }
 
-# ===== THE FIXED PARSER =====
+
 def parse_cv_text(text):
-    """Parse CV text into structured data"""
+    """Parse CV text into structured data - Handles ALL formats including bullet points"""
+    if not text:
+        return {
+            'name': 'CURRICULUM VITAE', 'title': '', 'email': '', 'phone': '',
+            'summary': '', 'skills': [], 'experience': [], 'education': [],
+            'achievements': [], 'references': []
+        }
+    
     lines = text.split('\n')
     lines = [line.strip() for line in lines if line.strip()]
     
@@ -52,13 +59,14 @@ def parse_cv_text(text):
         'achievements': [], 'references': []
     }
     
-    # Extract Name
+    # ===== Extract Name =====
     for line in lines[:5]:
         if len(line) < 50 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv', 'resume']):
-            info['name'] = line
-            break
+            if not any(x in line.lower() for x in ['education', 'employment', 'skill', 'reference']):
+                info['name'] = line
+                break
     
-    # Extract Email & Phone
+    # ===== Extract Email & Phone =====
     email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text)
     if email_match:
         info['email'] = email_match.group()
@@ -70,14 +78,14 @@ def parse_cv_text(text):
             info['phone'] = phone_match.group()
             break
     
-    # Find sections
+    # ===== Find sections =====
     sections = {}
     current_section = None
     section_keywords = {
-        'education': ['education'],
+        'education': ['education', 'academic'],
         'experience': ['employment', 'experience', 'work'],
         'skills': ['skill'],
-        'achievements': ['qualification', 'additional', 'certification'],
+        'achievements': ['qualification', 'additional', 'certification', 'award'],
         'references': ['reference', 'referee']
     }
     
@@ -94,31 +102,41 @@ def parse_cv_text(text):
         if not found and current_section and line:
             sections[current_section].append(line)
     
-    # Extract Summary
+    # ===== Extract Summary =====
     summary_lines = []
     for line in lines:
         if 'education' in line.lower():
             break
         if len(line) > 20 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv']):
-            summary_lines.append(line)
+            if not any(x in line.lower() for x in ['education', 'employment', 'skill', 'reference']):
+                summary_lines.append(line)
     if summary_lines:
         info['summary'] = ' '.join(summary_lines[:5])
     
-    # Education
+    # ===== Education =====
     info['education'] = sections.get('education', [])[:10]
     
-    # Experience
+    # ===== Experience =====
     exp_lines = sections.get('experience', [])
     exp_section = []
     current_exp = None
     
     for line in exp_lines:
-        if re.search(r'\d{4}', line):
+        # Check if line has a year (date pattern)
+        has_year = re.search(r'\d{4}', line)
+        
+        if has_year:
             if current_exp:
                 exp_section.append(current_exp)
             
             line_clean = line
             
+            # Try multiple parsing strategies
+            date_part = ''
+            title_part = ''
+            company_part = ''
+            
+            # Strategy 1: Colon separator "2023 – To Date: Title – Company"
             if ':' in line_clean:
                 parts = line_clean.split(':')
                 if len(parts) >= 2:
@@ -129,100 +147,135 @@ def parse_cv_text(text):
                         if len(rest_parts) >= 2:
                             title_part = rest_parts[0].strip()
                             company_part = rest_parts[1].strip()
-                            current_exp = {
-                                'company': company_part,
-                                'title': title_part,
-                                'date': date_part,
-                                'bullets': []
-                            }
                         else:
-                            current_exp = {
-                                'company': rest,
-                                'title': '',
-                                'date': date_part,
-                                'bullets': []
-                            }
+                            company_part = rest
                     else:
-                        current_exp = {
-                            'company': rest,
-                            'title': '',
-                            'date': date_part,
-                            'bullets': []
-                        }
-                else:
-                    current_exp = {
-                        'company': line_clean,
-                        'title': '',
-                        'date': '',
-                        'bullets': []
-                    }
+                        company_part = rest
+            
+            # Strategy 2: Dash separator "2023 – To Date – Title – Company"
             elif '–' in line_clean or '-' in line_clean:
                 parts = re.split(r'[–\-]', line_clean)
-                clean_parts = [p.strip() for p in parts if p.strip() and not re.search(r'\d{4}', p)]
+                clean_parts = [p.strip() for p in parts if p.strip()]
                 
-                if len(clean_parts) >= 2:
-                    title_part = clean_parts[0].strip()
-                    company_part = clean_parts[1].strip()
-                    date_match = re.search(r'(\d{4}\s*[–\-]\s*[A-Za-z\s]+)', line_clean)
-                    date_part = date_match.group(1) if date_match else ''
-                    current_exp = {
-                        'company': company_part,
-                        'title': title_part,
-                        'date': date_part,
-                        'bullets': []
-                    }
+                # Remove date from parts
+                date_parts = []
+                non_date_parts = []
+                for p in clean_parts:
+                    if re.search(r'\d{4}', p):
+                        date_parts.append(p)
+                    else:
+                        non_date_parts.append(p)
+                
+                date_part = ' – '.join(date_parts) if date_parts else ''
+                
+                if len(non_date_parts) >= 2:
+                    title_part = non_date_parts[0].strip()
+                    company_part = non_date_parts[1].strip()
+                elif len(non_date_parts) == 1:
+                    company_part = non_date_parts[0]
                 else:
-                    current_exp = {
-                        'company': line_clean,
-                        'title': '',
-                        'date': '',
-                        'bullets': []
-                    }
+                    company_part = line_clean
+            
+            # Strategy 3: Just date and text
             else:
-                current_exp = {
-                    'company': line_clean,
-                    'title': '',
-                    'date': '',
-                    'bullets': []
-                }
+                date_match = re.search(r'(\d{4}\s*[–\-]\s*[A-Za-z\s]+)', line_clean)
+                date_part = date_match.group(1) if date_match else ''
+                rest = re.sub(r'\d{4}\s*[–\-]\s*', '', line_clean)
+                if rest:
+                    if '–' in rest or '-' in rest:
+                        rest_parts = re.split(r'[–\-]', rest)
+                        if len(rest_parts) >= 2:
+                            title_part = rest_parts[0].strip()
+                            company_part = rest_parts[1].strip()
+                        else:
+                            company_part = rest
+                    else:
+                        company_part = rest
+            
+            current_exp = {
+                'company': company_part if company_part else line_clean,
+                'title': title_part,
+                'date': date_part,
+                'bullets': []
+            }
+        
         elif current_exp and line and len(line) > 3:
-            clean_line = re.sub(r'^[•\-]\s*', '', line)
+            # Clean bullet points - remove ALL bullet symbols
+            clean_line = line
+            clean_line = re.sub(r'^[•●◆▪▸››►➢➣➤]\s*', '', clean_line)
+            clean_line = re.sub(r'^[\u2022\u25CF\u25A0\u25AA\u25AB\u25E6\u2023\u2043]\s*', '', clean_line)
+            clean_line = re.sub(r'^[•\-]\s*', '', clean_line)
             clean_line = re.sub(r'^•\s*', '', clean_line)
             clean_line = re.sub(r'^-\s*', '', clean_line)
+            clean_line = re.sub(r'^\s*[•\-]\s*', '', clean_line)
             
-            if clean_line and not any(x in clean_line.lower() for x in ['education', 'skill', 'qualification', 'reference']):
+            if clean_line and not any(x in clean_line.lower() for x in ['education', 'skill', 'qualification', 'reference', 'employment']):
                 current_exp['bullets'].append(clean_line)
     
     if current_exp:
         exp_section.append(current_exp)
     info['experience'] = exp_section
     
-    # Skills
+    # ===== Skills =====
     skills_lines = sections.get('skills', [])
     skills_found = []
+    
     for line in skills_lines:
-        parts = re.split(r'[•,;\n]', line)
+        # Try splitting by commas, bullets, semicolons
+        parts = re.split(r'[•●◆▪▸››►➢➣➤,;\n]', line)
         for part in parts:
             part = part.strip()
             if part and len(part) < 60 and len(part) > 2:
+                # Remove leading bullet symbols
+                part = re.sub(r'^[•●◆▪▸››►➢➣➤]\s*', '', part)
+                part = re.sub(r'^[\u2022\u25CF\u25A0\u25AA\u25AB\u25E6\u2023\u2043]\s*', '', part)
                 part = re.sub(r'^[•\-]\s*', '', part)
                 part = re.sub(r'^•\s*', '', part)
                 part = re.sub(r'^-\s*', '', part)
+                part = re.sub(r'^\s*[•\-]\s*', '', part)
+                part = re.sub(r'\s+', ' ', part)
+                
                 if part and not any(x in part.lower() for x in ['skills', 'abilities']):
                     skills_found.append(part)
+    
+    # If no skills found, try alternate method
+    if not skills_found:
+        in_skills = False
+        for line in lines:
+            if 'skill' in line.lower():
+                in_skills = True
+                continue
+            if in_skills and line:
+                if any(x in line.lower() for x in ['education', 'employment', 'experience', 'qualification', 'reference']):
+                    break
+                parts = re.split(r'[•●◆▪▸››►➢➣➤,;\n]', line)
+                for part in parts:
+                    part = part.strip()
+                    if part and len(part) < 60 and len(part) > 2:
+                        part = re.sub(r'^[•\-]\s*', '', part)
+                        part = re.sub(r'^•\s*', '', part)
+                        part = re.sub(r'^-\s*', '', part)
+                        if part:
+                            skills_found.append(part)
+    
     info['skills'] = skills_found[:15]
     
-    # Achievements
+    # ===== Achievements =====
     ach_lines = sections.get('achievements', [])
     achievements_found = []
     for line in ach_lines:
-        clean_line = re.sub(r'^[•\-]\s*', '', line)
+        clean_line = line
+        clean_line = re.sub(r'^[•●◆▪▸››►➢➣➤]\s*', '', clean_line)
+        clean_line = re.sub(r'^[\u2022\u25CF\u25A0\u25AA\u25AB\u25E6\u2023\u2043]\s*', '', clean_line)
+        clean_line = re.sub(r'^[•\-]\s*', '', clean_line)
         clean_line = re.sub(r'^•\s*', '', clean_line)
+        clean_line = re.sub(r'^-\s*', '', clean_line)
+        clean_line = re.sub(r'^\s*[•\-]\s*', '', clean_line)
         if clean_line and len(clean_line) > 3:
             achievements_found.append(clean_line)
     info['achievements'] = achievements_found[:8]
     
-    # References
+    # ===== References =====
     ref_lines = sections.get('references', [])
     references = []
     current_ref = {}
@@ -235,6 +288,7 @@ def parse_cv_text(text):
         is_email = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line_clean)
         is_phone = re.search(r'\+254\s?\d{9}|0\d{9}|07\d{8}|01\d{8}', line_clean)
         
+        # If it's a name (not email, not phone, and reasonable length)
         if not is_email and not is_phone and len(line_clean) > 5:
             if current_ref and current_ref.get('name'):
                 references.append(current_ref)
@@ -258,7 +312,7 @@ def parse_cv_text(text):
     
     info['references'] = references[:5]
     
-    # Extract Title
+    # ===== Extract Title =====
     if info['experience'] and len(info['experience']) > 0:
         first_exp = info['experience'][0]
         if first_exp.get('title'):
@@ -266,10 +320,12 @@ def parse_cv_text(text):
     
     return info
 
+
 # ===== Routes =====
 @app.route('/')
 def index():
     return render_template('index.html', layouts=LAYOUTS, sample=SAMPLE_DATA)
+
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -290,6 +346,7 @@ def generate():
     except Exception as e:
         return render_template('index.html', error=f'Error: {str(e)}', layouts=LAYOUTS, sample=SAMPLE_DATA)
 
+
 @app.route('/generate-pdf/<session_id>')
 def generate_pdf(session_id):
     try:
@@ -307,6 +364,7 @@ def generate_pdf(session_id):
     
     except Exception as e:
         return render_template('error.html', message=f'Error generating PDF: {str(e)}')
+
 
 @app.route('/download/<filename>')
 def download_cv(filename):
@@ -329,9 +387,11 @@ def download_cv(filename):
     except Exception as e:
         return render_template('error.html', message=f'Error: {str(e)}')
 
+
 @app.route('/api/preview/<layout_id>')
 def preview_layout(layout_id):
     return jsonify(SAMPLE_DATA)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
