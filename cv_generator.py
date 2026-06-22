@@ -47,7 +47,7 @@ def create_cv_from_dict(data, layout='classic'):
 
 
 # ============================================
-# LAYOUT 1: CLASSIC - Two-Column
+# LAYOUT 1: CLASSIC - Working
 # ============================================
 def create_classic_cv(data):
     """Classic two-column layout"""
@@ -455,10 +455,10 @@ def create_classic_cv(data):
 
 
 # ============================================
-# LAYOUT 2: MODERN
+# LAYOUT 2: MODERN - FIXED (added references)
 # ============================================
 def create_modern_cv(data):
-    """Modern layout"""
+    """Modern layout with header"""
     
     class ModernCV(FPDF):
         def __init__(self):
@@ -593,6 +593,44 @@ def create_modern_cv(data):
                     edu_clean = clean_text(edu)
                     self.cell(self.main_width, 4, edu_clean, 0, 1, 'L')
                     y_pos += 4.5
+            
+            if achievements:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 42
+                y_pos = self.add_section_title("ACHIEVEMENTS", y_pos)
+                for ach in achievements[:3]:
+                    ach_clean = clean_text(ach)
+                    self.set_xy(self.main_x + 4, y_pos)
+                    self.set_color(self.gold[0], self.gold[1], self.gold[2])
+                    self.set_font("Helvetica", "", 7)
+                    self.cell(3, 3.5, "✦", 0, 0, 'L')
+                    self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                    wrapped_ach = textwrap.fill(ach_clean, width=80)
+                    self.multi_cell(self.main_width - 10, 3.5, wrapped_ach, 0, 'L')
+                    y_pos += len(wrapped_ach.split('\n')) * 3.5 + 2
+            
+            if references:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 42
+                y_pos = self.add_section_title("REFERENCES", y_pos)
+                for ref in references[:3]:
+                    ref_name = clean_text(ref.get('name', ''))
+                    if ref_name:
+                        self.set_xy(self.main_x, y_pos)
+                        self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                        self.set_font("Helvetica", "", 7.5)
+                        self.cell(self.main_width, 3.5, ref_name, 0, 1, 'L')
+                        y_pos += 3.5
+                    
+                    ref_email = clean_text(ref.get('email', ''))
+                    if ref_email:
+                        self.set_xy(self.main_x, y_pos)
+                        self.set_color(self.text_light[0], self.text_light[1], self.text_light[2])
+                        self.set_font("Helvetica", "", 6.5)
+                        self.cell(self.main_width, 3, ref_email, 0, 1, 'L')
+                        y_pos += 3
         
         def add_page(self):
             super().add_page()
@@ -654,7 +692,7 @@ def create_modern_cv(data):
 
 
 # ============================================
-# LAYOUT 3: ELEGANT
+# LAYOUT 3: ELEGANT - FIXED (added references)
 # ============================================
 def create_elegant_cv(data):
     """Elegant layout"""
@@ -795,6 +833,44 @@ def create_elegant_cv(data):
                     edu_clean = clean_text(edu)
                     self.cell(self.main_width, 4, edu_clean, 0, 1, 'L')
                     y_pos += 4.5
+            
+            if achievements:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 44
+                y_pos = self.add_section_title("ACHIEVEMENTS", y_pos)
+                for ach in achievements[:3]:
+                    ach_clean = clean_text(ach)
+                    self.set_xy(self.main_x + 4, y_pos)
+                    self.set_color(self.gold[0], self.gold[1], self.gold[2])
+                    self.set_font("Helvetica", "", 7)
+                    self.cell(3, 3.5, "✦", 0, 0, 'L')
+                    self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                    wrapped_ach = textwrap.fill(ach_clean, width=75)
+                    self.multi_cell(self.main_width - 10, 3.5, wrapped_ach, 0, 'L')
+                    y_pos += len(wrapped_ach.split('\n')) * 3.5 + 2
+            
+            if references:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 44
+                y_pos = self.add_section_title("REFERENCES", y_pos)
+                for ref in references[:3]:
+                    ref_name = clean_text(ref.get('name', ''))
+                    if ref_name:
+                        self.set_xy(self.main_x, y_pos)
+                        self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                        self.set_font("Helvetica", "", 7.5)
+                        self.cell(self.main_width, 3.5, ref_name, 0, 1, 'L')
+                        y_pos += 3.5
+                    
+                    ref_email = clean_text(ref.get('email', ''))
+                    if ref_email:
+                        self.set_xy(self.main_x, y_pos)
+                        self.set_color(self.text_light[0], self.text_light[1], self.text_light[2])
+                        self.set_font("Helvetica", "", 6.5)
+                        self.cell(self.main_width, 3, ref_email, 0, 1, 'L')
+                        y_pos += 3
         
         def add_page(self):
             super().add_page()
@@ -856,7 +932,7 @@ def create_elegant_cv(data):
 
 
 # ============================================
-# LAYOUT 4: PROFESSIONAL
+# LAYOUT 4: PROFESSIONAL - FIXED (added references)
 # ============================================
 def create_professional_cv(data):
     """Professional layout"""
@@ -960,7 +1036,7 @@ def create_professional_cv(data):
                 self.cell(sidebar_width, 2.5, f"- {lang_clean}", 0, 1, 'L')
                 y_pos += 2.5
         
-        def add_main_content(self, summary, experience, education, achievements):
+        def add_main_content(self, summary, experience, education, achievements, references):
             main_x = self.sidebar_width + 15
             main_width = 210 - main_x - 15
             y_pos = 15
@@ -1064,6 +1140,60 @@ def create_professional_cv(data):
                     edu_clean = clean_text(edu)
                     self.cell(main_width, 3.5, edu_clean, 0, 1, 'L')
                     y_pos += 4
+            
+            if achievements:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 15
+                self.set_xy(main_x, y_pos)
+                self.set_color(self.primary[0], self.primary[1], self.primary[2])
+                self.set_font("Helvetica", "B", 8)
+                self.cell(main_width, 3.5, "ACHIEVEMENTS", 0, 1, 'L')
+                self.set_draw(self.accent[0], self.accent[1], self.accent[2])
+                self.set_line_width(0.3)
+                self.line(main_x, y_pos + 4.5, main_x + 32, y_pos + 4.5)
+                y_pos += 6
+                
+                for ach in achievements[:3]:
+                    ach_clean = clean_text(ach)
+                    self.set_xy(main_x + 4, y_pos)
+                    self.set_color(self.gold[0], self.gold[1], self.gold[2])
+                    self.set_font("Helvetica", "", 6.5)
+                    self.cell(2.5, 3, "✦", 0, 0, 'L')
+                    self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                    wrapped_ach = textwrap.fill(ach_clean, width=70)
+                    self.multi_cell(main_width - 10, 3, wrapped_ach, 0, 'L')
+                    y_pos += len(wrapped_ach.split('\n')) * 3 + 1
+            
+            if references:
+                if y_pos > 240:
+                    self.add_page()
+                    y_pos = 15
+                self.set_xy(main_x, y_pos)
+                self.set_color(self.primary[0], self.primary[1], self.primary[2])
+                self.set_font("Helvetica", "B", 8)
+                self.cell(main_width, 3.5, "REFERENCES", 0, 1, 'L')
+                self.set_draw(self.accent[0], self.accent[1], self.accent[2])
+                self.set_line_width(0.3)
+                self.line(main_x, y_pos + 4.5, main_x + 30, y_pos + 4.5)
+                y_pos += 6
+                
+                for ref in references[:3]:
+                    ref_name = clean_text(ref.get('name', ''))
+                    if ref_name:
+                        self.set_xy(main_x, y_pos)
+                        self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
+                        self.set_font("Helvetica", "", 7)
+                        self.cell(main_width, 3, ref_name, 0, 1, 'L')
+                        y_pos += 3
+                    
+                    ref_email = clean_text(ref.get('email', ''))
+                    if ref_email:
+                        self.set_xy(main_x, y_pos)
+                        self.set_color(self.text_light[0], self.text_light[1], self.text_light[2])
+                        self.set_font("Helvetica", "", 6.5)
+                        self.cell(main_width, 2.5, ref_email, 0, 1, 'L')
+                        y_pos += 2.5
         
         def add_page(self):
             super().add_page()
@@ -1107,7 +1237,8 @@ def create_professional_cv(data):
         data.get('summary', ''),
         data.get('experience', []),
         data.get('education', []),
-        data.get('achievements', [])
+        data.get('achievements', []),
+        data.get('references', [])
     )
     
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
