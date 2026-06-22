@@ -6,7 +6,7 @@ import re
 import tempfile
 
 def clean_text(text):
-    """Clean text of special characters that cause PDF encoding issues"""
+    """Clean text of special characters"""
     if not text:
         return ""
     replacements = {
@@ -22,8 +22,46 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text)
     return text.strip()
 
-def create_cv_from_dict(data):
-    """Generate a professional CV PDF from extracted data"""
+def get_layout_colors(layout):
+    """Return color scheme for selected layout"""
+    layouts = {
+        'classic': {
+            'primary': (26, 35, 85),     # Navy
+            'accent': (41, 128, 185),    # Blue
+            'sidebar_bg': (248, 249, 252),
+            'gold': (184, 134, 11),
+            'text_dark': (33, 33, 33),
+            'text_light': (117, 117, 117),
+        },
+        'modern': {
+            'primary': (44, 62, 80),     # Dark Slate
+            'accent': (231, 76, 60),     # Coral Red
+            'sidebar_bg': (236, 240, 241),
+            'gold': (241, 196, 15),
+            'text_dark': (44, 62, 80),
+            'text_light': (127, 140, 141),
+        },
+        'elegant': {
+            'primary': (60, 30, 50),     # Dark Plum
+            'accent': (200, 160, 120),   # Gold Beige
+            'sidebar_bg': (245, 240, 235),
+            'gold': (180, 140, 100),
+            'text_dark': (40, 30, 35),
+            'text_light': (140, 120, 130),
+        },
+        'professional': {
+            'primary': (0, 80, 60),      # Forest Green
+            'accent': (0, 150, 136),     # Teal
+            'sidebar_bg': (240, 248, 245),
+            'gold': (255, 193, 7),
+            'text_dark': (30, 50, 40),
+            'text_light': (100, 130, 120),
+        }
+    }
+    return layouts.get(layout, layouts['classic'])
+
+def create_cv_from_dict(data, layout='classic'):
+    """Generate a professional CV PDF with selected layout"""
     
     cleaned_data = {}
     for key, value in data.items():
@@ -34,20 +72,23 @@ def create_cv_from_dict(data):
         else:
             cleaned_data[key] = value
     
+    colors = get_layout_colors(layout)
+    
     class PDF(FPDF):
         def __init__(self):
             super().__init__(orientation='P', unit='mm', format='A4')
             self.set_auto_page_break(auto=True, margin=15)
             self.set_margins(15, 15, 15)
-            self.primary = (26, 35, 85)
-            self.accent = (41, 128, 185)
-            self.text_dark = (33, 33, 33)
-            self.text_light = (117, 117, 117)
-            self.sidebar_bg = (248, 249, 252)
-            self.gold = (184, 134, 11)
+            self.primary = colors['primary']
+            self.accent = colors['accent']
+            self.text_dark = colors['text_dark']
+            self.text_light = colors['text_light']
+            self.sidebar_bg = colors['sidebar_bg']
+            self.gold = colors['gold']
             self.sidebar_width = 52
             self.main_x = 66
             self.main_width = 130
+            self.layout_name = layout
         
         def set_color(self, r, g, b):
             self.set_text_color(int(r), int(g), int(b))
@@ -448,19 +489,16 @@ def create_cv_from_dict(data):
         cleaned_data.get('references', [])
     )
     
-    # ===== FIX: Use temp directory for Vercel compatibility =====
     import tempfile
     import shutil
     
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
-    filename = f"{safe_name}_{uuid.uuid4().hex[:8]}.pdf"
+    filename = f"{safe_name}_{layout}_{uuid.uuid4().hex[:8]}.pdf"
     
-    # Save to temp directory
     temp_dir = tempfile.gettempdir()
     temp_path = os.path.join(temp_dir, filename)
     pdf.output(temp_path)
     
-    # Try to save to generated folder if writable
     try:
         if not os.path.exists('generated'):
             os.makedirs('generated')
