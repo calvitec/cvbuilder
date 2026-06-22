@@ -7,15 +7,13 @@ import tempfile
 import shutil
 
 def clean_text(text):
-    """Clean text of special characters"""
     if not text:
         return ""
     replacements = {
         '\u2013': '-', '\u2014': '-', '\u2018': "'", '\u2019': "'",
         '\u201c': '"', '\u201d': '"', '\u2022': '-', '\u2026': '...',
         '\u00a0': ' ', '\u00e9': 'e', '\u00e8': 'e', '\u00e0': 'a',
-        '\u00f4': 'o', '\u00ee': 'i', '\u00e7': 'c', '\u00f1': 'n',
-        '\u00fc': 'u', '\u00e4': 'a', '\u00f6': 'o', '\u00df': 'ss',
+        '\u00f4': 'o', '\u00ee': 'i',
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
@@ -23,9 +21,7 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text)
     return text.strip()
 
-
 def create_cv_from_dict(data, layout='classic'):
-    """Generate a professional CV PDF with selected layout"""
     
     cleaned_data = {}
     for key, value in data.items():
@@ -36,22 +32,16 @@ def create_cv_from_dict(data, layout='classic'):
         else:
             cleaned_data[key] = value
     
-    # Only support classic and modern layouts
     if layout == 'modern':
         return create_modern_cv(cleaned_data)
     else:
         return create_classic_cv(cleaned_data)
 
 
-# ============================================
-# LAYOUT 1: CLASSIC - Two-Column (WORKING)
-# ============================================
 def create_classic_cv(data):
-    """Classic two-column layout"""
-    
     class ClassicCV(FPDF):
         def __init__(self):
-            super().__init__(orientation='P', unit='mm', format='A4')
+            super().__init__()
             self.set_auto_page_break(auto=True, margin=12)
             self.primary = (26, 35, 85)
             self.accent = (41, 128, 185)
@@ -74,10 +64,10 @@ def create_classic_cv(data):
         
         def add_sidebar(self, name, title, contact_info, skills, languages):
             page_height = 297
-            sidebar_width = self.sidebar_width
+            sw = self.sidebar_width
             
             self.set_fill(self.sidebar_bg[0], self.sidebar_bg[1], self.sidebar_bg[2])
-            self.rect(0, 0, sidebar_width, page_height, 'F')
+            self.rect(0, 0, sw, page_height, 'F')
             
             self.set_fill(self.primary[0], self.primary[1], self.primary[2])
             self.rect(0, 0, 210, 4, 'F')
@@ -87,24 +77,23 @@ def create_classic_cv(data):
             self.set_xy(6, 15)
             self.set_color(self.primary[0], self.primary[1], self.primary[2])
             self.set_font("Helvetica", "B", 9)
-            self.multi_cell(sidebar_width - 12, 3.5, name_clean.upper(), 0, 'C')
+            self.multi_cell(sw - 12, 3.5, name_clean.upper(), 0, 'C')
             
             if title:
                 self.set_xy(6, 30)
                 self.set_color(self.accent[0], self.accent[1], self.accent[2])
                 self.set_font("Helvetica", "B", 5.5)
-                title_clean = clean_text(title)
-                self.cell(sidebar_width - 12, 2.5, title_clean, 0, 1, 'C')
+                self.cell(sw - 12, 2.5, clean_text(title), 0, 1, 'C')
                 self.set_draw(self.accent[0], self.accent[1], self.accent[2])
-                self.line(14, 34, sidebar_width - 14, 34)
+                self.line(14, 34, sw - 14, 34)
             
             y_pos = 42
             self.set_xy(8, y_pos)
             self.set_color(self.primary[0], self.primary[1], self.primary[2])
             self.set_font("Helvetica", "B", 5.5)
-            self.cell(sidebar_width - 16, 2.5, "CONTACT", 0, 1, 'L')
+            self.cell(sw - 16, 2.5, "CONTACT", 0, 1, 'L')
             self.set_draw(self.accent[0], self.accent[1], self.accent[2])
-            self.line(8, y_pos + 3.5, sidebar_width - 8, y_pos + 3.5)
+            self.line(8, y_pos + 3.5, sw - 8, y_pos + 3.5)
             
             y_pos += 6
             if contact_info.get('email'):
@@ -113,15 +102,14 @@ def create_classic_cv(data):
                 self.set_font("Helvetica", "", 4.5)
                 email_clean = clean_text(str(contact_info['email']))
                 wrapped_email = textwrap.fill(email_clean, width=16)
-                self.multi_cell(sidebar_width - 20, 2, wrapped_email, 0, 'L')
+                self.multi_cell(sw - 20, 2, wrapped_email, 0, 'L')
                 y_pos += len(wrapped_email.split('\n')) * 2 + 3
             
             if contact_info.get('phone'):
                 self.set_xy(10, y_pos)
                 self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
                 self.set_font("Helvetica", "", 4.5)
-                phone_clean = clean_text(str(contact_info['phone']))
-                self.cell(sidebar_width - 20, 2, phone_clean, 0, 1, 'L')
+                self.cell(sw - 20, 2, clean_text(str(contact_info['phone'])), 0, 1, 'L')
                 y_pos += 3
             
             if skills:
@@ -130,9 +118,9 @@ def create_classic_cv(data):
                     self.set_xy(8, y_pos)
                     self.set_color(self.primary[0], self.primary[1], self.primary[2])
                     self.set_font("Helvetica", "B", 5.5)
-                    self.cell(sidebar_width - 16, 2.5, "SKILLS", 0, 1, 'L')
+                    self.cell(sw - 16, 2.5, "SKILLS", 0, 1, 'L')
                     self.set_draw(self.accent[0], self.accent[1], self.accent[2])
-                    self.line(8, y_pos + 3.5, sidebar_width - 8, y_pos + 3.5)
+                    self.line(8, y_pos + 3.5, sw - 8, y_pos + 3.5)
                     
                     y_pos += 6
                     for skill in skills[:10]:
@@ -146,7 +134,7 @@ def create_classic_cv(data):
                         self.set_font("Helvetica", "", 4.5)
                         skill_clean = clean_text(skill)
                         wrapped_skill = textwrap.fill(skill_clean, width=14)
-                        self.multi_cell(sidebar_width - 22, 2, wrapped_skill, 0, 'L')
+                        self.multi_cell(sw - 22, 2, wrapped_skill, 0, 'L')
                         y_pos += len(wrapped_skill.split('\n')) * 2 + 1
             
             languages = languages or ["English", "Swahili"]
@@ -155,9 +143,9 @@ def create_classic_cv(data):
                 self.set_xy(8, y_pos)
                 self.set_color(self.primary[0], self.primary[1], self.primary[2])
                 self.set_font("Helvetica", "B", 5.5)
-                self.cell(sidebar_width - 16, 2.5, "LANGUAGES", 0, 1, 'L')
+                self.cell(sw - 16, 2.5, "LANGUAGES", 0, 1, 'L')
                 self.set_draw(self.accent[0], self.accent[1], self.accent[2])
-                self.line(8, y_pos + 3.5, sidebar_width - 8, y_pos + 3.5)
+                self.line(8, y_pos + 3.5, sw - 8, y_pos + 3.5)
                 
                 y_pos += 6
                 for lang in languages[:3]:
@@ -169,13 +157,12 @@ def create_classic_cv(data):
                     self.cell(2, 2, "-", 0, 0, 'L')
                     self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
                     self.set_font("Helvetica", "", 4.5)
-                    lang_clean = clean_text(lang)
-                    self.cell(sidebar_width - 22, 2, lang_clean, 0, 1, 'L')
+                    self.cell(sw - 22, 2, clean_text(lang), 0, 1, 'L')
                     y_pos += 2.5
             
             self.set_draw(self.primary[0], self.primary[1], self.primary[2])
             self.set_line_width(0.5)
-            self.line(sidebar_width, 0, sidebar_width, page_height)
+            self.line(sw, 0, sw, page_height)
         
         def add_main_content(self, summary, experience, education, achievements, references):
             main_x = self.main_x
@@ -183,11 +170,10 @@ def create_classic_cv(data):
             y_pos = 12
             
             name = data.get('name', 'CURRICULUM VITAE')
-            name_clean = clean_text(name)
             self.set_xy(main_x, y_pos)
             self.set_color(self.primary[0], self.primary[1], self.primary[2])
             self.set_font("Helvetica", "B", 18)
-            self.cell(main_width, 7, name_clean.upper(), 0, 1, 'L')
+            self.cell(main_width, 7, clean_text(name).upper(), 0, 1, 'L')
             y_pos += 7
             
             title = data.get('title', '')
@@ -195,8 +181,7 @@ def create_classic_cv(data):
                 self.set_xy(main_x, y_pos)
                 self.set_color(self.accent[0], self.accent[1], self.accent[2])
                 self.set_font("Helvetica", "B", 9)
-                title_clean = clean_text(title)
-                self.cell(main_width, 4, title_clean, 0, 1, 'L')
+                self.cell(main_width, 4, clean_text(title), 0, 1, 'L')
                 y_pos += 5
             
             self.set_draw(self.gold[0], self.gold[1], self.gold[2])
@@ -237,8 +222,7 @@ def create_classic_cv(data):
                     self.set_xy(main_x, y_pos)
                     self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
                     self.set_font("Helvetica", "", 7)
-                    edu_clean = clean_text(edu)
-                    self.cell(main_width, 3.5, edu_clean, 0, 1, 'L')
+                    self.cell(main_width, 3.5, clean_text(edu), 0, 1, 'L')
                     y_pos += 4
                 y_pos += 2
             
@@ -381,10 +365,10 @@ def create_classic_cv(data):
         def add_page(self):
             super().add_page()
             page_height = 297
-            sidebar_width = self.sidebar_width
+            sw = self.sidebar_width
             
             self.set_fill(self.sidebar_bg[0], self.sidebar_bg[1], self.sidebar_bg[2])
-            self.rect(0, 0, sidebar_width, page_height, 'F')
+            self.rect(0, 0, sw, page_height, 'F')
             
             self.set_fill(self.primary[0], self.primary[1], self.primary[2])
             self.rect(0, 0, 210, 4, 'F')
@@ -392,19 +376,18 @@ def create_classic_cv(data):
             
             self.set_draw(self.primary[0], self.primary[1], self.primary[2])
             self.set_line_width(0.5)
-            self.line(sidebar_width, 0, sidebar_width, page_height)
+            self.line(sw, 0, sw, page_height)
             
             name = data.get('name', 'CURRICULUM VITAE')
-            name_clean = clean_text(name)
             self.set_xy(6, 15)
             self.set_color(self.primary[0], self.primary[1], self.primary[2])
             self.set_font("Helvetica", "B", 8)
-            self.multi_cell(sidebar_width - 12, 3.5, name_clean, 0, 'C')
+            self.multi_cell(sw - 12, 3.5, clean_text(name), 0, 'C')
             
             self.set_xy(6, 28)
             self.set_color(self.text_light[0], self.text_light[1], self.text_light[2])
             self.set_font("Helvetica", "I", 5)
-            self.cell(sidebar_width - 12, 2.5, f"Page {self.page_no()}", 0, 1, 'C')
+            self.cell(sw - 12, 2.5, f"Page {self.page_no()}", 0, 1, 'C')
     
     pdf = ClassicCV()
     pdf.add_page()
@@ -435,7 +418,7 @@ def create_classic_cv(data):
     )
     
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
-    filename = f"{safe_name}_classic_{uuid.uuid4().hex[:8]}.pdf"
+    filename = f"{safe_name}_{uuid.uuid4().hex[:8]}.pdf"
     
     temp_dir = tempfile.gettempdir()
     temp_path = os.path.join(temp_dir, filename)
@@ -451,15 +434,10 @@ def create_classic_cv(data):
     return temp_path
 
 
-# ============================================
-# LAYOUT 2: MODERN - Header Style (WORKING)
-# ============================================
 def create_modern_cv(data):
-    """Modern layout with header"""
-    
     class ModernCV(FPDF):
         def __init__(self):
-            super().__init__(orientation='P', unit='mm', format='A4')
+            super().__init__()
             self.set_auto_page_break(auto=True, margin=12)
             self.primary = (44, 62, 80)
             self.accent = (231, 76, 60)
@@ -486,15 +464,13 @@ def create_modern_cv(data):
             self.set_xy(15, 8)
             self.set_color(self.white[0], self.white[1], self.white[2])
             self.set_font("Helvetica", "B", 20)
-            name_clean = clean_text(name) if name else "CURRICULUM VITAE"
-            self.cell(180, 8, name_clean.upper(), 0, 1, 'L')
+            self.cell(180, 8, clean_text(name).upper(), 0, 1, 'L')
             
             if title:
                 self.set_xy(15, 18)
                 self.set_color(self.accent[0], self.accent[1], self.accent[2])
                 self.set_font("Helvetica", "B", 10)
-                title_clean = clean_text(title)
-                self.cell(180, 5, title_clean, 0, 1, 'L')
+                self.cell(180, 5, clean_text(title), 0, 1, 'L')
             
             self.set_xy(15, 26)
             self.set_color(self.white[0], self.white[1], self.white[2])
@@ -587,8 +563,7 @@ def create_modern_cv(data):
                     self.set_xy(self.main_x, y_pos)
                     self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
                     self.set_font("Helvetica", "", 8)
-                    edu_clean = clean_text(edu)
-                    self.cell(self.main_width, 4, edu_clean, 0, 1, 'L')
+                    self.cell(self.main_width, 4, clean_text(edu), 0, 1, 'L')
                     y_pos += 4.5
             
             if achievements:
@@ -635,11 +610,10 @@ def create_modern_cv(data):
             self.rect(0, 0, 210, 38, 'F')
             
             name = data.get('name', 'CURRICULUM VITAE')
-            name_clean = clean_text(name)
             self.set_xy(15, 8)
             self.set_color(self.white[0], self.white[1], self.white[2])
             self.set_font("Helvetica", "B", 16)
-            self.cell(180, 7, name_clean.upper(), 0, 1, 'L')
+            self.cell(180, 7, clean_text(name).upper(), 0, 1, 'L')
             self.set_xy(15, 20)
             self.set_color(self.white[0], self.white[1], self.white[2])
             self.set_font("Helvetica", "", 7)
@@ -672,7 +646,7 @@ def create_modern_cv(data):
     )
     
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
-    filename = f"{safe_name}_modern_{uuid.uuid4().hex[:8]}.pdf"
+    filename = f"{safe_name}_{uuid.uuid4().hex[:8]}.pdf"
     
     temp_dir = tempfile.gettempdir()
     temp_path = os.path.join(temp_dir, filename)
