@@ -3,6 +3,8 @@ import os
 import uuid
 import re
 import json
+import tempfile
+import shutil
 from datetime import datetime
 from cv_generator import create_cv_from_dict
 
@@ -287,8 +289,13 @@ def generate_pdf(session_id):
             return "Session expired. Please paste your CV again.", 404
         
         data = extracted_data_store[session_id]
+        
+        # Generate PDF - this should return the path
         pdf_path = create_cv_from_dict(data)
         filename = os.path.basename(pdf_path)
+        
+        # Store the actual path for download
+        extracted_data_store['pdf_path'] = pdf_path
         
         return render_template('download.html', filename=filename, name=data.get('name', 'CV'))
     
@@ -298,12 +305,26 @@ def generate_pdf(session_id):
 @app.route('/download/<filename>')
 def download_cv(filename):
     try:
+        # First check if we have a stored path
+        if 'pdf_path' in extracted_data_store:
+            stored_path = extracted_data_store.get('pdf_path')
+            if stored_path and os.path.exists(stored_path):
+                return send_file(stored_path, as_attachment=True, download_name=filename)
+        
+        # Check generated folder
         filepath = os.path.join('generated', filename)
         if os.path.exists(filepath):
             return send_file(filepath, as_attachment=True, download_name=filename)
-        return jsonify({'error': 'File not found'}), 404
+        
+        # Check temp directory (for Vercel)
+        temp_path = os.path.join(tempfile.gettempdir(), filename)
+        if os.path.exists(temp_path):
+            return send_file(temp_path, as_attachment=True, download_name=filename)
+        
+        return jsonify({'error': 'File not found. Please generate your CV again.'}), 404
+        
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e)}), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
