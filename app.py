@@ -1,39 +1,24 @@
-from flask import Flask, render_template, request, send_file, jsonify, url_for
+from flask import Flask, render_template, request, send_file, jsonify
 import os
 import uuid
 import re
-import json
 import tempfile
-import shutil
-from datetime import datetime
 from cv_generator import create_cv_from_dict
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-GENERATED_FOLDER = 'generated'
-if not os.path.exists(GENERATED_FOLDER):
-    os.makedirs(GENERATED_FOLDER)
-
 extracted_data_store = {}
 
 def parse_cv_text(text):
     """Parse CV text into structured data"""
-    lines = text.split('\n')
-    lines = [line.strip() for line in lines if line.strip()]
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
     
     info = {
-        'name': 'CURRICULUM VITAE',
-        'title': '',
-        'email': '',
-        'phone': '',
-        'summary': '',
-        'skills': [],
-        'experience': [],
-        'education': [],
-        'achievements': [],
-        'references': []
+        'name': 'CURRICULUM VITAE', 'title': '', 'email': '', 'phone': '',
+        'summary': '', 'skills': [], 'experience': [], 'education': [],
+        'achievements': [], 'references': []
     }
     
     # Extract Name
@@ -42,12 +27,11 @@ def parse_cv_text(text):
             info['name'] = line
             break
     
-    # Extract Email
+    # Extract Email & Phone
     email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text)
     if email_match:
         info['email'] = email_match.group()
     
-    # Extract Phone
     phone_patterns = [r'\+254\s?\d{9}', r'0\d{9}', r'07\d{8}', r'01\d{8}']
     for pattern in phone_patterns:
         phone_match = re.search(pattern, text)
@@ -58,111 +42,62 @@ def parse_cv_text(text):
     # Find sections
     sections = {}
     current_section = None
+    section_keywords = {
+        'education': ['education'],
+        'experience': ['employment', 'experience', 'work'],
+        'skills': ['skill'],
+        'achievements': ['qualification', 'additional', 'certification'],
+        'references': ['reference', 'referee']
+    }
     
-    for i, line in enumerate(lines):
+    for line in lines:
         line_lower = line.lower()
-        if 'education' in line_lower and len(line) < 30:
-            current_section = 'education'
-            sections['education'] = {'start': i, 'lines': []}
-        elif 'employment' in line_lower or 'experience' in line_lower:
-            current_section = 'experience'
-            sections['experience'] = {'start': i, 'lines': []}
-        elif 'skill' in line_lower and len(line) < 30:
-            current_section = 'skills'
-            sections['skills'] = {'start': i, 'lines': []}
-        elif 'qualification' in line_lower or 'additional' in line_lower:
-            current_section = 'achievements'
-            sections['achievements'] = {'start': i, 'lines': []}
-        elif 'reference' in line_lower or 'referee' in line_lower:
-            current_section = 'references'
-            sections['references'] = {'start': i, 'lines': []}
-        elif current_section:
-            sections[current_section]['lines'].append(line)
+        found = False
+        for key, keywords in section_keywords.items():
+            if any(kw in line_lower for kw in keywords) and len(line) < 40:
+                current_section = key
+                if key not in sections:
+                    sections[key] = []
+                found = True
+                break
+        if not found and current_section and line:
+            sections[current_section].append(line)
     
     # Extract Summary
     summary_lines = []
-    edu_start = sections.get('education', {}).get('start', 999)
+    edu_start = [i for i, l in enumerate(lines) if 'education' in l.lower()][0] if any('education' in l.lower() for l in lines) else 999
     for i, line in enumerate(lines):
         if i == 0:
             continue
-        if i < edu_start:
-            if len(line) > 20 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv']):
-                summary_lines.append(line)
-        else:
-            break
+        if i < edu_start and len(line) > 20 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv']):
+            summary_lines.append(line)
     if summary_lines:
         info['summary'] = ' '.join(summary_lines)
     
-    # Extract Education
-    edu_lines = sections.get('education', {}).get('lines', [])
-    if not edu_lines:
-        in_edu = False
-        for line in lines:
-            if 'education' in line.lower():
-                in_edu = True
-                continue
-            if in_edu and line:
-                if any(x in line.lower() for x in ['employment', 'skill', 'qualification', 'experience', 'reference']):
-                    break
-                if len(line) > 3:
-                    edu_lines.append(line)
-    info['education'] = edu_lines[:10]
+    # Education
+    info['education'] = sections.get('education', [])[:10]
     
-    # Extract Experience
-    exp_lines = sections.get('experience', {}).get('lines', [])
-    if not exp_lines:
-        in_exp = False
-        for line in lines:
-            if 'employment' in line.lower() or 'experience' in line.lower():
-                in_exp = True
-                continue
-            if in_exp and line:
-                if any(x in line.lower() for x in ['education', 'skill', 'qualification', 'reference']):
-                    break
-                if len(line) > 3:
-                    exp_lines.append(line)
-    
+    # Experience
+    exp_lines = sections.get('experience', [])
     exp_section = []
     current_exp = None
     for line in exp_lines:
         if re.search(r'\d{4}', line):
             if current_exp:
                 exp_section.append(current_exp)
-            date_match = re.search(r'(\d{4}\s*[–\-]\s*[A-Za-z\s]+)', line)
-            date_part = date_match.group(1) if date_match else ''
-            
-            if ':' in line:
-                parts = line.split(':')
-                if len(parts) >= 2:
-                    date_part = parts[0].strip()
-                    rest = parts[1].strip()
-                    if '–' in rest or '-' in rest:
-                        rest_parts = re.split(r'[–\-]', rest)
-                        if len(rest_parts) >= 2:
-                            current_exp = {
-                                'company': rest_parts[1].strip(),
-                                'title': rest_parts[0].strip(),
-                                'date': date_part,
-                                'bullets': []
-                            }
-                        else:
-                            current_exp = {'company': rest, 'title': '', 'date': date_part, 'bullets': []}
-                    else:
-                        current_exp = {'company': rest, 'title': '', 'date': date_part, 'bullets': []}
-            elif '–' in line or '-' in line:
-                parts = re.split(r'[–\-]', line)
-                clean_parts = [p.strip() for p in parts if p.strip() and not re.search(r'\d{4}', p)]
-                if len(clean_parts) >= 2:
-                    current_exp = {
-                        'company': clean_parts[1],
-                        'title': clean_parts[0],
-                        'date': date_part if date_part else '',
-                        'bullets': []
-                    }
-                else:
-                    current_exp = {'company': line, 'title': '', 'date': date_part if date_part else '', 'bullets': []}
+            parts = re.split(r'[–\-:]', line)
+            date_part = parts[0].strip() if parts else ''
+            rest = parts[-1].strip() if len(parts) > 1 else line
+            if '–' in rest or '-' in rest:
+                rest_parts = re.split(r'[–\-]', rest)
+                current_exp = {
+                    'company': rest_parts[-1].strip() if len(rest_parts) > 1 else rest,
+                    'title': rest_parts[0].strip() if len(rest_parts) > 1 else '',
+                    'date': date_part,
+                    'bullets': []
+                }
             else:
-                current_exp = {'company': line, 'title': '', 'date': date_part if date_part else '', 'bullets': []}
+                current_exp = {'company': rest, 'title': '', 'date': date_part, 'bullets': []}
         elif current_exp and line and len(line) > 3:
             clean_line = re.sub(r'^[•\-]\s*', '', line)
             if clean_line and not any(x in clean_line.lower() for x in ['education', 'skill', 'qualification', 'reference']):
@@ -171,94 +106,60 @@ def parse_cv_text(text):
         exp_section.append(current_exp)
     info['experience'] = exp_section
     
-    # Extract Skills
-    skills_lines = sections.get('skills', {}).get('lines', [])
+    # Skills
+    skills_lines = sections.get('skills', [])
     skills_found = []
-    if skills_lines:
-        for line in skills_lines:
-            parts = re.split(r'[•,;\n]', line)
-            for part in parts:
-                part = part.strip()
-                if part and len(part) < 60 and len(part) > 2:
-                    part = re.sub(r'^[•\-]\s*', '', part)
-                    part = re.sub(r'\s+', ' ', part)
-                    if part and not any(x in part.lower() for x in ['skills', 'abilities']):
-                        skills_found.append(part)
-    if not skills_found:
-        in_skills = False
-        for line in lines:
-            if 'skill' in line.lower() and len(line) < 30:
-                in_skills = True
-                continue
-            if in_skills and line:
-                if any(x in line.lower() for x in ['education', 'employment', 'experience', 'qualification', 'reference']):
-                    break
-                parts = re.split(r'[•,;\n]', line)
-                for part in parts:
-                    part = part.strip()
-                    if part and len(part) < 60 and len(part) > 2:
-                        part = re.sub(r'^[•\-]\s*', '', part)
-                        if part:
-                            skills_found.append(part)
+    for line in skills_lines:
+        parts = re.split(r'[•,;\n]', line)
+        for part in parts:
+            part = part.strip()
+            if part and len(part) < 60 and len(part) > 2:
+                part = re.sub(r'^[•\-]\s*', '', part)
+                if part and not any(x in part.lower() for x in ['skills', 'abilities']):
+                    skills_found.append(part)
     info['skills'] = skills_found[:15]
     
-    # Extract Achievements
-    ach_lines = sections.get('achievements', {}).get('lines', [])
+    # Achievements
+    ach_lines = sections.get('achievements', [])
     achievements_found = []
     for line in ach_lines:
         clean_line = re.sub(r'^[•\-]\s*', '', line)
         if clean_line and len(clean_line) > 3:
             achievements_found.append(clean_line)
-    if not achievements_found:
-        in_qual = False
-        for line in lines:
-            if 'qualification' in line.lower() or 'additional' in line.lower():
-                in_qual = True
-                continue
-            if in_qual and line:
-                if any(x in line.lower() for x in ['experience', 'education', 'skill', 'employment', 'reference']):
-                    break
-                if len(line) > 3:
-                    clean_line = re.sub(r'^[•\-]\s*', '', line)
-                    if clean_line:
-                        achievements_found.append(clean_line)
     info['achievements'] = achievements_found[:8]
     
-    # Extract References
-    ref_lines = sections.get('references', {}).get('lines', [])
+    # References
+    ref_lines = sections.get('references', [])
     references = []
-    if ref_lines:
-        current_ref = {}
-        for line in ref_lines:
-            if line and not any(x in line.lower() for x in ['email:', 'phone:', 'tel:', 'address']):
-                if len(line) > 5 and not re.match(r'^[\d\-+]', line):
-                    if current_ref and current_ref.get('name'):
-                        references.append(current_ref)
-                    current_ref = {'name': line, 'position': '', 'email': '', 'phone': ''}
-                elif line and current_ref:
-                    email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line)
-                    if email_match:
-                        current_ref['email'] = email_match.group()
-                        line = line.replace(email_match.group(), '').strip()
-                        if line and not current_ref['position']:
-                            current_ref['position'] = line
-                    phone_match = re.search(r'\+254\s?\d{9}|0\d{9}|07\d{8}|01\d{8}', line)
-                    if phone_match:
-                        current_ref['phone'] = phone_match.group()
-                        line = line.replace(phone_match.group(), '').strip()
-                        if line and not current_ref['position']:
-                            current_ref['position'] = line
-                    elif line and not current_ref['position']:
+    current_ref = {}
+    for line in ref_lines:
+        if line and not any(x in line.lower() for x in ['email:', 'phone:', 'tel:', 'address']):
+            if len(line) > 5 and not re.match(r'^[\d\-+]', line):
+                if current_ref and current_ref.get('name'):
+                    references.append(current_ref)
+                current_ref = {'name': line, 'position': '', 'email': '', 'phone': ''}
+            elif line and current_ref:
+                email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line)
+                if email_match:
+                    current_ref['email'] = email_match.group()
+                    line = line.replace(email_match.group(), '').strip()
+                    if line and not current_ref['position']:
                         current_ref['position'] = line
-        if current_ref and current_ref.get('name'):
-            references.append(current_ref)
+                phone_match = re.search(r'\+254\s?\d{9}|0\d{9}|07\d{8}|01\d{8}', line)
+                if phone_match:
+                    current_ref['phone'] = phone_match.group()
+                    line = line.replace(phone_match.group(), '').strip()
+                    if line and not current_ref['position']:
+                        current_ref['position'] = line
+                elif line and not current_ref['position']:
+                    current_ref['position'] = line
+    if current_ref and current_ref.get('name'):
+        references.append(current_ref)
     info['references'] = references[:5]
     
     # Extract Title
-    if info['experience'] and len(info['experience']) > 0:
-        first_exp = info['experience'][0]
-        if first_exp.get('title'):
-            info['title'] = first_exp['title']
+    if info['experience'] and info['experience'][0].get('title'):
+        info['title'] = info['experience'][0]['title']
     
     return info
 
@@ -267,7 +168,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/generate', methods=['POST'])
-def generate_from_text():
+def generate():
     try:
         cv_text = request.form.get('cv_text', '')
         if not cv_text:
@@ -289,12 +190,8 @@ def generate_pdf(session_id):
             return "Session expired. Please paste your CV again.", 404
         
         data = extracted_data_store[session_id]
-        
-        # Generate PDF - this should return the path
         pdf_path = create_cv_from_dict(data)
         filename = os.path.basename(pdf_path)
-        
-        # Store the actual path for download
         extracted_data_store['pdf_path'] = pdf_path
         
         return render_template('download.html', filename=filename, name=data.get('name', 'CV'))
@@ -305,24 +202,21 @@ def generate_pdf(session_id):
 @app.route('/download/<filename>')
 def download_cv(filename):
     try:
-        # First check if we have a stored path
         if 'pdf_path' in extracted_data_store:
             stored_path = extracted_data_store.get('pdf_path')
             if stored_path and os.path.exists(stored_path):
                 return send_file(stored_path, as_attachment=True, download_name=filename)
         
-        # Check generated folder
         filepath = os.path.join('generated', filename)
         if os.path.exists(filepath):
             return send_file(filepath, as_attachment=True, download_name=filename)
         
-        # Check temp directory (for Vercel)
         temp_path = os.path.join(tempfile.gettempdir(), filename)
         if os.path.exists(temp_path):
             return send_file(temp_path, as_attachment=True, download_name=filename)
         
-        return jsonify({'error': 'File not found. Please generate your CV again.'}), 404
-        
+        return jsonify({'error': 'File not found'}), 404
+    
     except Exception as e:
         return jsonify({'error': str(e)}), 404
 
