@@ -4,6 +4,7 @@ import textwrap
 import uuid
 import re
 import tempfile
+import shutil
 
 def clean_text(text):
     """Clean text of special characters"""
@@ -25,6 +26,7 @@ def clean_text(text):
 def create_cv_from_dict(data, layout='classic'):
     """Generate a professional CV PDF with selected layout"""
     
+    # Clean data
     cleaned_data = {}
     for key, value in data.items():
         if isinstance(value, str):
@@ -34,6 +36,7 @@ def create_cv_from_dict(data, layout='classic'):
         else:
             cleaned_data[key] = value
     
+    # Route to appropriate layout
     if layout == 'modern':
         return create_modern_cv(cleaned_data)
     elif layout == 'elegant':
@@ -109,6 +112,7 @@ def create_classic_cv(data):
             self.line(10, y_pos + 4, sidebar_width - 10, y_pos + 4)
             
             y_pos += 8
+            
             if contact_info.get('email') and contact_info['email'] not in ['', 'Email not provided']:
                 self.set_xy(12, y_pos)
                 self.set_color(self.text_light[0], self.text_light[1], self.text_light[2])
@@ -446,6 +450,8 @@ def create_classic_cv(data):
     contact_info = {}
     if data.get('email'):
         contact_info['email'] = clean_text(data['email'])
+    if data.get('phone'):
+        contact_info['phone'] = clean_text(data['phone'])
     
     skills = data.get('skills', [])
     if not skills:
@@ -462,9 +468,6 @@ def create_classic_cv(data):
         data.get('achievements', []),
         data.get('references', [])
     )
-    
-    import tempfile
-    import shutil
     
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
     filename = f"{safe_name}_classic_{uuid.uuid4().hex[:8]}.pdf"
@@ -500,7 +503,6 @@ def create_modern_cv(data):
             self.text_light = (127, 140, 141)
             self.white = (255, 255, 255)
             self.gold = (241, 196, 15)
-            self.sidebar_width = 0
             self.main_x = 15
             self.main_width = 180
         
@@ -514,7 +516,6 @@ def create_modern_cv(data):
             self.set_draw_color(int(r), int(g), int(b))
         
         def add_header(self, name, title, contact_info):
-            # Large colored header
             self.set_fill(self.primary[0], self.primary[1], self.primary[2])
             self.rect(0, 0, 210, 45, 'F')
             
@@ -531,23 +532,21 @@ def create_modern_cv(data):
                 title_clean = clean_text(title)
                 self.cell(180, 6, title_clean, 0, 1, 'L')
             
-            # Contact info in header
             self.set_xy(15, 32)
             self.set_color(self.white[0], self.white[1], self.white[2])
             self.set_font("Helvetica", "", 8)
             contact_text = ""
             if contact_info.get('email'):
-                contact_text += f"📧 {contact_info['email']}  "
+                contact_text += f"Email: {contact_info['email']}  "
             if contact_info.get('phone'):
-                contact_text += f"📱 {contact_info['phone']}"
+                contact_text += f"Phone: {contact_info['phone']}"
             self.cell(180, 5, contact_text, 0, 1, 'L')
             
-            # Decorative line
             self.set_draw(self.accent[0], self.accent[1], self.accent[2])
             self.set_line_width(2)
             self.line(15, 40, 195, 40)
             
-            return 48  # y position after header
+            return 48
         
         def add_section_title(self, title, y_pos):
             self.set_xy(self.main_x, y_pos)
@@ -562,7 +561,6 @@ def create_modern_cv(data):
         def add_main_content(self, summary, experience, education, achievements, references):
             y_pos = 48
             
-            # Summary
             if summary:
                 y_pos = self.add_section_title("PROFESSIONAL SUMMARY", y_pos)
                 self.set_xy(self.main_x, y_pos)
@@ -573,7 +571,6 @@ def create_modern_cv(data):
                 self.multi_cell(self.main_width, 4.5, wrapped_summary, 0, 'L')
                 y_pos += len(wrapped_summary.split('\n')) * 4.5 + 8
             
-            # Experience
             if experience:
                 y_pos = self.add_section_title("WORK EXPERIENCE", y_pos)
                 for exp in experience[:4]:
@@ -585,7 +582,6 @@ def create_modern_cv(data):
                     title_text = clean_text(exp.get('title', ''))
                     date_text = clean_text(exp.get('date', ''))
                     
-                    # Company and date
                     self.set_xy(self.main_x, y_pos)
                     self.set_color(self.primary[0], self.primary[1], self.primary[2])
                     self.set_font("Helvetica", "B", 10)
@@ -595,7 +591,6 @@ def create_modern_cv(data):
                     self.cell(self.main_width * 0.4, 5, date_text, 0, 1, 'R')
                     y_pos += 5
                     
-                    # Title
                     if title_text:
                         self.set_xy(self.main_x, y_pos)
                         self.set_color(self.accent[0], self.accent[1], self.accent[2])
@@ -603,7 +598,6 @@ def create_modern_cv(data):
                         self.cell(self.main_width, 4.5, title_text, 0, 1, 'L')
                         y_pos += 4.5
                     
-                    # Bullets
                     if exp.get('bullets'):
                         for bullet in exp['bullets'][:3]:
                             if y_pos > 260:
@@ -620,7 +614,6 @@ def create_modern_cv(data):
                             y_pos += len(wrapped_bullet.split('\n')) * 4 + 1
                     y_pos += 3
             
-            # Education
             if education:
                 if y_pos > 240:
                     self.add_page()
@@ -633,26 +626,9 @@ def create_modern_cv(data):
                     edu_clean = clean_text(edu)
                     self.cell(self.main_width, 4.5, edu_clean, 0, 1, 'L')
                     y_pos += 5
-            
-            # Skills as tags
-            if data.get('skills'):
-                if y_pos > 240:
-                    self.add_page()
-                    y_pos = 48
-                y_pos = self.add_section_title("SKILLS", y_pos)
-                skills = data.get('skills', [])
-                skill_line = ""
-                for s in skills[:10]:
-                    skill_line += f"• {s}  "
-                self.set_xy(self.main_x, y_pos)
-                self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
-                self.set_font("Helvetica", "", 9)
-                self.multi_cell(self.main_width, 4.5, skill_line, 0, 'L')
-                y_pos += 20
         
         def add_page(self):
             super().add_page()
-            # Re-add header on new pages
             self.set_fill(self.primary[0], self.primary[1], self.primary[2])
             self.rect(0, 0, 210, 45, 'F')
             
@@ -692,9 +668,6 @@ def create_modern_cv(data):
         data.get('achievements', []),
         data.get('references', [])
     )
-    
-    import tempfile
-    import shutil
     
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
     filename = f"{safe_name}_modern_{uuid.uuid4().hex[:8]}.pdf"
@@ -743,19 +716,16 @@ def create_elegant_cv(data):
             self.set_draw_color(int(r), int(g), int(b))
         
         def add_header(self, name, title, contact_info):
-            # Decorative top line
             self.set_draw(self.accent[0], self.accent[1], self.accent[2])
             self.set_line_width(1.5)
             self.line(25, 8, 185, 8)
             
-            # Name centered
             self.set_xy(0, 15)
             self.set_color(self.primary[0], self.primary[1], self.primary[2])
             self.set_font("Helvetica", "B", 28)
             name_clean = clean_text(name) if name else "CURRICULUM VITAE"
             self.cell(210, 10, name_clean.upper(), 0, 1, 'C')
             
-            # Title centered
             if title:
                 self.set_xy(0, 28)
                 self.set_color(self.accent[0], self.accent[1], self.accent[2])
@@ -763,18 +733,16 @@ def create_elegant_cv(data):
                 title_clean = clean_text(title)
                 self.cell(210, 6, title_clean, 0, 1, 'C')
             
-            # Contact centered
             contact_text = ""
             if contact_info.get('email'):
-                contact_text += f"✉ {contact_info['email']}  "
+                contact_text += f"Email: {contact_info['email']}  "
             if contact_info.get('phone'):
-                contact_text += f"✆ {contact_info['phone']}"
+                contact_text += f"Phone: {contact_info['phone']}"
             self.set_xy(0, 36)
             self.set_color(self.text_light[0], self.text_light[1], self.text_light[2])
             self.set_font("Helvetica", "", 8)
             self.cell(210, 5, contact_text, 0, 1, 'C')
             
-            # Decorative line
             self.set_draw(self.accent[0], self.accent[1], self.accent[2])
             self.set_line_width(1)
             self.line(55, 44, 155, 44)
@@ -861,26 +829,9 @@ def create_elegant_cv(data):
                     edu_clean = clean_text(edu)
                     self.cell(self.main_width, 4.5, edu_clean, 0, 1, 'L')
                     y_pos += 5
-            
-            if achievements:
-                if y_pos > 240:
-                    self.add_page()
-                    y_pos = 50
-                y_pos = self.add_section_title("ACHIEVEMENTS", y_pos)
-                for ach in achievements[:5]:
-                    ach_clean = clean_text(ach)
-                    self.set_xy(self.main_x + 5, y_pos)
-                    self.set_color(self.gold[0], self.gold[1], self.gold[2])
-                    self.set_font("Helvetica", "", 8)
-                    self.cell(3, 4, "✦", 0, 0, 'L')
-                    self.set_color(self.text_dark[0], self.text_dark[1], self.text_dark[2])
-                    wrapped_ach = textwrap.fill(ach_clean, width=75)
-                    self.multi_cell(self.main_width - 10, 4, wrapped_ach, 0, 'L')
-                    y_pos += len(wrapped_ach.split('\n')) * 4 + 2
         
         def add_page(self):
             super().add_page()
-            # Decorative top line
             self.set_draw(self.accent[0], self.accent[1], self.accent[2])
             self.set_line_width(1.5)
             self.line(25, 8, 185, 8)
@@ -921,9 +872,6 @@ def create_elegant_cv(data):
         data.get('references', [])
     )
     
-    import tempfile
-    import shutil
-    
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
     filename = f"{safe_name}_elegant_{uuid.uuid4().hex[:8]}.pdf"
     
@@ -958,10 +906,7 @@ def create_professional_cv(data):
             self.text_light = (100, 130, 120)
             self.white = (255, 255, 255)
             self.gold = (255, 193, 7)
-            self.main_x = 20
-            self.main_width = 170
             self.sidebar_width = 45
-            self.sidebar_x = 20
         
         def set_color(self, r, g, b):
             self.set_text_color(int(r), int(g), int(b))
@@ -979,7 +924,6 @@ def create_professional_cv(data):
             self.set_fill(self.primary[0], self.primary[1], self.primary[2])
             self.rect(0, 0, sidebar_width + 5, page_height, 'F')
             
-            # Name in sidebar
             self.set_xy(5, 15)
             self.set_color(self.white[0], self.white[1], self.white[2])
             self.set_font("Helvetica", "B", 12)
@@ -1050,15 +994,12 @@ def create_professional_cv(data):
                 lang_clean = clean_text(lang)
                 self.cell(sidebar_width, 3, f"- {lang_clean}", 0, 1, 'L')
                 y_pos += 3
-            
-            return sidebar_width + 10
         
         def add_main_content(self, summary, experience, education, achievements):
             main_x = self.sidebar_width + 15
             main_width = 210 - main_x - 15
             y_pos = 15
             
-            # Main name
             self.set_xy(main_x, y_pos)
             self.set_color(self.primary[0], self.primary[1], self.primary[2])
             self.set_font("Helvetica", "B", 18)
@@ -1203,9 +1144,6 @@ def create_professional_cv(data):
         data.get('education', []),
         data.get('achievements', [])
     )
-    
-    import tempfile
-    import shutil
     
     safe_name = re.sub(r'[^\x00-\x7F]+', '', name.replace(' ', '_')[:20]) if name else 'cv'
     filename = f"{safe_name}_professional_{uuid.uuid4().hex[:8]}.pdf"
