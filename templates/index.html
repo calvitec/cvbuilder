@@ -1,99 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional CV Builder</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV Builder Pro – Create Professional CVs Instantly</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        * { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .glass-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); }
-        .animate-float { animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        .typing-dots::after { content: '...'; animation: dots 1.5s steps(4, end) infinite; }
-        @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-hero {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+        .gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card-dark {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        .animate-pulse-slow {
+            animation: pulseSlow 3s ease-in-out infinite;
+        }
+        @keyframes pulseSlow {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .gradient-border {
+            position: relative;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            z-index: -1;
+            animation: rotateBorder 4s linear infinite;
+            background-size: 300% 300%;
+        }
+        @keyframes rotateBorder {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        textarea:focus {
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3);
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen py-8 px-4">
-    <div class="max-w-5xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-8 animate-float">
-            <div class="inline-block bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-4">
-                <i class="fas fa-file-pdf text-white text-5xl"></i>
-            </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">CV Builder Pro</h1>
-            <p class="text-white/80 text-lg">Paste your CV text and get a professional PDF in seconds</p>
-        </div>
-
-        <!-- Main Card -->
-        <div class="glass-card rounded-3xl shadow-2xl p-6 md:p-8">
-            {% if error %}
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-                    <p class="text-red-700">{{ error }}</p>
+                    <i class="fas fa-file-pdf text-2xl text-white"></i>
+                    <span class="ml-2 text-xl font-bold text-white">CV<span class="text-purple-400">Pro</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8 text-white/80">
+                    <a href="#features" class="hover:text-white transition">Features</a>
+                    <a href="#how-it-works" class="hover:text-white transition">How It Works</a>
+                    <a href="#templates" class="hover:text-white transition">Templates</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="document.getElementById('cvForm').scrollIntoView({behavior:'smooth'})"
+                        class="px-6 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold text-sm hover:shadow-lg transition-all">
+                        Get Started
+                    </button>
                 </div>
             </div>
-            {% endif %}
+        </div>
+    </nav>
 
-            <form id="cvForm" action="/generate" method="POST">
-                <!-- Text Area -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2">
-                        <i class="fas fa-paste text-blue-600 mr-2"></i> Paste Your CV Text
-                    </label>
-                    <textarea name="cv_text" id="cvText" rows="16" 
-                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 resize-none font-mono text-sm"
-                        placeholder="Paste your CV here... Include sections like: EDUCATION, EMPLOYMENT, SKILLS, REFERENCES..."></textarea>
-                    <div class="mt-2 text-sm text-gray-500">
-                        <i class="fas fa-info-circle text-blue-500 mr-1"></i> 
-                        Supports: EDUCATION, EMPLOYMENT, SKILLS, ADDITIONAL QUALIFICATIONS, REFERENCES
+    <!-- Hero Section -->
+    <section class="gradient-hero min-h-screen flex items-center pt-16 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-float"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl animate-float" style="animation-delay:2s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 text-sm mb-6">
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                        AI-Powered CV Builder
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+                        Create a <span class="gradient-text">Professional CV</span> in Minutes
+                    </h1>
+                    <p class="text-xl text-white/70 mt-6 leading-relaxed max-w-lg">
+                        Transform your plain text into a stunning, ATS-friendly CV. Powered by AI, designed by experts.
+                        <span class="block mt-2 text-white/50 text-base">No sign-up required • 100% Free • Instant Download</span>
+                    </p>
+                    <div class="flex flex-wrap gap-4 mt-8">
+                        <button onclick="document.getElementById('cvForm').scrollIntoView({behavior:'smooth'})"
+                            class="px-8 py-4 rounded-2xl btn-gradient text-white font-bold text-lg flex items-center gap-3">
+                            <i class="fas fa-magic"></i> Create Your CV
+                        </button>
+                        <button onclick="loadSample()"
+                            class="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-lg flex items-center gap-3 hover:bg-white/20 transition">
+                            <i class="fas fa-file-alt"></i> Try Sample
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-6 mt-8 text-white/50 text-sm">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                            <span>ATS-Optimized</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                            <span>Professional Design</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                            <span>Instant PDF</span>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <button type="submit" id="generateBtn"
-                        class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
-                        <i class="fas fa-magic mr-3"></i> Generate CV
-                    </button>
-                    <button type="button" onclick="loadSample()"
-                        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-2xl transition-all duration-200 flex items-center justify-center">
-                        <i class="fas fa-file-alt mr-3"></i> Load Sample
-                    </button>
+                <div class="hidden lg:block relative">
+                    <div class="glass-card rounded-3xl p-6 max-w-md mx-auto animate-float">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">JM</div>
+                            <div>
+                                <h3 class="text-white font-bold">John Mwangi</h3>
+                                <p class="text-white/50 text-sm">Full Stack Developer</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 text-white/70 text-sm">
+                                <i class="fas fa-briefcase text-purple-400"></i>
+                                <span>5+ years experience</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-white/70 text-sm">
+                                <i class="fas fa-graduation-cap text-purple-400"></i>
+                                <span>Bachelor's in Computer Science</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs">Python</span>
+                                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs">React</span>
+                                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs">AWS</span>
+                                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs">Django</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-white/40 text-xs">
+                            <span>📄 2 Pages</span>
+                            <span>⭐ Professional Layout</span>
+                        </div>
+                    </div>
                 </div>
-            </form>
-
-            <!-- Loading -->
-            <div id="loadingDiv" class="hidden text-center py-8">
-                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-                <p class="text-gray-600 font-semibold">Generating your professional CV...</p>
-                <p class="text-gray-400 text-sm">This may take a few seconds</p>
             </div>
         </div>
+    </section>
 
-        <!-- Features -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-            <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center text-white">
-                <i class="fas fa-robot text-3xl mb-2"></i>
-                <h3 class="font-bold">AI-Powered</h3>
-                <p class="text-white/70 text-sm">Smart parsing of your CV content</p>
+    <!-- CV Builder Form -->
+    <section id="cvForm" class="py-16 bg-gray-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Paste Your CV Text</h2>
+                <p class="text-gray-500 mt-2">We'll instantly transform it into a professional PDF</p>
             </div>
-            <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center text-white">
-                <i class="fas fa-palette text-3xl mb-2"></i>
-                <h3 class="font-bold">Professional Design</h3>
-                <p class="text-white/70 text-sm">Clean, modern CV templates</p>
+
+            <div class="glass-card-dark rounded-3xl shadow-2xl p-6 md:p-8">
+                {% if error %}
+                <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                    <p class="text-red-700">{{ error }}</p>
+                </div>
+                {% endif %}
+
+                <form id="cvFormSubmit" action="/generate" method="POST">
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            <i class="fas fa-paste text-purple-600 mr-2"></i> Your CV Text
+                        </label>
+                        <textarea name="cv_text" id="cvText" rows="14"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all duration-200 resize-none font-mono text-sm bg-gray-50"
+                            placeholder="Paste your CV here... Include sections like: EDUCATION, EMPLOYMENT, SKILLS, REFERENCES..."></textarea>
+                        <div class="mt-3 flex flex-wrap gap-3 text-sm text-gray-500">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-purple-400 rounded-full"></span> EDUCATION</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-400 rounded-full"></span> EMPLOYMENT</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-400 rounded-full"></span> SKILLS</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-yellow-400 rounded-full"></span> REFERENCES</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button type="submit" id="generateBtn"
+                            class="flex-1 btn-gradient text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 flex items-center justify-center gap-3 text-lg">
+                            <i class="fas fa-magic"></i> Generate CV
+                        </button>
+                        <button type="button" onclick="loadSample()"
+                            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-4 px-6 rounded-2xl transition-all duration-200 flex items-center justify-center gap-3 text-lg">
+                            <i class="fas fa-file-alt"></i> Load Sample
+                        </button>
+                    </div>
+                </form>
+
+                <div id="loadingDiv" class="hidden text-center py-8">
+                    <div class="spinner mx-auto"></div>
+                    <p class="mt-4 text-gray-600 font-semibold">Generating your professional CV...</p>
+                    <p class="text-gray-400 text-sm">This takes just a few seconds</p>
+                </div>
             </div>
-            <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center text-white">
-                <i class="fas fa-download text-3xl mb-2"></i>
-                <h3 class="font-bold">Instant Download</h3>
-                <p class="text-white/70 text-sm">Get your PDF in seconds</p>
+
+            <!-- Trust Badges -->
+            <div class="flex flex-wrap justify-center items-center gap-8 mt-8">
+                <div class="flex items-center gap-2 text-gray-500">
+                    <i class="fas fa-shield-alt text-green-500"></i>
+                    <span class="text-sm">100% Secure</span>
+                </div>
+                <div class="flex items-center gap-2 text-gray-500">
+                    <i class="fas fa-rocket text-purple-500"></i>
+                    <span class="text-sm">Instant Download</span>
+                </div>
+                <div class="flex items-center gap-2 text-gray-500">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm">Trusted by 10,000+ Professionals</span>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Why Choose CV Pro?</h2>
+                <p class="text-gray-500 mt-2">Everything you need to create a standout CV</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card bg-gray-50 rounded-3xl p-8 text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl mb-4">🤖</div>
+                    <h3 class="text-xl font-bold text-gray-900">AI-Powered Parsing</h3>
+                    <p class="text-gray-500 mt-2">Smart extraction of your education, experience, skills, and more</p>
+                </div>
+                <div class="feature-card bg-gray-50 rounded-3xl p-8 text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl mb-4">🎨</div>
+                    <h3 class="text-xl font-bold text-gray-900">Professional Design</h3>
+                    <p class="text-gray-500 mt-2">Clean, modern layout that impresses recruiters and hiring managers</p>
+                </div>
+                <div class="feature-card bg-gray-50 rounded-3xl p-8 text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center text-white text-2xl mb-4">⚡</div>
+                    <h3 class="text-xl font-bold text-gray-900">Instant Download</h3>
+                    <p class="text-gray-500 mt-2">Get your PDF CV in seconds, no sign-up required</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="gradient-hero py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-white/50 text-sm">
+            <p>© 2026 CV Pro. Built with ❤️ for professionals everywhere.</p>
+        </div>
+    </footer>
 
     <script>
         function loadSample() {
@@ -125,7 +375,7 @@ Email: surbhi.vashisht@hillcrest.ac.ke
 Phone: +254 733 941 398`;
         }
 
-        document.getElementById('cvForm').addEventListener('submit', function(e) {
+        document.getElementById('cvFormSubmit').addEventListener('submit', function(e) {
             const text = document.getElementById('cvText').value.trim();
             if (!text) {
                 e.preventDefault();
@@ -134,7 +384,7 @@ Phone: +254 733 941 398`;
             }
             document.getElementById('loadingDiv').style.display = 'block';
             document.getElementById('generateBtn').disabled = true;
-            document.getElementById('generateBtn').innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i> Processing...';
+            document.getElementById('generateBtn').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
         });
     </script>
 </body>
