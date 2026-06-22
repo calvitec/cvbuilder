@@ -346,6 +346,7 @@ def generate():
         
         cv_data = parse_cv_text(cv_text)
         cv_data['layout'] = layout
+        cv_data['raw_text'] = cv_text
         session_id = uuid.uuid4().hex[:8]
         extracted_data_store[session_id] = cv_data
         
@@ -366,7 +367,8 @@ def generate_pdf(session_id):
         
         pdf_path = create_cv_from_dict(data, layout)
         filename = os.path.basename(pdf_path)
-        extracted_data_store['pdf_path'] = pdf_path
+        # store pdf path under the session data
+        extracted_data_store[session_id]['pdf_path'] = pdf_path
         
         return render_template('download.html', filename=filename, name=data.get('name', 'CV'))
     
@@ -377,10 +379,16 @@ def generate_pdf(session_id):
 @app.route('/download/<filename>')
 def download_cv(filename):
     try:
-        if 'pdf_path' in extracted_data_store:
-            stored_path = extracted_data_store.get('pdf_path')
-            if stored_path and os.path.exists(stored_path):
-                return send_file(stored_path, as_attachment=True, download_name=filename)
+        # Try to find the generated path in stored sessions
+        stored_path = None
+        for val in extracted_data_store.values():
+            if isinstance(val, dict) and val.get('pdf_path'):
+                if os.path.basename(val.get('pdf_path')) == filename:
+                    stored_path = val.get('pdf_path')
+                    break
+
+        if stored_path and os.path.exists(stored_path):
+            return send_file(stored_path, as_attachment=True, download_name=filename)
         
         filepath = os.path.join('generated', filename)
         if os.path.exists(filepath):
