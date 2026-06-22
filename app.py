@@ -85,13 +85,13 @@ def parse_cv_text(text):
         'achievements': [], 'references': []
     }
     
-    # Extract Name
+    # ===== Extract Name =====
     for line in lines[:5]:
         if len(line) < 50 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv', 'resume']):
             info['name'] = line
             break
     
-    # Extract Email & Phone
+    # ===== Extract Email & Phone =====
     email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text)
     if email_match:
         info['email'] = email_match.group()
@@ -103,7 +103,7 @@ def parse_cv_text(text):
             info['phone'] = phone_match.group()
             break
     
-    # Find sections
+    # ===== Find sections =====
     sections = {}
     current_section = None
     section_keywords = {
@@ -127,7 +127,7 @@ def parse_cv_text(text):
         if not found and current_section and line:
             sections[current_section].append(line)
     
-    # Extract Summary
+    # ===== Extract Summary =====
     summary_lines = []
     edu_start = 999
     for i, l in enumerate(lines):
@@ -142,39 +142,102 @@ def parse_cv_text(text):
     if summary_lines:
         info['summary'] = ' '.join(summary_lines)
     
-    # Education
+    # ===== Education =====
     info['education'] = sections.get('education', [])[:10]
     
-    # Experience
+    # ===== Experience =====
     exp_lines = sections.get('experience', [])
     exp_section = []
     current_exp = None
+    
     for line in exp_lines:
         if re.search(r'\d{4}', line):
             if current_exp:
                 exp_section.append(current_exp)
-            parts = re.split(r'[–\-:]', line)
-            date_part = parts[0].strip() if parts else ''
-            rest = parts[-1].strip() if len(parts) > 1 else line
-            if '–' in rest or '-' in rest:
-                rest_parts = re.split(r'[–\-]', rest)
+            
+            line_clean = line
+            
+            # Check for colon separator: "2023 – To Date: Compliance Account Manager – KRA"
+            if ':' in line_clean:
+                parts = line_clean.split(':')
+                if len(parts) >= 2:
+                    date_part = parts[0].strip()
+                    rest = parts[1].strip()
+                    if '–' in rest or '-' in rest:
+                        rest_parts = re.split(r'[–\-]', rest)
+                        if len(rest_parts) >= 2:
+                            title_part = rest_parts[0].strip()
+                            company_part = rest_parts[1].strip()
+                            current_exp = {
+                                'company': company_part,
+                                'title': title_part,
+                                'date': date_part,
+                                'bullets': []
+                            }
+                        else:
+                            current_exp = {
+                                'company': rest,
+                                'title': '',
+                                'date': date_part,
+                                'bullets': []
+                            }
+                    else:
+                        current_exp = {
+                            'company': rest,
+                            'title': '',
+                            'date': date_part,
+                            'bullets': []
+                        }
+                else:
+                    current_exp = {
+                        'company': line_clean,
+                        'title': '',
+                        'date': '',
+                        'bullets': []
+                    }
+            elif '–' in line_clean or '-' in line_clean:
+                parts = re.split(r'[–\-]', line_clean)
+                clean_parts = []
+                for p in parts:
+                    p_clean = p.strip()
+                    if p_clean and not re.search(r'\d{4}', p_clean):
+                        clean_parts.append(p_clean)
+                
+                if len(clean_parts) >= 2:
+                    title_part = clean_parts[0].strip()
+                    company_part = clean_parts[1].strip()
+                    date_match = re.search(r'(\d{4}\s*[–\-]\s*[A-Za-z\s]+)', line_clean)
+                    date_part = date_match.group(1) if date_match else ''
+                    current_exp = {
+                        'company': company_part,
+                        'title': title_part,
+                        'date': date_part,
+                        'bullets': []
+                    }
+                else:
+                    current_exp = {
+                        'company': line_clean,
+                        'title': '',
+                        'date': '',
+                        'bullets': []
+                    }
+            else:
                 current_exp = {
-                    'company': rest_parts[-1].strip() if len(rest_parts) > 1 else rest,
-                    'title': rest_parts[0].strip() if len(rest_parts) > 1 else '',
-                    'date': date_part,
+                    'company': line_clean,
+                    'title': '',
+                    'date': '',
                     'bullets': []
                 }
-            else:
-                current_exp = {'company': rest, 'title': '', 'date': date_part, 'bullets': []}
         elif current_exp and line and len(line) > 3:
             clean_line = re.sub(r'^[•\-]\s*', '', line)
             if clean_line and not any(x in clean_line.lower() for x in ['education', 'skill', 'qualification', 'reference']):
                 current_exp['bullets'].append(clean_line)
+    
     if current_exp:
         exp_section.append(current_exp)
     info['experience'] = exp_section
     
-    # Skills
+    # ===== Skills =====
     skills_lines = sections.get('skills', [])
     skills_found = []
     for line in skills_lines:
@@ -187,7 +250,7 @@ def parse_cv_text(text):
                     skills_found.append(part)
     info['skills'] = skills_found[:15]
     
-    # Achievements
+    # ===== Achievements =====
     ach_lines = sections.get('achievements', [])
     achievements_found = []
     for line in ach_lines:
@@ -196,7 +259,7 @@ def parse_cv_text(text):
             achievements_found.append(clean_line)
     info['achievements'] = achievements_found[:8]
     
-    # References
+    # ===== References =====
     ref_lines = sections.get('references', [])
     references = []
     current_ref = {}
@@ -225,7 +288,7 @@ def parse_cv_text(text):
         references.append(current_ref)
     info['references'] = references[:5]
     
-    # Extract Title
+    # ===== Extract Title =====
     if info['experience'] and info['experience'][0].get('title'):
         info['title'] = info['experience'][0]['title']
     
