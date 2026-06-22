@@ -17,67 +17,34 @@ if not os.path.exists(GENERATED_FOLDER):
 
 extracted_data_store = {}
 
-# 4 Completely Different Layouts with unique designs
+# 4 Layouts
 LAYOUTS = [
-    {
-        'id': 'classic',
-        'name': 'Classic',
-        'icon': 'fa-solid fa-crown',
-        'color': 'from-blue-500 to-indigo-600',
-        'bg': 'bg-gradient-to-br from-blue-50 to-indigo-50',
-        'desc': 'Traditional two-column with sidebar',
-        'structure': 'Sidebar + Main Content'
-    },
-    {
-        'id': 'modern',
-        'name': 'Modern',
-        'icon': 'fa-solid fa-bolt',
-        'color': 'from-purple-500 to-pink-500',
-        'bg': 'bg-gradient-to-br from-purple-50 to-pink-50',
-        'desc': 'Top header with timeline experience',
-        'structure': 'Header + Timeline'
-    },
-    {
-        'id': 'elegant',
-        'name': 'Elegant',
-        'icon': 'fa-solid fa-gem',
-        'color': 'from-amber-500 to-orange-500',
-        'bg': 'bg-gradient-to-br from-amber-50 to-orange-50',
-        'desc': 'Centered with gold accents',
-        'structure': 'Centered + Minimalist'
-    },
-    {
-        'id': 'professional',
-        'name': 'Professional',
-        'icon': 'fa-solid fa-briefcase',
-        'color': 'from-emerald-500 to-teal-500',
-        'bg': 'bg-gradient-to-br from-emerald-50 to-teal-50',
-        'desc': 'Left sidebar corporate style',
-        'structure': 'Corporate + Structured'
-    }
+    {'id': 'classic', 'name': 'Classic', 'icon': 'fa-solid fa-crown', 'color': 'from-blue-500 to-indigo-600', 'bg': 'bg-gradient-to-br from-blue-50 to-indigo-50', 'desc': 'Traditional two-column with sidebar', 'structure': 'Sidebar + Main Content'},
+    {'id': 'modern', 'name': 'Modern', 'icon': 'fa-solid fa-bolt', 'color': 'from-purple-500 to-pink-500', 'bg': 'bg-gradient-to-br from-purple-50 to-pink-50', 'desc': 'Top header with timeline experience', 'structure': 'Header + Timeline'},
+    {'id': 'elegant', 'name': 'Elegant', 'icon': 'fa-solid fa-gem', 'color': 'from-amber-500 to-orange-500', 'bg': 'bg-gradient-to-br from-amber-50 to-orange-50', 'desc': 'Centered with gold accents', 'structure': 'Centered + Minimalist'},
+    {'id': 'professional', 'name': 'Professional', 'icon': 'fa-solid fa-briefcase', 'color': 'from-emerald-500 to-teal-500', 'bg': 'bg-gradient-to-br from-emerald-50 to-teal-50', 'desc': 'Left sidebar corporate style', 'structure': 'Corporate + Structured'}
 ]
 
-# Sample data for preview
 SAMPLE_DATA = {
     'name': 'John Amwayi Ngatia',
     'title': 'Compliance Account Manager',
-    'summary': 'Highly motivated professional with over 5 years of experience in tax administration, revenue management, and financial compliance. Currently pursuing a Master\'s degree at Moi University.',
-    'skills': ['Tax Laws', 'Data Analytics', 'Auditing', 'Customer Service', 'Relationship Building', 'Python', 'SQL'],
+    'summary': 'Highly motivated professional with over 5 years of experience in tax administration, revenue management, and financial compliance.',
+    'skills': ['Tax Laws', 'Data Analytics', 'Auditing', 'Customer Service', 'Relationship Building'],
     'experience': [
-        {'company': 'Kenya Revenue Authority (KRA)', 'title': 'Compliance Account Manager', 'date': '2023 - Present', 'bullets': ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and investigations', 'Prepare detailed reports for management']},
-        {'company': 'Balkan Ltd', 'title': 'Research Associate', 'date': '2020 - 2022', 'bullets': ['Conducted market research and data analysis', 'Prepared comprehensive reports', 'Managed data collection processes']}
+        {'company': 'Kenya Revenue Authority (KRA)', 'title': 'Compliance Account Manager', 'date': '2023 - Present', 'bullets': ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and investigations']},
+        {'company': 'Balkan Ltd', 'title': 'Research Associate', 'date': '2020 - 2022', 'bullets': ['Conducted market research and data analysis', 'Prepared comprehensive reports']}
     ],
-    'education': ['Master\'s Degree, Moi University (2024 - To Date)', 'Bachelor\'s Degree, Kenyatta University (2016 - 2021)'],
-    'references': [
-        {'name': 'Surbhi S. Vashisht', 'position': 'Head Teacher', 'email': 'surbhi@hillcrest.ac.ke', 'phone': '+254 733 941 398'}
-    ],
+    'education': ["Master's Degree, Moi University (2024 - To Date)", "Bachelor's Degree, Kenyatta University (2016 - 2021)"],
+    'references': [{'name': 'Surbhi S. Vashisht', 'position': 'Head Teacher', 'email': 'surbhi@hillcrest.ac.ke', 'phone': '+254 733 941 398'}],
     'phone': '+254 712 345 678',
     'email': 'john.ngatia@email.com'
 }
 
+# ===== THE FIXED PARSER =====
 def parse_cv_text(text):
     """Parse CV text into structured data"""
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    lines = text.split('\n')
+    lines = [line.strip() for line in lines if line.strip()]
     
     info = {
         'name': 'CURRICULUM VITAE', 'title': '', 'email': '', 'phone': '',
@@ -85,13 +52,13 @@ def parse_cv_text(text):
         'achievements': [], 'references': []
     }
     
-    # ===== Extract Name =====
+    # Extract Name
     for line in lines[:5]:
         if len(line) < 50 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv', 'resume']):
             info['name'] = line
             break
     
-    # ===== Extract Email & Phone =====
+    # Extract Email & Phone
     email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text)
     if email_match:
         info['email'] = email_match.group()
@@ -103,14 +70,14 @@ def parse_cv_text(text):
             info['phone'] = phone_match.group()
             break
     
-    # ===== Find sections =====
+    # Find sections
     sections = {}
     current_section = None
     section_keywords = {
-        'education': ['education', 'academic'],
+        'education': ['education'],
         'experience': ['employment', 'experience', 'work'],
         'skills': ['skill'],
-        'achievements': ['qualification', 'additional', 'certification', 'award'],
+        'achievements': ['qualification', 'additional', 'certification'],
         'references': ['reference', 'referee']
     }
     
@@ -127,25 +94,20 @@ def parse_cv_text(text):
         if not found and current_section and line:
             sections[current_section].append(line)
     
-    # ===== Extract Summary =====
+    # Extract Summary
     summary_lines = []
-    edu_start = 999
-    for i, l in enumerate(lines):
-        if 'education' in l.lower():
-            edu_start = i
+    for line in lines:
+        if 'education' in line.lower():
             break
-    for i, line in enumerate(lines):
-        if i == 0:
-            continue
-        if i < edu_start and len(line) > 20 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv']):
+        if len(line) > 20 and not any(x in line.lower() for x in ['curriculum', 'vitae', 'cv']):
             summary_lines.append(line)
     if summary_lines:
-        info['summary'] = ' '.join(summary_lines)
+        info['summary'] = ' '.join(summary_lines[:5])
     
-    # ===== Education =====
+    # Education
     info['education'] = sections.get('education', [])[:10]
     
-    # ===== Experience =====
+    # Experience
     exp_lines = sections.get('experience', [])
     exp_section = []
     current_exp = None
@@ -157,7 +119,6 @@ def parse_cv_text(text):
             
             line_clean = line
             
-            # Check for colon separator: "2023 – To Date: Compliance Account Manager – KRA"
             if ':' in line_clean:
                 parts = line_clean.split(':')
                 if len(parts) >= 2:
@@ -197,11 +158,7 @@ def parse_cv_text(text):
                     }
             elif '–' in line_clean or '-' in line_clean:
                 parts = re.split(r'[–\-]', line_clean)
-                clean_parts = []
-                for p in parts:
-                    p_clean = p.strip()
-                    if p_clean and not re.search(r'\d{4}', p_clean):
-                        clean_parts.append(p_clean)
+                clean_parts = [p.strip() for p in parts if p.strip() and not re.search(r'\d{4}', p)]
                 
                 if len(clean_parts) >= 2:
                     title_part = clean_parts[0].strip()
@@ -230,6 +187,9 @@ def parse_cv_text(text):
                 }
         elif current_exp and line and len(line) > 3:
             clean_line = re.sub(r'^[•\-]\s*', '', line)
+            clean_line = re.sub(r'^•\s*', '', clean_line)
+            clean_line = re.sub(r'^-\s*', '', clean_line)
+            
             if clean_line and not any(x in clean_line.lower() for x in ['education', 'skill', 'qualification', 'reference']):
                 current_exp['bullets'].append(clean_line)
     
@@ -237,7 +197,7 @@ def parse_cv_text(text):
         exp_section.append(current_exp)
     info['experience'] = exp_section
     
-    # ===== Skills =====
+    # Skills
     skills_lines = sections.get('skills', [])
     skills_found = []
     for line in skills_lines:
@@ -246,54 +206,67 @@ def parse_cv_text(text):
             part = part.strip()
             if part and len(part) < 60 and len(part) > 2:
                 part = re.sub(r'^[•\-]\s*', '', part)
+                part = re.sub(r'^•\s*', '', part)
+                part = re.sub(r'^-\s*', '', part)
                 if part and not any(x in part.lower() for x in ['skills', 'abilities']):
                     skills_found.append(part)
     info['skills'] = skills_found[:15]
     
-    # ===== Achievements =====
+    # Achievements
     ach_lines = sections.get('achievements', [])
     achievements_found = []
     for line in ach_lines:
         clean_line = re.sub(r'^[•\-]\s*', '', line)
+        clean_line = re.sub(r'^•\s*', '', clean_line)
         if clean_line and len(clean_line) > 3:
             achievements_found.append(clean_line)
     info['achievements'] = achievements_found[:8]
     
-    # ===== References =====
+    # References
     ref_lines = sections.get('references', [])
     references = []
     current_ref = {}
+    
     for line in ref_lines:
-        if line and not any(x in line.lower() for x in ['email:', 'phone:', 'tel:', 'address']):
-            if len(line) > 5 and not re.match(r'^[\d\-+]', line):
-                if current_ref and current_ref.get('name'):
-                    references.append(current_ref)
-                current_ref = {'name': line, 'position': '', 'email': '', 'phone': ''}
-            elif line and current_ref:
-                email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line)
-                if email_match:
-                    current_ref['email'] = email_match.group()
-                    line = line.replace(email_match.group(), '').strip()
-                    if line and not current_ref['position']:
-                        current_ref['position'] = line
-                phone_match = re.search(r'\+254\s?\d{9}|0\d{9}|07\d{8}|01\d{8}', line)
-                if phone_match:
-                    current_ref['phone'] = phone_match.group()
-                    line = line.replace(phone_match.group(), '').strip()
-                    if line and not current_ref['position']:
-                        current_ref['position'] = line
-                elif line and not current_ref['position']:
-                    current_ref['position'] = line
+        line_clean = line.strip()
+        if not line_clean:
+            continue
+        
+        is_email = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line_clean)
+        is_phone = re.search(r'\+254\s?\d{9}|0\d{9}|07\d{8}|01\d{8}', line_clean)
+        
+        if not is_email and not is_phone and len(line_clean) > 5:
+            if current_ref and current_ref.get('name'):
+                references.append(current_ref)
+            current_ref = {'name': line_clean, 'position': '', 'email': '', 'phone': ''}
+        elif current_ref and current_ref.get('name'):
+            if is_email:
+                current_ref['email'] = is_email.group()
+                line_clean = line_clean.replace(is_email.group(), '').strip()
+                if line_clean and not current_ref['position']:
+                    current_ref['position'] = line_clean
+            elif is_phone:
+                current_ref['phone'] = is_phone.group()
+                line_clean = line_clean.replace(is_phone.group(), '').strip()
+                if line_clean and not current_ref['position']:
+                    current_ref['position'] = line_clean
+            elif not current_ref['position'] and len(line_clean) > 3:
+                current_ref['position'] = line_clean
+    
     if current_ref and current_ref.get('name'):
         references.append(current_ref)
+    
     info['references'] = references[:5]
     
-    # ===== Extract Title =====
-    if info['experience'] and info['experience'][0].get('title'):
-        info['title'] = info['experience'][0]['title']
+    # Extract Title
+    if info['experience'] and len(info['experience']) > 0:
+        first_exp = info['experience'][0]
+        if first_exp.get('title'):
+            info['title'] = first_exp['title']
     
     return info
 
+# ===== Routes =====
 @app.route('/')
 def index():
     return render_template('index.html', layouts=LAYOUTS, sample=SAMPLE_DATA)
@@ -326,7 +299,6 @@ def generate_pdf(session_id):
         data = extracted_data_store[session_id]
         layout = data.get('layout', 'classic')
         
-        # Generate PDF with selected layout
         pdf_path = create_cv_from_dict(data, layout)
         filename = os.path.basename(pdf_path)
         extracted_data_store['pdf_path'] = pdf_path
@@ -339,18 +311,15 @@ def generate_pdf(session_id):
 @app.route('/download/<filename>')
 def download_cv(filename):
     try:
-        # Check stored path
         if 'pdf_path' in extracted_data_store:
             stored_path = extracted_data_store.get('pdf_path')
             if stored_path and os.path.exists(stored_path):
                 return send_file(stored_path, as_attachment=True, download_name=filename)
         
-        # Check generated folder
         filepath = os.path.join('generated', filename)
         if os.path.exists(filepath):
             return send_file(filepath, as_attachment=True, download_name=filename)
         
-        # Check temp directory
         temp_path = os.path.join(tempfile.gettempdir(), filename)
         if os.path.exists(temp_path):
             return send_file(temp_path, as_attachment=True, download_name=filename)
@@ -362,7 +331,6 @@ def download_cv(filename):
 
 @app.route('/api/preview/<layout_id>')
 def preview_layout(layout_id):
-    """Return preview data for a layout"""
     return jsonify(SAMPLE_DATA)
 
 if __name__ == '__main__':
