@@ -17,7 +17,7 @@ if not os.path.exists(GENERATED_FOLDER):
 
 extracted_data_store = {}
 
-# 4 Professional Layouts with Preview Data
+# 4 Completely Different Layouts with unique designs
 LAYOUTS = [
     {
         'id': 'classic',
@@ -25,8 +25,8 @@ LAYOUTS = [
         'icon': 'fa-solid fa-crown',
         'color': 'from-blue-500 to-indigo-600',
         'bg': 'bg-gradient-to-br from-blue-50 to-indigo-50',
-        'desc': 'Traditional professional look',
-        'preview_colors': {'primary': '#1a237e', 'accent': '#1565c0', 'sidebar': '#e8eaf6'}
+        'desc': 'Traditional two-column with sidebar',
+        'structure': 'Sidebar + Main Content'
     },
     {
         'id': 'modern',
@@ -34,8 +34,8 @@ LAYOUTS = [
         'icon': 'fa-solid fa-bolt',
         'color': 'from-purple-500 to-pink-500',
         'bg': 'bg-gradient-to-br from-purple-50 to-pink-50',
-        'desc': 'Clean and contemporary',
-        'preview_colors': {'primary': '#2c3e50', 'accent': '#e74c3c', 'sidebar': '#ecf0f1'}
+        'desc': 'Top header with timeline experience',
+        'structure': 'Header + Timeline'
     },
     {
         'id': 'elegant',
@@ -43,8 +43,8 @@ LAYOUTS = [
         'icon': 'fa-solid fa-gem',
         'color': 'from-amber-500 to-orange-500',
         'bg': 'bg-gradient-to-br from-amber-50 to-orange-50',
-        'desc': 'Sophisticated premium design',
-        'preview_colors': {'primary': '#3d2b3f', 'accent': '#c9a96e', 'sidebar': '#f5f0eb'}
+        'desc': 'Centered with gold accents',
+        'structure': 'Centered + Minimalist'
     },
     {
         'id': 'professional',
@@ -52,8 +52,8 @@ LAYOUTS = [
         'icon': 'fa-solid fa-briefcase',
         'color': 'from-emerald-500 to-teal-500',
         'bg': 'bg-gradient-to-br from-emerald-50 to-teal-50',
-        'desc': 'Corporate executive style',
-        'preview_colors': {'primary': '#004d40', 'accent': '#00897b', 'sidebar': '#e0f2f1'}
+        'desc': 'Left sidebar corporate style',
+        'structure': 'Corporate + Structured'
     }
 ]
 
@@ -62,15 +62,17 @@ SAMPLE_DATA = {
     'name': 'John Amwayi Ngatia',
     'title': 'Compliance Account Manager',
     'summary': 'Highly motivated professional with over 5 years of experience in tax administration, revenue management, and financial compliance. Currently pursuing a Master\'s degree at Moi University.',
-    'skills': ['Tax Laws', 'Data Analytics', 'Auditing', 'Customer Service', 'Relationship Building'],
+    'skills': ['Tax Laws', 'Data Analytics', 'Auditing', 'Customer Service', 'Relationship Building', 'Python', 'SQL'],
     'experience': [
-        {'company': 'Kenya Revenue Authority', 'title': 'Compliance Account Manager', 'date': '2023 - Present', 'bullets': ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and investigations']},
-        {'company': 'Balkan Ltd', 'title': 'Research Associate', 'date': '2020 - 2022', 'bullets': ['Conducted market research and data analysis', 'Prepared comprehensive reports']}
+        {'company': 'Kenya Revenue Authority (KRA)', 'title': 'Compliance Account Manager', 'date': '2023 - Present', 'bullets': ['Manage tax compliance for 150+ taxpayers', 'Conduct tax audits and investigations', 'Prepare detailed reports for management']},
+        {'company': 'Balkan Ltd', 'title': 'Research Associate', 'date': '2020 - 2022', 'bullets': ['Conducted market research and data analysis', 'Prepared comprehensive reports', 'Managed data collection processes']}
     ],
     'education': ['Master\'s Degree, Moi University (2024 - To Date)', 'Bachelor\'s Degree, Kenyatta University (2016 - 2021)'],
     'references': [
-        {'name': 'Surbhi S. Vashisht', 'position': 'Head Teacher', 'email': 'surbhi@hillcrest.ac.ke'}
-    ]
+        {'name': 'Surbhi S. Vashisht', 'position': 'Head Teacher', 'email': 'surbhi@hillcrest.ac.ke', 'phone': '+254 733 941 398'}
+    ],
+    'phone': '+254 712 345 678',
+    'email': 'john.ngatia@email.com'
 }
 
 def parse_cv_text(text):
@@ -260,6 +262,8 @@ def generate_pdf(session_id):
         
         data = extracted_data_store[session_id]
         layout = data.get('layout', 'classic')
+        
+        # Generate PDF with selected layout
         pdf_path = create_cv_from_dict(data, layout)
         filename = os.path.basename(pdf_path)
         extracted_data_store['pdf_path'] = pdf_path
@@ -267,20 +271,23 @@ def generate_pdf(session_id):
         return render_template('download.html', filename=filename, name=data.get('name', 'CV'))
     
     except Exception as e:
-        return render_template('error.html', message=f'Error: {str(e)}')
+        return render_template('error.html', message=f'Error generating PDF: {str(e)}')
 
 @app.route('/download/<filename>')
 def download_cv(filename):
     try:
+        # Check stored path
         if 'pdf_path' in extracted_data_store:
             stored_path = extracted_data_store.get('pdf_path')
             if stored_path and os.path.exists(stored_path):
                 return send_file(stored_path, as_attachment=True, download_name=filename)
         
+        # Check generated folder
         filepath = os.path.join('generated', filename)
         if os.path.exists(filepath):
             return send_file(filepath, as_attachment=True, download_name=filename)
         
+        # Check temp directory
         temp_path = os.path.join(tempfile.gettempdir(), filename)
         if os.path.exists(temp_path):
             return send_file(temp_path, as_attachment=True, download_name=filename)
