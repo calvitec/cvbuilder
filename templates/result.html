@@ -3,58 +3,32 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CV Parsed – CV Pro</title>
+    <title>CV Parsed – CV Pro by Calvin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .glass-card-dark {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-        }
-        .skill-tag {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
-        }
-        .stat-card {
-            transition: all 0.3s ease;
-        }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-8px);
-            }
-        }
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #0c0c1d 0%, #1a1a3e 30%, #2d1b69 60%, #1a1a3e 100%); }
+        .glass-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-card-dark { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
+        .skill-tag { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(102,126,234,0.3); }
+        .stat-card { transition: all 0.3s ease; }
+        .btn-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); transition: all 0.3s ease; }
+        .btn-gradient:hover { transform: scale(1.02); box-shadow: 0 10px 40px rgba(102,126,234,0.4); }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
     </style>
 </head>
 <body class="gradient-bg min-h-screen py-8 px-4">
     <div class="max-w-5xl mx-auto">
         <div class="text-center mb-8">
-            <div class="inline-block bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-4 animate-float">
+            <div class="inline-block glass-card rounded-2xl p-4 mb-4 animate-float">
                 <i class="fas fa-check-circle text-white text-5xl"></i>
             </div>
-            <h1 class="text-3xl md:text-4xl font-extrabold text-white">CV Parsed Successfully!</h1>
-            <p class="text-white/70 text-lg">Review your extracted information, then generate your professional PDF</p>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-white">🎉 CV Parsed Successfully!</h1>
+            <p class="text-white/60 text-lg">Review your information, then generate your professional PDF</p>
         </div>
 
         <div class="glass-card-dark rounded-3xl shadow-2xl p-6 md:p-8">
@@ -78,84 +52,74 @@
                 </div>
             </div>
 
-            <!-- Sections -->
+            <!-- Name -->
             {% if data.name %}
             <div class="bg-gray-50 rounded-xl p-4 mb-3 border-l-4 border-purple-500">
-                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fas fa-user text-purple-600 mr-2"></i>Name</p>
+                <p class="text-xs text-gray-400 font-semibold uppercase"><i class="fas fa-user text-purple-600 mr-2"></i>Name</p>
                 <p class="font-bold text-lg text-gray-800">{{ data.name }}</p>
             </div>
             {% endif %}
 
+            <!-- Summary -->
             {% if data.summary %}
             <div class="bg-gray-50 rounded-xl p-4 mb-3 border-l-4 border-blue-500">
-                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fas fa-align-left text-blue-600 mr-2"></i>Professional Summary</p>
+                <p class="text-xs text-gray-400 font-semibold uppercase"><i class="fas fa-align-left text-blue-600 mr-2"></i>Summary</p>
                 <p class="text-gray-700 text-sm">{{ data.summary[:350] }}{% if data.summary|length > 350 %}...{% endif %}</p>
             </div>
             {% endif %}
 
+            <!-- Skills -->
             {% if data.skills %}
             <div class="bg-gray-50 rounded-xl p-4 mb-3 border-l-4 border-green-500">
-                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fas fa-tools text-green-600 mr-2"></i>Skills ({{ data.skills|length }})</p>
+                <p class="text-xs text-gray-400 font-semibold uppercase"><i class="fas fa-tools text-green-600 mr-2"></i>Skills ({{ data.skills|length }})</p>
                 <div class="flex flex-wrap gap-2 mt-1">
-                    {% for skill in data.skills[:12] %}
+                    {% for skill in data.skills[:15] %}
                     <span class="skill-tag text-white text-xs px-3 py-1 rounded-full">{{ skill }}</span>
                     {% endfor %}
-                    {% if data.skills|length > 12 %}
-                    <span class="text-gray-400 text-xs">+{{ data.skills|length - 12 }} more</span>
-                    {% endif %}
                 </div>
             </div>
             {% endif %}
 
+            <!-- Education -->
             {% if data.education %}
             <div class="bg-gray-50 rounded-xl p-4 mb-3 border-l-4 border-teal-500">
-                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fas fa-graduation-cap text-teal-600 mr-2"></i>Education ({{ data.education|length }})</p>
+                <p class="text-xs text-gray-400 font-semibold uppercase"><i class="fas fa-graduation-cap text-teal-600 mr-2"></i>Education ({{ data.education|length }})</p>
                 <ul class="list-disc list-inside text-gray-700 text-sm">
-                    {% for edu in data.education[:4] %}
-                    <li>{{ edu }}</li>
-                    {% endfor %}
+                    {% for edu in data.education[:5] %}<li>{{ edu }}</li>{% endfor %}
                 </ul>
             </div>
             {% endif %}
 
+            <!-- Experience -->
             {% if data.experience %}
             <div class="bg-gray-50 rounded-xl p-4 mb-3 border-l-4 border-orange-500">
-                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fas fa-briefcase text-orange-600 mr-2"></i>Experience ({{ data.experience|length }})</p>
+                <p class="text-xs text-gray-400 font-semibold uppercase"><i class="fas fa-briefcase text-orange-600 mr-2"></i>Experience ({{ data.experience|length }})</p>
                 {% for exp in data.experience[:3] %}
                 <div class="mt-2 border-t border-gray-200 pt-2 first:border-0 first:pt-0">
                     <p class="font-semibold text-gray-800">{{ exp.company or 'Company' }}</p>
-                    {% if exp.title %}
-                    <p class="text-sm text-orange-600">{{ exp.title }}</p>
-                    {% endif %}
-                    {% if exp.date %}
-                    <p class="text-xs text-gray-400">{{ exp.date }}</p>
-                    {% endif %}
+                    {% if exp.title %}<p class="text-sm text-orange-600">{{ exp.title }}</p>{% endif %}
+                    {% if exp.date %}<p class="text-xs text-gray-400">{{ exp.date }}</p>{% endif %}
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
 
+            <!-- References -->
             {% if data.references %}
             <div class="bg-gray-50 rounded-xl p-4 mb-3 border-l-4 border-pink-500">
-                <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fas fa-address-book text-pink-600 mr-2"></i>References ({{ data.references|length }})</p>
+                <p class="text-xs text-gray-400 font-semibold uppercase"><i class="fas fa-address-book text-pink-600 mr-2"></i>References ({{ data.references|length }})</p>
                 {% for ref in data.references[:3] %}
-                <div class="mt-2 text-sm">
-                    <p class="font-semibold text-gray-800">{{ ref.name or 'Name' }}</p>
-                    {% if ref.position %}
-                    <p class="text-gray-600">{{ ref.position }}</p>
-                    {% endif %}
-                    {% if ref.email %}
-                    <p class="text-gray-400 text-xs">{{ ref.email }}</p>
-                    {% endif %}
-                </div>
+                <div class="mt-2 text-sm"><p class="font-semibold text-gray-800">{{ ref.name or 'Name' }}</p>
+                {% if ref.position %}<p class="text-gray-600">{{ ref.position }}</p>{% endif %}
+                {% if ref.email %}<p class="text-gray-400 text-xs">{{ ref.email }}</p>{% endif %}</div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- Action Buttons -->
+            <!-- Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 mt-6">
                 <a href="{{ url_for('generate_pdf', session_id=session_id) }}"
-                    class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg text-center">
+                    class="flex-1 btn-gradient text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg text-center">
                     <i class="fas fa-file-pdf mr-3"></i> Generate PDF CV
                 </a>
                 <a href="/"
