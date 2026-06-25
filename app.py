@@ -81,13 +81,28 @@ BUNDLES = {
 }
 
 # ============================================
+# CV LAYOUTS (for the builder)
+# ============================================
+LAYOUTS = [
+    {'id': 'classic', 'name': 'Classic', 'icon': 'fa-solid fa-crown', 'color': 'from-blue-500 to-indigo-600', 'desc': 'Traditional two-column with sidebar'},
+    {'id': 'modern', 'name': 'Modern', 'icon': 'fa-solid fa-bolt', 'color': 'from-purple-500 to-pink-500', 'desc': 'Top header with timeline experience'},
+    {'id': 'elegant', 'name': 'Elegant', 'icon': 'fa-solid fa-gem', 'color': 'from-amber-500 to-orange-500', 'desc': 'Centered with gold accents'},
+    {'id': 'professional', 'name': 'Professional', 'icon': 'fa-solid fa-briefcase', 'color': 'from-emerald-500 to-teal-500', 'desc': 'Left sidebar corporate style'}
+]
+
+# ============================================
 # ROUTES
 # ============================================
 
 @app.route('/')
 def index():
-    """Shop homepage"""
+    """Shop Homepage"""
     return render_template('shop.html', products=PRODUCTS, bundles=BUNDLES)
+
+@app.route('/builder')
+def builder():
+    """CV Builder Page"""
+    return render_template('index.html', layouts=LAYOUTS)
 
 @app.route('/product/<product_id>')
 def product_detail(product_id):
@@ -104,7 +119,9 @@ def cart():
     for item in cart_items:
         if item in PRODUCTS:
             total += PRODUCTS[item]['price']
-    return render_template('cart.html', cart_items=cart_items, products=PRODUCTS, total=total)
+        elif item in BUNDLES:
+            total += BUNDLES[item]['price']
+    return render_template('cart.html', cart_items=cart_items, products=PRODUCTS, bundles=BUNDLES, total=total)
 
 @app.route('/add-to-cart/<product_id>', methods=['POST'])
 def add_to_cart(product_id):
