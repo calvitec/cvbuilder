@@ -6,91 +6,57 @@
     <title>Your Bag - Allison Beauty</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .quantity-btn {
-            @apply w-8 h-8 rounded-full bg-gray-100 hover:bg-pink-100 hover:text-pink-600 flex items-center justify-center transition-all duration-200 text-gray-600 text-sm font-medium;
-        }
-        .cart-item {
-            @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 transition-all duration-300 hover:shadow-md;
-        }
-        .remove-btn {
-            @apply text-gray-400 hover:text-red-500 transition-colors duration-200 text-sm;
-        }
-        .checkout-btn {
-            @apply w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold text-lg hover:shadow-lg hover:shadow-pink-500/25 hover:scale-[1.02] transition-all duration-300;
-        }
-        .continue-btn {
-            @apply inline-flex items-center gap-2 text-gray-600 hover:text-pink-600 transition-colors duration-200 font-medium;
-        }
-        .empty-cart {
-            @apply text-center py-16;
-        }
-        .empty-cart-icon {
-            @apply text-6xl text-gray-300 mb-4;
-        }
-    </style>
 </head>
 <body class="bg-gray-50">
 
-    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="{{ url_for('index') }}" class="flex items-center gap-2">
-                <span class="text-2xl font-bold text-gray-900">allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">beauty</span></span>
+            <a href="{{ url_for('index') }}" class="text-2xl font-bold">
+                allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">beauty</span>
             </a>
-            <a href="{{ url_for('index') }}" class="continue-btn">
+            <a href="{{ url_for('index') }}" class="text-gray-600 hover:text-pink-600 transition">
                 <i class="fas fa-arrow-left"></i> Continue Shopping
             </a>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Your Bag</h1>
+        <h1 class="text-3xl font-bold mb-2">Your Bag</h1>
         <p class="text-gray-500 mb-8">{{ total_items }} item{% if total_items != 1 %}s{% endif %} in your bag</p>
 
         {% if cart_items %}
         <div class="grid lg:grid-cols-3 gap-8">
-            <!-- Cart Items -->
             <div class="lg:col-span-2 space-y-4">
                 {% for item in cart_items %}
-                <div class="cart-item" id="item-{{ item.id }}">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6" id="item-{{ item.id }}">
                     <div class="flex gap-4">
-                        <!-- Image -->
-                        <div class="w-24 h-24 md:w-28 md:h-28 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+                        <div class="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
                             <img src="{{ item.image }}" alt="{{ item.name }}" class="w-full h-full object-cover">
                         </div>
-                        
-                        <!-- Details -->
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-start justify-between gap-2">
+                        <div class="flex-1">
+                            <div class="flex justify-between">
                                 <div>
-                                    <h3 class="font-semibold text-gray-900 text-sm md:text-base">{{ item.name }}</h3>
+                                    <h3 class="font-semibold text-gray-900">{{ item.name }}</h3>
                                     {% if item.type == 'bundle' %}
-                                    <span class="text-xs text-purple-600 font-medium bg-purple-50 px-2 py-0.5 rounded-full inline-block mt-1">Bundle</span>
+                                    <span class="text-xs text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">Bundle</span>
                                     {% endif %}
                                     <p class="text-sm text-gray-500 mt-1">${{ "%.2f"|format(item.price) }}</p>
                                 </div>
-                                <button onclick="removeItem('{{ item.id }}')" class="remove-btn">
+                                <button onclick="removeItem('{{ item.id }}')" class="text-gray-400 hover:text-red-500 transition">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
-                            
-                            <!-- Quantity Controls -->
                             <div class="flex items-center gap-3 mt-3">
-                                <button onclick="updateQuantity('{{ item.id }}', 'decrease')" class="quantity-btn">
+                                <button onclick="updateQuantity('{{ item.id }}', 'decrease')" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-pink-100 hover:text-pink-600 flex items-center justify-center transition">
                                     <i class="fas fa-minus text-xs"></i>
                                 </button>
-                                <span class="text-gray-900 font-medium w-8 text-center" id="qty-{{ item.id }}">{{ item.quantity }}</span>
-                                <button onclick="updateQuantity('{{ item.id }}', 'increase')" class="quantity-btn">
+                                <span class="font-medium w-8 text-center" id="qty-{{ item.id }}">{{ item.quantity }}</span>
+                                <button onclick="updateQuantity('{{ item.id }}', 'increase')" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-pink-100 hover:text-pink-600 flex items-center justify-center transition">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                                 <span class="text-sm font-semibold text-gray-900 ml-4" id="item-total-{{ item.id }}">
                                     ${{ "%.2f"|format(item.item_total) }}
                                 </span>
-                                {% if item.type == 'product' and item.stock %}
-                                <span class="text-xs text-gray-400 ml-2">({{ item.stock }} available)</span>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -98,53 +64,45 @@
                 {% endfor %}
             </div>
 
-            <!-- Order Summary -->
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
-                    <h2 class="text-lg font-bold text-gray-900 mb-4">Order Summary</h2>
-                    
+                    <h2 class="text-lg font-bold mb-4">Order Summary</h2>
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="text-gray-900 font-medium" id="subtotal">${{ "%.2f"|format(subtotal) }}</span>
+                            <span class="font-medium" id="subtotal">${{ "%.2f"|format(subtotal) }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Shipping</span>
-                            <span class="text-gray-900 font-medium" id="shipping">
+                            <span id="shipping">
                                 {% if shipping == 0 %}
-                                <span class="text-green-600">FREE</span>
+                                <span class="text-green-600 font-medium">FREE</span>
                                 {% else %}
-                                ${{ "%.2f"|format(shipping) }}
+                                <span class="font-medium">${{ "%.2f"|format(shipping) }}</span>
                                 {% endif %}
                             </span>
                         </div>
-                        <div class="border-t border-gray-200 pt-3 mt-3">
+                        <div class="border-t pt-3 mt-3">
                             <div class="flex justify-between text-lg font-bold">
-                                <span class="text-gray-900">Total</span>
-                                <span class="text-gray-900" id="total">${{ "%.2f"|format(total) }}</span>
+                                <span>Total</span>
+                                <span id="total">${{ "%.2f"|format(total) }}</span>
                             </div>
                         </div>
                     </div>
-
-                    <a href="{{ url_for('checkout') }}" class="checkout-btn block text-center mt-6">
+                    <a href="{{ url_for('checkout') }}" class="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold text-center block mt-6 hover:shadow-lg transition">
                         Proceed to Checkout
                     </a>
-
-                    <p class="text-xs text-gray-400 text-center mt-4">
-                        <i class="fas fa-lock mr-1"></i> Secure checkout
-                    </p>
                 </div>
             </div>
         </div>
         {% else %}
-        <!-- Empty Cart -->
-        <div class="empty-cart">
-            <div class="empty-cart-icon">
+        <div class="text-center py-16">
+            <div class="text-6xl text-gray-300 mb-4">
                 <i class="fas fa-shopping-bag"></i>
             </div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Your bag is empty</h2>
-            <p class="text-gray-500 mb-6">Looks like you haven't added anything to your bag yet.</p>
-            <a href="{{ url_for('index') }}" class="checkout-btn inline-block px-8 py-3 w-auto">
+            <h2 class="text-2xl font-bold mb-2">Your bag is empty</h2>
+            <p class="text-gray-500 mb-6">Looks like you haven't added anything yet.</p>
+            <a href="{{ url_for('index') }}" class="inline-block px-8 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold hover:shadow-lg transition">
                 <i class="fas fa-shopping-bag mr-2"></i> Start Shopping
             </a>
         </div>
@@ -152,68 +110,62 @@
     </main>
 
     <script>
-        function updateQuantity(itemId, action) {
-            fetch(`/update-cart/${itemId}/${action}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update quantity
-                    const qtyElement = document.getElementById(`qty-${itemId}`);
-                    if (data.quantity === 0) {
-                        // Remove item from DOM
-                        const itemElement = document.getElementById(`item-${itemId}`);
-                        if (itemElement) itemElement.remove();
-                        location.reload(); // Reload to update empty state
-                    } else {
-                        qtyElement.textContent = data.quantity;
-                        
-                        // Update item total
-                        const itemTotal = document.getElementById(`item-total-${itemId}`);
-                        if (itemTotal) {
-                            itemTotal.textContent = `$${data.item_total.toFixed(2)}`;
-                        }
-                        
-                        // Update summary
-                        document.getElementById('subtotal').textContent = `$${data.subtotal.toFixed(2)}`;
-                        const shippingElement = document.getElementById('shipping');
-                        if (data.shipping === 0) {
-                            shippingElement.innerHTML = '<span class="text-green-600">FREE</span>';
-                        } else {
-                            shippingElement.textContent = `$${data.shipping.toFixed(2)}`;
-                        }
-                        document.getElementById('total').textContent = `$${data.total.toFixed(2)}`;
-                        
-                        // Update cart count in header
-                        const cartCount = document.querySelector('.cart-count');
-                        if (cartCount) cartCount.textContent = data.total_items;
-                    }
-                } else {
-                    alert(data.message || 'Error updating cart');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        function removeItem(itemId) {
-            if (!confirm('Remove this item from your bag?')) return;
-            
-            fetch(`/remove-from-cart/${itemId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+    function updateQuantity(itemId, action) {
+        fetch(`/update-cart/${itemId}/${action}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const qtyElement = document.getElementById(`qty-${itemId}`);
+                if (data.quantity === 0) {
                     location.reload();
                 } else {
-                    alert(data.message || 'Error removing item');
+                    qtyElement.textContent = data.quantity;
+                    const itemTotal = document.getElementById(`item-total-${itemId}`);
+                    if (itemTotal) {
+                        itemTotal.textContent = `$${data.item_total.toFixed(2)}`;
+                    }
+                    document.getElementById('subtotal').textContent = `$${data.subtotal.toFixed(2)}`;
+                    const shippingEl = document.getElementById('shipping');
+                    if (data.shipping === 0) {
+                        shippingEl.innerHTML = '<span class="text-green-600 font-medium">FREE</span>';
+                    } else {
+                        shippingEl.innerHTML = `<span class="font-medium">$${data.shipping.toFixed(2)}</span>`;
+                    }
+                    document.getElementById('total').textContent = `$${data.total.toFixed(2)}`;
                 }
-            })
-            .catch(error => console.error('Error:', error));
-        }
+            } else {
+                alert(data.message || 'Error updating cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Something went wrong. Please try again.');
+        });
+    }
+
+    function removeItem(itemId) {
+        if (!confirm('Remove this item from your bag?')) return;
+        fetch(`/remove-from-cart/${itemId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Error removing item');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Something went wrong. Please try again.');
+        });
+    }
     </script>
+
 </body>
 </html>
