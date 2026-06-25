@@ -202,16 +202,34 @@ BUNDLES = {
 @app.route('/')
 def index():
     """Allison Beauty Homepage"""
-    best_sellers = [p for p in PRODUCTS.values() if p.get('badge') == 'Best Seller']
-    new_arrivals = [p for p in PRODUCTS.values() if p.get('badge') == 'New']
-    trending = [p for p in PRODUCTS.values() if p.get('badge') == 'Trending']
+    # Get products by badge
+    best_sellers = []
+    new_arrivals = []
+    trending = []
+    
+    for product in PRODUCTS.values():
+        if product.get('badge') == 'Best Seller':
+            best_sellers.append(product)
+        elif product.get('badge') == 'New':
+            new_arrivals.append(product)
+        elif product.get('badge') == 'Trending':
+            trending.append(product)
+    
+    # If no products in a category, add some defaults
+    if not best_sellers:
+        best_sellers = list(PRODUCTS.values())[:4]
+    if not new_arrivals:
+        new_arrivals = list(PRODUCTS.values())[2:6]
+    if not trending:
+        trending = list(PRODUCTS.values())[4:8]
     
     return render_template('shop.html', 
         products=PRODUCTS, 
         bundles=BUNDLES, 
         best_sellers=best_sellers,
         new_arrivals=new_arrivals,
-        trending=trending
+        trending=trending,
+        all_products=PRODUCTS
     )
 
 @app.route('/product/<product_id>')
@@ -294,11 +312,23 @@ def checkout():
     total = 0
     for item_id in cart_items:
         if item_id in PRODUCTS:
-            cart_data.append({'id': item_id, 'name': PRODUCTS[item_id]['name'], 'price': PRODUCTS[item_id]['price'], 'image': PRODUCTS[item_id]['image']})
-            total += PRODUCTS[item_id]['price']
+            product = PRODUCTS[item_id]
+            cart_data.append({
+                'id': item_id, 
+                'name': product['name'], 
+                'price': product['price'], 
+                'image': product['image']
+            })
+            total += product['price']
         elif item_id in BUNDLES:
-            cart_data.append({'id': item_id, 'name': BUNDLES[item_id]['name'], 'price': BUNDLES[item_id]['price'], 'image': BUNDLES[item_id]['image']})
-            total += BUNDLES[item_id]['price']
+            bundle = BUNDLES[item_id]
+            cart_data.append({
+                'id': item_id, 
+                'name': bundle['name'], 
+                'price': bundle['price'], 
+                'image': bundle['image']
+            })
+            total += bundle['price']
     
     return render_template('checkout.html', cart_items=cart_data, total=total)
 
