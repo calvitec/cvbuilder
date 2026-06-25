@@ -127,6 +127,19 @@
             border-color: rgba(233,30,99,0.08);
         }
         
+        /* ===== PRODUCT IMAGE ===== */
+        .product-image {
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+        }
+        .product-image-container {
+            overflow: hidden;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f8f9fa, #f1f3f5);
+        }
+        
         /* ===== BADGES ===== */
         .badge-best { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
         .badge-new { background: linear-gradient(135deg, #48dbfb, #0abde3); }
@@ -161,9 +174,6 @@
         
         .animate-float-slow { animation: floatSlow 8s ease-in-out infinite; }
         @keyframes floatSlow { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
-        
-        .animate-float-fast { animation: floatFast 4s ease-in-out infinite; }
-        @keyframes floatFast { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
         
         .fade-slide { opacity: 0; transform: translateY(30px); animation: fadeSlide 0.8s ease-out forwards; }
         @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
@@ -423,9 +433,14 @@
                 </div>
                 <div class="relative animate-float hidden lg:block">
                     <div class="grid grid-cols-2 gap-5">
-                        <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                            <span class="text-7xl block mb-3">✨</span>
-                            <p class="font-bold text-gray-800 text-xl">Glow Serum</p>
+                        <!-- Hero Product 1 -->
+                        <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                            <div class="relative w-full h-48 rounded-xl overflow-hidden bg-gray-100 mb-4">
+                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" 
+                                     alt="Glow Serum" 
+                                     class="w-full h-full object-cover">
+                            </div>
+                            <p class="font-bold text-gray-800 text-lg">Glow Serum</p>
                             <p class="text-gray-400 text-sm">Vitamin C + Hyaluronic</p>
                             <div class="flex items-center gap-2 mt-3">
                                 <span class="text-2xl font-bold text-gray-800">$34.99</span>
@@ -435,9 +450,14 @@
                                 <i class="fas fa-plus mr-2"></i> Add to Bag
                             </button>
                         </div>
-                        <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/30 mt-10 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                            <span class="text-7xl block mb-3">🌙</span>
-                            <p class="font-bold text-gray-800 text-xl">Retinol Night</p>
+                        <!-- Hero Product 2 -->
+                        <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 mt-10 hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                            <div class="relative w-full h-48 rounded-xl overflow-hidden bg-gray-100 mb-4">
+                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop" 
+                                     alt="Retinol Night" 
+                                     class="w-full h-full object-cover">
+                            </div>
+                            <p class="font-bold text-gray-800 text-lg">Retinol Night</p>
                             <p class="text-gray-400 text-sm">Anti-Aging Treatment</p>
                             <div class="flex items-center gap-2 mt-3">
                                 <span class="text-2xl font-bold text-gray-800">$42.99</span>
@@ -495,7 +515,13 @@
                         {% elif product.badge == 'Trending' %}
                         <span class="absolute top-3 left-3 badge-trending text-white text-xs font-bold px-3 py-1.5 rounded-full">🔥 Trending</span>
                         {% endif %}
-                        <div class="text-7xl mb-4 mt-6">{{ product.image }}</div>
+                        
+                        <!-- REAL PRODUCT IMAGE -->
+                        <div class="product-image-container relative w-full h-64 mb-4">
+                            <img src="{{ product.image }}" alt="{{ product.name }}" 
+                                 class="product-image w-full h-full object-cover">
+                        </div>
+                        
                         <h3 class="font-bold text-gray-800 text-lg">{{ product.name }}</h3>
                         <p class="text-gray-400 text-sm mt-2">{{ product.description[:45] }}...</p>
                         <div class="flex items-center justify-center gap-1 mt-3 text-sm">
@@ -522,7 +548,7 @@
     </section>
 
     <!-- ===== ALL PRODUCTS ===== -->
-    <section class="py-20 px-4 bg-gray-50">
+    <section id="new" class="py-20 px-4 bg-gray-50">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-14">
                 <span class="text-pink-500 text-sm font-semibold tracking-[0.2em] uppercase">Shop All</span>
@@ -532,7 +558,11 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {% for id, product in all_products.items() %}
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <div class="text-6xl mb-4">{{ product.image }}</div>
+                    <!-- REAL PRODUCT IMAGE -->
+                    <div class="product-image-container relative w-full h-56 mb-4">
+                        <img src="{{ product.image }}" alt="{{ product.name }}" 
+                             class="product-image w-full h-full object-cover">
+                    </div>
                     <h3 class="font-bold text-gray-800 text-sm">{{ product.name }}</h3>
                     <p class="text-gray-400 text-xs mt-1">{{ product.category }}</p>
                     <div class="flex items-center justify-center gap-1 mt-2 text-sm">
@@ -570,11 +600,17 @@
                     {% if bundle.popular %}
                     <span class="text-xs font-bold text-yellow-600 bg-yellow-50 px-3 py-1.5 rounded-full inline-block mb-2 border border-yellow-200">⭐ Best Value</span>
                     {% endif %}
-                    <div class="text-6xl mb-3">{{ bundle.image }}</div>
+                    
+                    <!-- BUNDLE IMAGE -->
+                    <div class="product-image-container relative w-full h-48 mb-4">
+                        <img src="{{ bundle.image }}" alt="{{ bundle.name }}" 
+                             class="product-image w-full h-full object-cover">
+                    </div>
+                    
                     <h3 class="font-bold text-gray-800 text-lg">{{ bundle.name }}</h3>
                     <div class="flex justify-center gap-1 my-3">
                         {% for pid in bundle.products %}
-                        <span class="text-3xl">{{ all_products[pid].image if pid in all_products else '📦' }}</span>
+                        <span class="text-2xl">📦</span>
                         {% endfor %}
                     </div>
                     <p class="text-gray-400 text-sm">{{ bundle.products|length }} Products Included</p>
