@@ -18,19 +18,66 @@
         .gradient-hero { background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 25%, #e8eaf6 55%, #e0f7fa 85%, #fce4ec 100%); position: relative; overflow: hidden; }
         .glass-nav { background: rgba(255,255,255,0.88); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.2); transition: all 0.3s ease; }
         .glass-nav.scrolled { background: rgba(255,255,255,0.96); box-shadow: 0 4px 40px rgba(0,0,0,0.08); }
-        .btn-primary { background: linear-gradient(135deg, #e91e63 0%, #9c27b0 100%); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: none; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #e91e63 0%, #9c27b0 100%); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; border: none; cursor: pointer; }
         .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 50px rgba(233,30,99,0.35); }
-        .product-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border: 1px solid rgba(0,0,0,0.04); background: white; position: relative; overflow: visible; }
-        .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #e91e63, #9c27b0, #f6c445); opacity: 0; transition: opacity 0.4s ease; z-index: 5; }
+        .btn-primary::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%); transform: rotate(45deg) translateX(-100%); transition: all 0.6s ease; }
+        .btn-primary:hover::after { transform: rotate(45deg) translateX(100%); }
+
+        /* ── PRODUCT CARD ── */
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.04);
+            background: white;
+            position: relative;   /* ← required for badge absolute positioning */
+            overflow: visible;    /* ← allow badge to sit above, not clip image */
+        }
+        .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #e91e63, #9c27b0, #f6c445); opacity: 0; transition: opacity 0.4s ease; border-radius: 24px 24px 0 0; }
         .product-card:hover::before { opacity: 1; }
         .product-card:hover { transform: translateY(-12px) scale(1.01); box-shadow: 0 30px 70px rgba(233,30,99,0.10); border-color: rgba(233,30,99,0.08); }
-        .product-image { transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 100%; height: 100%; object-fit: cover; }
+
+        /* ── IMAGE CONTAINER ── keeps images inside, badge sits outside ── */
+        .product-image-wrapper {
+            position: relative;          /* badge anchors here */
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .product-image-container {
+            overflow: hidden;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f8f9fa, #f1f3f5);
+            width: 100%;
+            height: 220px;               /* fixed height so images never collapse */
+        }
+        .product-image-container.tall { height: 260px; }
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
         .product-card:hover .product-image { transform: scale(1.08); }
-        .product-image-container { overflow: hidden; border-radius: 16px; background: linear-gradient(135deg, #f8f9fa, #f1f3f5); position: relative; }
-        .badge-best { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
-        .badge-new { background: linear-gradient(135deg, #48dbfb, #0abde3); }
-        .badge-trending { background: linear-gradient(135deg, #f6c445, #f093fb); }
-        .badge-editor { background: linear-gradient(135deg, #7c4dff, #651fff); }
+
+        /* ── BADGE — sits above the image, not overlapping product text ── */
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 999px;
+            color: white;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .badge-best    { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .badge-new     { background: linear-gradient(135deg, #48dbfb, #0abde3); }
+        .badge-trending{ background: linear-gradient(135deg, #f6c445, #f093fb); }
+        .badge-editor  { background: linear-gradient(135deg, #7c4dff, #651fff); }
+
         .cart-count { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; border-radius: 50%; padding: 2px 8px; font-size: 10px; font-weight: 700; min-width: 20px; text-align: center; box-shadow: 0 2px 10px rgba(233,30,99,0.3); }
         .section-title { font-family: 'Playfair Display', serif; }
         .hero-title { font-family: 'Playfair Display', serif; font-size: 4.5rem; line-height: 1.05; }
@@ -69,6 +116,9 @@
         .footer-link { color: rgba(255,255,255,0.4); transition: all 0.3s ease; text-decoration: none; font-size: 0.875rem; }
         .footer-link:hover { color: white; transform: translateX(4px); }
         .hero-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; }
+
+        /* fallback gradient shown while image loads */
+        .img-fallback { background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%); }
     </style>
 </head>
 <body>
@@ -80,7 +130,7 @@
     </div>
 
     <!-- ===== NAVIGATION ===== -->
-    <nav class="glass-nav fixed top-0 left-0 right-0 z-50" id="navbar">
+    <nav class="glass-nav fixed top-8 left-0 right-0 z-50" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <a href="/" class="flex items-center gap-3 group">
@@ -91,7 +141,7 @@
                     </div>
                 </a>
                 <div class="hidden lg:flex items-center gap-8">
-                    <a href="#shop" class="nav-link active">Shop</a>
+                    <a href="#shop" class="nav-link">Shop</a>
                     <a href="#bundles" class="nav-link">Bundles</a>
                     <a href="#new" class="nav-link">New</a>
                     <a href="#about" class="nav-link">About</a>
@@ -99,7 +149,10 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <button class="hidden md:block text-gray-400 hover:text-pink-500 transition text-lg"><i class="fas fa-search"></i></button>
-                    <button class="hidden md:block text-gray-400 hover:text-pink-500 transition text-lg relative"><i class="far fa-heart"></i><span class="absolute -top-1 -right-2 text-[8px] bg-pink-500 text-white rounded-full px-1.5 py-0.5">3</span></button>
+                    <button class="hidden md:block text-gray-400 hover:text-pink-500 transition text-lg relative">
+                        <i class="far fa-heart"></i>
+                        <span class="absolute -top-1 -right-2 text-[8px] bg-pink-500 text-white rounded-full px-1.5 py-0.5 leading-none">3</span>
+                    </button>
                     <a href="/cart" class="relative text-gray-700 hover:text-pink-500 transition text-xl">
                         <i class="fas fa-shopping-bag"></i>
                         <span class="cart-count absolute -top-2 -right-3 text-xs" id="cartCount">0</span>
@@ -111,55 +164,64 @@
     </nav>
 
     <!-- ===== HERO SECTION ===== -->
-    <section class="gradient-hero min-h-[85vh] flex items-center pt-24 relative">
+    <section class="gradient-hero min-h-[85vh] flex items-center pt-36 relative">
         <div class="hero-blob w-[600px] h-[600px] bg-pink-300 top-[-200px] right-[-100px]"></div>
         <div class="hero-blob w-[400px] h-[400px] bg-purple-300 bottom-[-100px] left-[-100px]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="fade-slide">
-                    <div class="inline-flex items-center gap-2 bg-white/80 px-5 py-2.5 rounded-full text-sm text-pink-600 font-semibold mb-6 border border-pink-100 shadow-sm">
+                    <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-5 py-2.5 rounded-full text-sm text-pink-600 font-semibold mb-6 border border-pink-100 shadow-sm">
                         <span class="w-2.5 h-2.5 bg-pink-500 rounded-full animate-pulse"></span> Discover Your Glow
                     </div>
-                    <h1 class="hero-title text-gray-800">Radiant <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-500 to-pink-400">Skin Starts Here</span></h1>
-                    <p class="text-gray-500 text-lg mt-4 max-w-md">Clean, effective skincare formulated with love. Every product is dermatologist-tested, cruelty-free, and made to make you glow.</p>
+                    <h1 class="hero-title text-gray-800 leading-[1.05]">Radiant <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-500 to-pink-400">Skin Starts Here</span></h1>
+                    <p class="text-gray-500 text-lg mt-4 max-w-md leading-relaxed">Clean, effective skincare formulated with love. Every product is dermatologist-tested, cruelty-free, and made to make you glow.</p>
                     <div class="flex flex-wrap gap-4 mt-8">
                         <a href="#shop" class="px-8 py-4 rounded-full btn-primary text-white font-bold shadow-lg flex items-center gap-2"><i class="fas fa-shopping-bag"></i> Shop Now</a>
                         <a href="#bundles" class="px-8 py-4 rounded-full border-2 border-gray-200 text-gray-600 font-bold hover:border-pink-400 hover:text-pink-500 transition-all flex items-center gap-2"><i class="fas fa-gift"></i> View Bundles</a>
                     </div>
-                    <div class="flex items-center gap-8 mt-8 text-gray-400 text-sm">
+                    <div class="flex flex-wrap items-center gap-6 mt-8 text-gray-400 text-sm">
                         <div class="flex items-center gap-2"><span class="text-2xl">🌟</span> 50K+ Happy Customers</div>
                         <div class="flex items-center gap-2"><span class="text-2xl">🌿</span> Cruelty-Free</div>
                         <div class="flex items-center gap-2"><span class="text-2xl">💧</span> Dermatologist Tested</div>
                     </div>
                 </div>
+                <!-- Hero product cards -->
                 <div class="relative animate-float hidden lg:block">
                     <div class="grid grid-cols-2 gap-5">
-                        <div class="bg-white/85 rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                            <div class="product-image-container w-full h-48 rounded-xl mb-4">
-                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" alt="Glow Serum" class="product-image">
+                        <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-5 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                            <div class="product-image-container img-fallback mb-4">
+                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&auto=format"
+                                     alt="Glow Serum"
+                                     class="product-image"
+                                     loading="lazy"
+                                     onerror="this.style.display='none'">
                             </div>
-                            <p class="font-bold text-gray-800 text-lg">Glow Serum</p>
+                            <p class="font-bold text-gray-800">Glow Serum</p>
                             <p class="text-gray-400 text-sm">Vitamin C + Hyaluronic</p>
-                            <div class="flex items-center gap-2 mt-3">
-                                <span class="text-2xl font-bold text-gray-800">$34.99</span>
-                                <span class="text-xs bg-green-100 text-green-600 px-2.5 py-1 rounded-full font-semibold">Best Seller</span>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="text-xl font-bold text-gray-800">$34.99</span>
+                                <span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-semibold">Best Seller</span>
                             </div>
-                            <button onclick="addToCart('glow_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                            <button onclick="addToCart('glow_serum')" class="mt-3 w-full py-3 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                         </div>
-                        <div class="bg-white/85 rounded-3xl p-6 shadow-2xl border border-white/30 mt-10 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                            <div class="product-image-container w-full h-48 rounded-xl mb-4">
-                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop" alt="Retinol Night" class="product-image">
+                        <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-5 shadow-2xl border border-white/30 mt-10 hover:shadow-3xl transition-all duration-300 hover:scale-105">
+                            <div class="product-image-container img-fallback mb-4">
+                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format"
+                                     alt="Retinol Night"
+                                     class="product-image"
+                                     loading="lazy"
+                                     onerror="this.style.display='none'">
                             </div>
-                            <p class="font-bold text-gray-800 text-lg">Retinol Night</p>
+                            <p class="font-bold text-gray-800">Retinol Night</p>
                             <p class="text-gray-400 text-sm">Anti-Aging Treatment</p>
-                            <div class="flex items-center gap-2 mt-3">
-                                <span class="text-2xl font-bold text-gray-800">$42.99</span>
-                                <span class="text-xs bg-purple-100 text-purple-600 px-2.5 py-1 rounded-full font-semibold">Editor's Choice</span>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="text-xl font-bold text-gray-800">$42.99</span>
+                                <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-semibold">Editor's Choice</span>
                             </div>
-                            <button onclick="addToCart('retinol_night')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                            <button onclick="addToCart('retinol_night')" class="mt-3 w-full py-3 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                         </div>
                     </div>
-                    <div class="absolute -bottom-6 -left-6 bg-white/90 rounded-2xl px-6 py-4 shadow-xl border border-white/50">
+                    <div class="absolute -bottom-6 -left-6 bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-xl border border-white/50">
                         <div class="flex items-center gap-2"><span class="text-yellow-400 text-sm">★★★★★</span><span class="text-gray-800 font-bold text-sm">4.9</span><span class="text-gray-400 text-xs">(50K+ reviews)</span></div>
                         <p class="text-gray-600 text-sm font-medium">"Best skincare I've ever used!"</p>
                     </div>
@@ -192,69 +254,83 @@
                 <p class="text-gray-400 mt-3 max-w-md mx-auto">The products our customers can't stop raving about</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Product 1: Glow Serum -->
-                <div class="product-card rounded-3xl p-6 text-center" style="position:relative;">
-                    <span class="absolute top-3 left-3 badge-best text-white text-xs font-bold px-3 py-1.5 rounded-full z-20">🏆 Best Seller</span>
-                    <div class="product-image-container w-full h-64 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" alt="Glow Serum" class="product-image">
+
+                <!-- Glow Serum -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <div class="product-image-wrapper">
+                        <span class="product-badge badge-best">🏆 Best Seller</span>
+                        <div class="product-image-container tall img-fallback">
+                            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&auto=format"
+                                 alt="Glow Serum" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Glow Repair Serum</h3>
-                    <p class="text-gray-400 text-sm mt-2">Powerful vitamin C serum for radiant skin...</p>
+                    <p class="text-gray-400 text-sm mt-2">Powerful vitamin C serum for radiant skin</p>
                     <div class="flex items-center justify-center gap-1 mt-3 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
                         <span class="text-gray-400 text-xs ml-1">(234)</span>
                     </div>
                     <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$34.99</span></div>
-                    <button onclick="addToCart('glow_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('glow_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 2: Retinol Night -->
-                <div class="product-card rounded-3xl p-6 text-center" style="position:relative;">
-                    <span class="absolute top-3 left-3 badge-editor text-white text-xs font-bold px-3 py-1.5 rounded-full z-20">⭐ Editor's Choice</span>
-                    <div class="product-image-container w-full h-64 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop" alt="Retinol Night" class="product-image">
+                <!-- Retinol Night -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <div class="product-image-wrapper">
+                        <span class="product-badge badge-editor">✨ Editor's Choice</span>
+                        <div class="product-image-container tall img-fallback">
+                            <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format"
+                                 alt="Retinol Night" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Retinol Night Treatment</h3>
-                    <p class="text-gray-400 text-sm mt-2">Advanced retinol for overnight skin renewal...</p>
+                    <p class="text-gray-400 text-sm mt-2">Advanced retinol for overnight skin renewal</p>
                     <div class="flex items-center justify-center gap-1 mt-3 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
                         <span class="text-gray-400 text-xs ml-1">(312)</span>
                     </div>
                     <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$42.99</span></div>
-                    <button onclick="addToCart('retinol_night')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('retinol_night')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 3: Niacinamide -->
-                <div class="product-card rounded-3xl p-6 text-center" style="position:relative;">
-                    <span class="absolute top-3 left-3 badge-best text-white text-xs font-bold px-3 py-1.5 rounded-full z-20">🏆 Best Seller</span>
-                    <div class="product-image-container w-full h-64 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop" alt="Niacinamide" class="product-image">
+                <!-- Niacinamide -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <div class="product-image-wrapper">
+                        <span class="product-badge badge-best">🏆 Best Seller</span>
+                        <div class="product-image-container tall img-fallback">
+                            <img src="https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop&auto=format"
+                                 alt="Niacinamide" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Niacinamide Serum</h3>
-                    <p class="text-gray-400 text-sm mt-2">Brightening serum with 10% niacinamide...</p>
+                    <p class="text-gray-400 text-sm mt-2">Brightening serum with 10% niacinamide</p>
                     <div class="flex items-center justify-center gap-1 mt-3 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
                         <span class="text-gray-400 text-xs ml-1">(203)</span>
                     </div>
                     <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$29.99</span></div>
-                    <button onclick="addToCart('niacinamide')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('niacinamide')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 4: Eye Cream -->
-                <div class="product-card rounded-3xl p-6 text-center" style="position:relative;">
-                    <span class="absolute top-3 left-3 badge-trending text-white text-xs font-bold px-3 py-1.5 rounded-full z-20">🔥 Trending</span>
-                    <div class="product-image-container w-full h-64 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228454-1243a6c2f0c5?w=400&h=400&fit=crop" alt="Eye Cream" class="product-image">
+                <!-- Eye Cream -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <div class="product-image-wrapper">
+                        <span class="product-badge badge-trending">🔥 Trending</span>
+                        <div class="product-image-container tall img-fallback">
+                            <img src="https://images.unsplash.com/photo-1556228454-1243a6c2f0c5?w=400&h=400&fit=crop&auto=format"
+                                 alt="Eye Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Brightening Eye Cream</h3>
-                    <p class="text-gray-400 text-sm mt-2">Targets dark circles, puffiness, and fine lines...</p>
+                    <p class="text-gray-400 text-sm mt-2">Targets dark circles, puffiness, and fine lines</p>
                     <div class="flex items-center justify-center gap-1 mt-3 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
                         <span class="text-gray-400 text-xs ml-1">(145)</span>
                     </div>
                     <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$32.99</span></div>
-                    <button onclick="addToCart('eye_cream')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('eye_cream')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
+
             </div>
         </div>
     </section>
@@ -268,89 +344,97 @@
                 <p class="text-gray-400 mt-3">Every product designed for your best skin</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Product 5: Hydrating Cream -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container w-full h-56 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop" alt="Hydrating Cream" class="product-image">
+
+                <!-- Hydrating Cream -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container img-fallback mb-4">
+                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop&auto=format"
+                             alt="Hydrating Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm">Hydrating Moisture Cream</h3>
+                    <h3 class="font-bold text-gray-800">Hydrating Moisture Cream</h3>
                     <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
-                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
                     </div>
                     <div class="mt-3"><span class="text-xl font-bold text-gray-800">$28.99</span></div>
-                    <button onclick="addToCart('hydrating_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('hydrating_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 6: Sunscreen -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container w-full h-56 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop" alt="Sunscreen" class="product-image">
+                <!-- Sunscreen -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container img-fallback mb-4">
+                        <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop&auto=format"
+                             alt="Sunscreen" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm">SPF 50 Sunscreen</h3>
+                    <h3 class="font-bold text-gray-800">SPF 50 Sunscreen</h3>
                     <p class="text-gray-400 text-xs mt-1">Sun Care</p>
-                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
                     </div>
                     <div class="mt-3"><span class="text-xl font-bold text-gray-800">$24.99</span></div>
-                    <button onclick="addToCart('sunscreen_spf')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('sunscreen_spf')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 7: Face Mask -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container w-full h-56 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop" alt="Face Mask" class="product-image">
+                <!-- Face Mask -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container img-fallback mb-4">
+                        <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop&auto=format"
+                             alt="Face Mask" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm">Detox Clay Mask</h3>
+                    <h3 class="font-bold text-gray-800">Detox Clay Mask</h3>
                     <p class="text-gray-400 text-xs mt-1">Masks</p>
-                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
                     </div>
                     <div class="mt-3"><span class="text-xl font-bold text-gray-800">$19.99</span></div>
-                    <button onclick="addToCart('face_mask')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('face_mask')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 8: Cleansing Balm -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container w-full h-56 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop" alt="Cleansing Balm" class="product-image">
+                <!-- Cleansing Balm -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container img-fallback mb-4">
+                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop&auto=format"
+                             alt="Cleansing Balm" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm">Cleansing Balm</h3>
+                    <h3 class="font-bold text-gray-800">Cleansing Balm</h3>
                     <p class="text-gray-400 text-xs mt-1">Cleansers</p>
-                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
                     </div>
                     <div class="mt-3"><span class="text-xl font-bold text-gray-800">$22.99</span></div>
-                    <button onclick="addToCart('cleansing_balm')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('cleansing_balm')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 9: Toner -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container w-full h-56 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop" alt="Toner" class="product-image">
+                <!-- Toner -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container img-fallback mb-4">
+                        <img src="https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop&auto=format"
+                             alt="Toner" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm">Hydrating Facial Toner</h3>
+                    <h3 class="font-bold text-gray-800">Hydrating Facial Toner</h3>
                     <p class="text-gray-400 text-xs mt-1">Toners</p>
-                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
                     </div>
                     <div class="mt-3"><span class="text-xl font-bold text-gray-800">$18.99</span></div>
-                    <button onclick="addToCart('toner')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('toner')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                 </div>
 
-                <!-- Product 10: Peptide Cream -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container w-full h-56 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop" alt="Peptide Cream" class="product-image">
+                <!-- Peptide Cream -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container img-fallback mb-4">
+                        <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop&auto=format"
+                             alt="Peptide Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm">Peptide Firming Cream</h3>
+                    <h3 class="font-bold text-gray-800">Peptide Firming Cream</h3>
                     <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
-                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
                     </div>
                     <div class="mt-3"><span class="text-xl font-bold text-gray-800">$38.99</span></div>
-                    <button onclick="addToCart('peptide_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <button onclick="addToCart('peptide_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                 </div>
+
             </div>
         </div>
     </section>
@@ -367,24 +451,20 @@
                 {% for id, bundle in bundles.items() %}
                 <div class="bundle-card {% if bundle.popular %}popular{% endif %} bg-gray-50 rounded-3xl p-6 text-center">
                     {% if bundle.popular %}
-                    <span class="text-xs font-bold text-yellow-600 bg-yellow-50 px-3 py-1.5 rounded-full inline-block mb-2 border border-yellow-200">⭐ Best Value</span>
+                    <span class="text-xs font-bold text-yellow-600 bg-yellow-50 px-3 py-1.5 rounded-full inline-block mb-3 border border-yellow-200">⭐ Best Value</span>
                     {% endif %}
-                    <div class="product-image-container w-full h-48 rounded-xl mb-4">
-                        <img src="{{ bundle.image }}" alt="{{ bundle.name }}" class="product-image">
+                    <div class="product-image-container img-fallback mb-4">
+                        <img src="{{ bundle.image }}" alt="{{ bundle.name }}" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">{{ bundle.name }}</h3>
-                    <div class="flex justify-center gap-1 my-3">
-                        {% for pid in bundle.products %}
-                        <span class="text-2xl">📦</span>
-                        {% endfor %}
-                    </div>
-                    <p class="text-gray-400 text-sm">{{ bundle.products|length }} Products Included</p>
+                    <p class="text-gray-400 text-sm mt-1">{{ bundle.products|length }} Products Included</p>
                     <div class="mt-3">
                         <span class="text-2xl font-bold text-gray-800">${{ bundle.price }}</span>
-                        <span class="text-gray-400 text-sm line-through ml-2">${{ bundle.price + bundle.savings }}</span>
-                        <span class="text-green-500 text-sm ml-2 font-semibold">Save ${{ bundle.savings }}</span>
+                        <span class="text-gray-400 text-sm line-through ml-2">${{ "%.2f"|format(bundle.price + bundle.savings) }}</span>
+                        <br>
+                        <span class="text-green-500 text-sm font-semibold">Save ${{ bundle.savings }}</span>
                     </div>
-                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add Bundle</button>
+                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add Bundle</button>
                 </div>
                 {% endfor %}
             </div>
@@ -402,22 +482,22 @@
                 <div class="text-center group">
                     <div class="w-20 h-20 mx-auto rounded-2xl bg-pink-50 group-hover:bg-pink-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">🌿</div>
                     <h3 class="font-bold text-gray-800 text-lg">Clean Ingredients</h3>
-                    <p class="text-gray-400 text-sm mt-2">Paraben-free, sulfate-free, and cruelty-free formulas</p>
+                    <p class="text-gray-400 text-sm mt-2 leading-relaxed">Paraben-free, sulfate-free, and cruelty-free formulas</p>
                 </div>
                 <div class="text-center group">
                     <div class="w-20 h-20 mx-auto rounded-2xl bg-purple-50 group-hover:bg-purple-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">🔬</div>
                     <h3 class="font-bold text-gray-800 text-lg">Dermatologist Tested</h3>
-                    <p class="text-gray-400 text-sm mt-2">Clinically tested for safety and efficacy</p>
+                    <p class="text-gray-400 text-sm mt-2 leading-relaxed">Clinically tested for safety and efficacy</p>
                 </div>
                 <div class="text-center group">
                     <div class="w-20 h-20 mx-auto rounded-2xl bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">❤️</div>
                     <h3 class="font-bold text-gray-800 text-lg">Loved by Thousands</h3>
-                    <p class="text-gray-400 text-sm mt-2">Over 50,000 happy customers worldwide</p>
+                    <p class="text-gray-400 text-sm mt-2 leading-relaxed">Over 50,000 happy customers worldwide</p>
                 </div>
                 <div class="text-center group">
                     <div class="w-20 h-20 mx-auto rounded-2xl bg-yellow-50 group-hover:bg-yellow-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">♻️</div>
                     <h3 class="font-bold text-gray-800 text-lg">Sustainable</h3>
-                    <p class="text-gray-400 text-sm mt-2">Eco-friendly packaging and responsible sourcing</p>
+                    <p class="text-gray-400 text-sm mt-2 leading-relaxed">Eco-friendly packaging and responsible sourcing</p>
                 </div>
             </div>
         </div>
@@ -435,23 +515,23 @@
                     <div class="flex text-yellow-400 text-sm mb-3">★★★★★</div>
                     <p class="text-gray-600 italic leading-relaxed">"This serum completely transformed my skin! I've never felt more confident without makeup."</p>
                     <div class="mt-4 flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-200 to-pink-300 flex items-center justify-center font-bold text-pink-600 text-lg">SM</div>
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-200 to-pink-300 flex items-center justify-center font-bold text-pink-600 text-lg flex-shrink-0">SM</div>
                         <div><p class="font-semibold text-gray-800">Sarah M.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
                     </div>
                 </div>
                 <div class="testimonial-card bg-gray-50 rounded-3xl p-8">
                     <div class="flex text-yellow-400 text-sm mb-3">★★★★★</div>
-                    <p class="text-gray-600 italic">"The retinol night treatment is a game-changer. My fine lines have visibly reduced in just 4 weeks!"</p>
+                    <p class="text-gray-600 italic leading-relaxed">"The retinol night treatment is a game-changer. My fine lines have visibly reduced in just 4 weeks!"</p>
                     <div class="mt-4 flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-200 to-purple-300 flex items-center justify-center font-bold text-purple-600 text-lg">JK</div>
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-200 to-purple-300 flex items-center justify-center font-bold text-purple-600 text-lg flex-shrink-0">JK</div>
                         <div><p class="font-semibold text-gray-800">Jessica K.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
                     </div>
                 </div>
                 <div class="testimonial-card bg-gray-50 rounded-3xl p-8">
                     <div class="flex text-yellow-400 text-sm mb-3">★★★★★</div>
-                    <p class="text-gray-600 italic">"Finally found a sunscreen that doesn't feel greasy. I use it every single day!"</p>
+                    <p class="text-gray-600 italic leading-relaxed">"Finally found a sunscreen that doesn't feel greasy. I use it every single day!"</p>
                     <div class="mt-4 flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 flex items-center justify-center font-bold text-blue-600 text-lg">AL</div>
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 flex items-center justify-center font-bold text-blue-600 text-lg flex-shrink-0">AL</div>
                         <div><p class="font-semibold text-gray-800">Amanda L.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
                     </div>
                 </div>
@@ -467,17 +547,17 @@
             <span class="text-white/80 text-sm font-semibold tracking-[0.2em] uppercase">Join the Glow Community</span>
             <h2 class="section-title text-5xl font-bold text-white mt-2">Ready to Glow?</h2>
             <p class="text-white/80 text-lg mt-4 max-w-2xl mx-auto">Join thousands of happy customers and discover your best skin yet.</p>
-            <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="mt-8 px-12 py-4.5 rounded-full bg-white text-pink-600 font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 flex items-center gap-3 mx-auto"><i class="fas fa-shopping-bag"></i> Shop Now</button>
+            <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="mt-8 px-12 py-4 rounded-full bg-white text-pink-600 font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 inline-flex items-center gap-3"><i class="fas fa-shopping-bag"></i> Shop Now</button>
         </div>
     </section>
 
-    <!-- ===== PREMIUM FOOTER ===== -->
+    <!-- ===== FOOTER ===== -->
     <footer class="bg-gray-900 text-white/60 pt-16 pb-8 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-4 gap-12">
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">AB</div>
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg flex-shrink-0">AB</div>
                         <span class="text-2xl font-bold text-white">allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">beauty</span></span>
                     </div>
                     <p class="text-sm leading-relaxed text-gray-400 max-w-xs">Premium skincare for radiant, healthy skin. Clean, effective, and cruelty-free.</p>
@@ -503,7 +583,7 @@
                     <h4 class="text-white font-semibold text-lg mb-4">Support</h4>
                     <ul class="space-y-3 text-sm">
                         <li><a href="#" class="footer-link">Help Center</a></li>
-                        <li><a href="#" class="footer-link">Returns & Refunds</a></li>
+                        <li><a href="#" class="footer-link">Returns &amp; Refunds</a></li>
                         <li><a href="#" class="footer-link">Shipping Info</a></li>
                         <li><a href="#" class="footer-link">Track Order</a></li>
                         <li><a href="#" class="footer-link">Contact Us</a></li>
@@ -513,7 +593,7 @@
                     <h4 class="text-white font-semibold text-lg mb-4">Stay Glowing</h4>
                     <p class="text-sm text-gray-400 mb-4">Get 15% off your first order + exclusive updates</p>
                     <div class="flex flex-col gap-3">
-                        <input type="email" placeholder="Enter your email" class="newsletter-input text-white" />
+                        <input type="email" placeholder="Enter your email" class="newsletter-input" />
                         <button class="newsletter-btn w-full">Subscribe</button>
                     </div>
                     <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime.</p>
@@ -525,9 +605,7 @@
                     <a href="#" class="hover:text-white transition">Terms of Service</a>
                     <a href="#" class="hover:text-white transition">Cookie Policy</a>
                 </div>
-                <div class="text-xs text-gray-500 text-center md:text-right">
-                    <p>© 2026 Allison Beauty. Built with ❤️ by <span class="text-white/60">Calvin</span>. All rights reserved.</p>
-                </div>
+                <p class="text-xs text-gray-500 text-center md:text-right">© 2026 Allison Beauty. Built with ❤️ by <span class="text-white/60">Calvin</span>. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -553,38 +631,29 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             })
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
+                showToast(data.success ? 'Added to bag! 🎀' : data.message);
                 if (data.success) {
-                    showToast('Added to bag! 🎀');
                     const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
                     cart.push(itemId);
                     sessionStorage.setItem('cart', JSON.stringify(cart));
                     updateCartCount();
-                } else {
-                    showToast(data.message);
                 }
-            });
+            })
+            .catch(() => showToast('Something went wrong'));
         }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            toastMessage.textContent = message;
+            document.getElementById('toastMessage').textContent = message;
             toast.classList.remove('hidden');
             clearTimeout(window.toastTimeout);
-            window.toastTimeout = setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3000);
+            window.toastTimeout = setTimeout(() => toast.classList.add('hidden'), 3000);
         }
 
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
         });
 
         document.querySelectorAll('.category-pill').forEach(pill => {
@@ -598,9 +667,7 @@
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
     </script>
