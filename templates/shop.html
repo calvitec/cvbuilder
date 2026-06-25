@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV Pro Shop - Professional CV Templates</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-hero { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); }
+        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(102,126,234,0.3); }
+        .product-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 10px 40px rgba(102,126,234,0.4); }
+        .btn-outline { border: 2px solid #667eea; color: #667eea; transition: all 0.3s ease; }
+        .btn-outline:hover { background: #667eea; color: white; }
+        .badge-popular { background: linear-gradient(135deg, #f6c445, #f093fb); }
+        .cart-count { background: #f093fb; color: white; border-radius: 50%; padding: 2px 8px; font-size: 12px; }
+        .bundle-card { border: 2px solid transparent; transition: all 0.3s ease; }
+        .bundle-card:hover { border-color: #667eea; transform: translateY(-4px); }
+        .bundle-card.popular { border-color: #f6c445; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+        .fade-slide { opacity: 0; transform: translateY(30px); animation: fadeSlide 0.8s ease-out forwards; }
+        @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        .toast { position: fixed; bottom: 30px; right: 30px; z-index: 9999; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { 0% { transform: translateX(100px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+    </style>
+</head>
+<body class="gradient-hero min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">CP</div>
+                    <span class="text-xl font-bold text-white">CV<span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Pro</span></span>
+                    <span class="hidden md:block text-white/40 text-xs ml-2">Shop</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#products" class="text-white/70 hover:text-white transition text-sm hidden md:block">Products</a>
+                    <a href="#bundles" class="text-white/70 hover:text-white transition text-sm hidden md:block">Bundles</a>
+                    <a href="/cart" class="relative text-white hover:text-white/80 transition">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="cart-count absolute -top-2 -right-3" id="cartCount">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pt-32 pb-16 text-center px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight fade-slide">
+                Professional CV Templates<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">That Get You Hired</span>
+            </h1>
+            <p class="text-white/60 text-lg md:text-xl mt-4 fade-slide" style="animation-delay:0.2s;">
+                Choose from 4 premium designs. Create your CV in minutes. Download instantly.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 mt-8 fade-slide" style="animation-delay:0.4s;">
+                <a href="#products" class="px-8 py-4 rounded-2xl btn-primary text-white font-bold flex items-center gap-2">
+                    <i class="fas fa-shopping-bag"></i> Shop Now
+                </a>
+                <a href="#bundles" class="px-8 py-4 rounded-2xl btn-outline text-white font-bold flex items-center gap-2">
+                    <i class="fas fa-gift"></i> View Bundles
+                </a>
+            </div>
+            <div class="flex justify-center gap-8 mt-8 text-white/40 text-sm fade-slide" style="animation-delay:0.6s;">
+                <span>📄 4 Professional Templates</span>
+                <span>⚡ Instant Download</span>
+                <span>🔒 Secure Checkout</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section id="products" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-white text-center mb-12">Choose Your CV Template</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for id, product in products.items() %}
+                <div class="product-card glass-card rounded-2xl p-6 text-center">
+                    {% if product.popular %}
+                    <span class="badge-popular text-white text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">⭐ Popular</span>
+                    {% endif %}
+                    <div class="text-6xl mb-4">{{ product.image }}</div>
+                    <h3 class="text-white font-bold text-lg">{{ product.name }}</h3>
+                    <p class="text-white/50 text-sm mt-2">{{ product.description[:60] }}...</p>
+                    <div class="flex flex-wrap justify-center gap-1 mt-3">
+                        {% for feature in product.features %}
+                        <span class="text-xs bg-white/10 text-white/60 px-2 py-1 rounded-full">{{ feature }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-2xl font-bold text-white">${{ product.price }}</span>
+                    </div>
+                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-3 rounded-xl btn-primary text-white font-semibold transition">
+                        <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Bundles -->
+    <section id="bundles" class="py-16 px-4 bg-white/5">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-white text-center mb-12">Save with Bundles</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                {% for id, bundle in bundles.items() %}
+                <div class="bundle-card glass-card rounded-2xl p-6 text-center {% if bundle.popular %}popular{% endif %}">
+                    {% if bundle.popular %}
+                    <span class="badge-popular text-white text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">🔥 Best Value</span>
+                    {% endif %}
+                    <h3 class="text-white font-bold text-xl">{{ bundle.name }}</h3>
+                    <div class="flex justify-center gap-2 my-3">
+                        {% for pid in bundle.products %}
+                        <span class="text-3xl">{{ products[pid].image }}</span>
+                        {% endfor %}
+                    </div>
+                    <p class="text-white/50 text-sm">{{ bundle.products|length }} Templates Included</p>
+                    <div class="mt-3">
+                        <span class="text-2xl font-bold text-white">${{ bundle.price }}</span>
+                        <span class="text-white/40 text-sm line-through ml-2">${{ bundle.price + bundle.savings }}</span>
+                        <span class="text-green-400 text-sm ml-2">Save ${{ bundle.savings }}</span>
+                    </div>
+                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-3 rounded-xl btn-primary text-white font-semibold transition">
+                        <i class="fas fa-cart-plus mr-2"></i> Add Bundle
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-4 text-center text-white/30 text-sm border-t border-white/5">
+        <p>© 2026 CV Pro Shop. Built with ❤️ by Calvin</p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl p-4 max-w-sm">
+        <p id="toastMessage" class="text-white font-semibold"></p>
+    </div>
+
+    <script>
+        // Cart count
+        function updateCartCount() {
+            const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+        updateCartCount();
+
+        // Add to cart
+        function addToCart(productId) {
+            fetch('/add-to-cart/' + productId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('✅ ' + data.message);
+                    const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+                    cart.push(productId);
+                    sessionStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                } else {
+                    showToast('❌ ' + data.message);
+                }
+            });
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
