@@ -462,62 +462,85 @@
             <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="mt-8 px-12 py-4 rounded-full bg-white text-pink-600 font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 inline-flex items-center gap-3"><i class="fas fa-shopping-bag"></i> Shop Now</button>
         </div>
     </section>
-
-   <!-- ===== FOOTER ===== -->
-<footer class="bg-gray-900 text-white/60 pt-16 pb-8 px-4">
+<!-- ===== FOOTER ===== -->
+<footer class="bg-gray-900 text-white/60 pt-20 pb-6 px-4">
     <div class="max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-4 gap-12">
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg flex-shrink-0">AB</div>
-                    <span class="text-2xl font-bold text-white">allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">beauty</span></span>
+        <!-- Main Footer Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 lg:gap-16 pb-12 border-b border-gray-800/60">
+            
+            <!-- Brand Column -->
+            <div class="col-span-2 md:col-span-1">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-pink-500/20 flex-shrink-0">AB</div>
+                    <span class="text-2xl font-bold text-white tracking-tight">allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">beauty</span></span>
                 </div>
-                <p class="text-sm leading-relaxed text-gray-400 max-w-xs">Premium skincare for radiant, healthy skin. Clean, effective, and cruelty-free.</p>
-                <div class="flex gap-3 mt-6">
-                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-pinterest-p"></i></a>
+                <p class="text-sm leading-relaxed text-gray-400 max-w-xs mb-6">Premium skincare for radiant, healthy skin. Clean, effective, and cruelty-free.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800/50 hover:bg-pink-500/20 hover:text-pink-400 flex items-center justify-center text-gray-400 transition-all duration-300 hover:scale-110"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800/50 hover:bg-pink-500/20 hover:text-pink-400 flex items-center justify-center text-gray-400 transition-all duration-300 hover:scale-110"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800/50 hover:bg-pink-500/20 hover:text-pink-400 flex items-center justify-center text-gray-400 transition-all duration-300 hover:scale-110"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800/50 hover:bg-pink-500/20 hover:text-pink-400 flex items-center justify-center text-gray-400 transition-all duration-300 hover:scale-110"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800/50 hover:bg-pink-500/20 hover:text-pink-400 flex items-center justify-center text-gray-400 transition-all duration-300 hover:scale-110"><i class="fab fa-pinterest-p"></i></a>
                 </div>
             </div>
+
+            <!-- Shop Column -->
             <div>
-                <h4 class="text-white font-semibold text-lg mb-4">Shop</h4>
-                <ul class="space-y-3 text-sm">
-                    <li><a href="#" class="footer-link">All Products</a></li>
-                    <li><a href="#" class="footer-link">Bundles</a></li>
-                    <li><a href="#" class="footer-link">Best Sellers</a></li>
-                    <li><a href="#" class="footer-link">New Arrivals</a></li>
-                    <li><a href="#" class="footer-link">Gift Cards</a></li>
+                <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-5">Shop</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">All Products</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Bundles</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Best Sellers</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">New Arrivals</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Gift Cards</a></li>
                 </ul>
             </div>
+
+            <!-- Support Column -->
             <div>
-                <h4 class="text-white font-semibold text-lg mb-4">Support</h4>
-                <ul class="space-y-3 text-sm">
-                    <li><a href="#" class="footer-link">Help Center</a></li>
-                    <li><a href="#" class="footer-link">Returns &amp; Refunds</a></li>
-                    <li><a href="#" class="footer-link">Shipping Info</a></li>
-                    <li><a href="#" class="footer-link">Track Order</a></li>
-                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-5">Support</h4>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Help Center</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Returns &amp; Refunds</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Shipping Info</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Track Order</a></li>
+                    <li><a href="#" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Contact Us</a></li>
                 </ul>
             </div>
-            <div>
-                <h4 class="text-white font-semibold text-lg mb-4">Stay Glowing</h4>
+
+            <!-- Newsletter Column -->
+            <div class="col-span-2 md:col-span-1">
+                <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-5">Stay Glowing ✨</h4>
                 <p class="text-sm text-gray-400 mb-4">Get 15% off your first order + exclusive updates</p>
-                <div class="flex flex-col gap-3">
-                    <input type="email" placeholder="Enter your email" class="newsletter-input" />
-                    <button class="newsletter-btn w-full">Subscribe</button>
-                </div>
+                <form class="flex flex-col gap-3">
+                    <input 
+                        type="email" 
+                        placeholder="Enter your email" 
+                        class="px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
+                    />
+                    <button 
+                        type="submit" 
+                        class="px-4 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold text-sm hover:shadow-lg hover:shadow-pink-500/25 hover:scale-[1.02] transition-all duration-300"
+                    >
+                        Subscribe
+                    </button>
+                </form>
                 <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime.</p>
             </div>
         </div>
-        <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-6 text-xs text-gray-500">
-                <a href="#" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Service</a>
-                <a href="#" class="hover:text-white transition">Cookie Policy</a>
+
+        <!-- Bottom Bar -->
+        <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6 text-xs">
+                <a href="#" class="text-gray-500 hover:text-white transition-colors duration-200">Privacy Policy</a>
+                <span class="text-gray-700 hidden md:inline">|</span>
+                <a href="#" class="text-gray-500 hover:text-white transition-colors duration-200">Terms of Service</a>
+                <span class="text-gray-700 hidden md:inline">|</span>
+                <a href="#" class="text-gray-500 hover:text-white transition-colors duration-200">Cookie Policy</a>
             </div>
-            <p class="text-xs text-gray-500 text-center md:text-right">© 2026 <span class="text-white/80 font-medium">Allison Stone LLC</span>. All rights reserved.</p>
+            <p class="text-xs text-gray-500 text-center">
+                © 2026 <span class="text-white/80 font-medium">Allison Stone LLC</span>. All rights reserved.
+            </p>
         </div>
     </div>
 </footer>
