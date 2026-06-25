@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'allison-beauty-secret-2026'
 
 # ============================================
-# ALL PRODUCTS - REMOVED PROBLEMATIC ONES
+# ONLY WORKING PRODUCTS - REMOVED BROKEN ONES
 # ============================================
 PRODUCTS = {
     'glow_serum': {
@@ -122,40 +122,11 @@ PRODUCTS = {
         'popular': False,
         'badge': 'New',
         'stock': 35
-    },
-    # ===== NEW PRODUCTS (Replacing problematic ones) =====
-    'vitamin_c_serum': {
-        'id': 'vitamin_c_serum',
-        'name': 'Vitamin C Brightening Serum',
-        'price': 36.99,
-        'image': 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop&q=80',
-        'category': 'Serums',
-        'description': 'Powerful vitamin C serum that brightens and evens skin tone.',
-        'features': ['Vitamin C', 'Brightening', 'Anti-Aging', 'Cruelty-Free'],
-        'rating': 4.7,
-        'reviews': 178,
-        'popular': True,
-        'badge': "Editor's Choice",
-        'stock': 40
-    },
-    'rose_toner': {
-        'id': 'rose_toner',
-        'name': 'Rose Hydrating Toner',
-        'price': 21.99,
-        'image': 'https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop&q=80',
-        'category': 'Toners',
-        'description': 'Gentle rose-infused toner that hydrates and soothes sensitive skin.',
-        'features': ['Rose Water', 'Hydrating', 'Soothing', 'Alcohol-Free'],
-        'rating': 4.6,
-        'reviews': 145,
-        'popular': True,
-        'badge': 'Trending',
-        'stock': 50
     }
 }
 
 # ============================================
-# BUNDLES - Updated with new products
+# BUNDLES
 # ============================================
 BUNDLES = {
     'skincare_starter': {
@@ -171,7 +142,7 @@ BUNDLES = {
         'id': 'glow_bundle',
         'name': 'Glow Getter Bundle',
         'price': 69.99,
-        'products': ['glow_serum', 'vitamin_c_serum', 'sunscreen_spf'],
+        'products': ['glow_serum', 'niacinamide', 'sunscreen_spf'],
         'savings': 28.98,
         'popular': True,
         'image': 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&q=80'
@@ -189,7 +160,7 @@ BUNDLES = {
         'id': 'complete_routine',
         'name': 'Complete Skincare Routine',
         'price': 129.99,
-        'products': ['cleansing_balm', 'rose_toner', 'glow_serum', 'hydrating_cream', 'sunscreen_spf', 'niacinamide'],
+        'products': ['cleansing_balm', 'toner', 'glow_serum', 'hydrating_cream', 'sunscreen_spf', 'niacinamide'],
         'savings': 63.94,
         'popular': True,
         'image': 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop&q=80'
@@ -214,8 +185,6 @@ def index():
             new_arrivals.append(product)
         elif product.get('badge') == 'Trending':
             trending.append(product)
-        elif product.get('badge') == "Editor's Choice":
-            best_sellers.append(product)
     
     if not best_sellers:
         best_sellers = list(PRODUCTS.values())[:4]
