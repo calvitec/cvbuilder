@@ -8,14 +8,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'allison-beauty-secret-2026'
 
 # ============================================
-# BEAUTY PRODUCTS CATALOG
+# BEAUTY PRODUCTS WITH REAL IMAGES
 # ============================================
 PRODUCTS = {
     'glow_serum': {
         'id': 'glow_serum',
         'name': 'Glow Repair Serum',
         'price': 34.99,
-        'image': '✨',
+        'image': 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
         'category': 'Serums',
         'description': 'Powerful vitamin C serum for radiant, glowing skin. Reduces dark spots and fine lines.',
         'features': ['Vitamin C', 'Hydrating', 'Brightening', 'Cruelty-Free'],
@@ -29,7 +29,7 @@ PRODUCTS = {
         'id': 'hydrating_cream',
         'name': 'Hydrating Moisture Cream',
         'price': 28.99,
-        'image': '💧',
+        'image': 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
         'category': 'Moisturizers',
         'description': 'Deep hydration cream with hyaluronic acid for plump, dewy skin.',
         'features': ['Hyaluronic Acid', '24hr Hydration', 'Non-comedogenic'],
@@ -43,7 +43,7 @@ PRODUCTS = {
         'id': 'retinol_night',
         'name': 'Retinol Night Treatment',
         'price': 42.99,
-        'image': '🌙',
+        'image': 'https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop',
         'category': 'Treatments',
         'description': 'Advanced retinol formula for overnight skin renewal and anti-aging benefits.',
         'features': ['Retinol', 'Anti-Aging', 'Overnight Repair', 'Dermatologist Tested'],
@@ -57,7 +57,7 @@ PRODUCTS = {
         'id': 'sunscreen_spf',
         'name': 'SPF 50 Sunscreen',
         'price': 24.99,
-        'image': '☀️',
+        'image': 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop',
         'category': 'Sun Care',
         'description': 'Lightweight, non-greasy sunscreen with broad-spectrum SPF 50 protection.',
         'features': ['SPF 50', 'Broad Spectrum', 'Non-greasy', 'Water Resistant'],
@@ -71,7 +71,7 @@ PRODUCTS = {
         'id': 'face_mask',
         'name': 'Detox Clay Mask',
         'price': 19.99,
-        'image': '🧖',
+        'image': 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop',
         'category': 'Masks',
         'description': 'Purifying clay mask that draws out impurities and leaves skin refreshed.',
         'features': ['Kaolin Clay', 'Detoxifying', 'Pore Minimizing', 'Natural'],
@@ -85,7 +85,7 @@ PRODUCTS = {
         'id': 'eye_cream',
         'name': 'Brightening Eye Cream',
         'price': 32.99,
-        'image': '👁️',
+        'image': 'https://images.unsplash.com/photo-1556228454-1243a6c2f0c5?w=400&h=400&fit=crop',
         'category': 'Eye Care',
         'description': 'Targets dark circles, puffiness, and fine lines for a refreshed look.',
         'features': ['Caffeine', 'Brightening', 'Anti-Puffiness', 'Fine Line Reduction'],
@@ -99,7 +99,7 @@ PRODUCTS = {
         'id': 'cleansing_balm',
         'name': 'Cleansing Balm',
         'price': 22.99,
-        'image': '🧴',
+        'image': 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop',
         'category': 'Cleansers',
         'description': 'Gentle cleansing balm that melts away makeup and impurities.',
         'features': ['Oil-Based', 'Makeup Remover', 'Hydrating', 'Sensitive Skin'],
@@ -113,7 +113,7 @@ PRODUCTS = {
         'id': 'toner',
         'name': 'Hydrating Facial Toner',
         'price': 18.99,
-        'image': '💦',
+        'image': 'https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop',
         'category': 'Toners',
         'description': 'Alcohol-free toner that balances and hydrates skin after cleansing.',
         'features': ['Alcohol-Free', 'Balancing', 'Hydrating', 'Rose Water'],
@@ -127,7 +127,7 @@ PRODUCTS = {
         'id': 'niacinamide',
         'name': 'Niacinamide Serum',
         'price': 29.99,
-        'image': '🌟',
+        'image': 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
         'category': 'Serums',
         'description': 'Brightening serum with 10% niacinamide to minimize pores and even skin tone.',
         'features': ['Niacinamide', 'Pore Minimizing', 'Brightening', 'Oil Control'],
@@ -141,7 +141,7 @@ PRODUCTS = {
         'id': 'peptide_cream',
         'name': 'Peptide Firming Cream',
         'price': 38.99,
-        'image': '🔬',
+        'image': 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
         'category': 'Moisturizers',
         'description': 'Advanced peptide cream that firms and lifts skin for a youthful appearance.',
         'features': ['Peptides', 'Firming', 'Anti-Wrinkle', 'Collagen Boost'],
@@ -164,7 +164,7 @@ BUNDLES = {
         'products': ['cleansing_balm', 'toner', 'hydrating_cream'],
         'savings': 20.98,
         'popular': True,
-        'image': '🎁'
+        'image': 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop'
     },
     'glow_bundle': {
         'id': 'glow_bundle',
@@ -173,7 +173,7 @@ BUNDLES = {
         'products': ['glow_serum', 'hydrating_cream', 'sunscreen_spf'],
         'savings': 28.98,
         'popular': True,
-        'image': '✨'
+        'image': 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop'
     },
     'night_renewal': {
         'id': 'night_renewal',
@@ -182,7 +182,7 @@ BUNDLES = {
         'products': ['cleansing_balm', 'retinol_night', 'eye_cream', 'hydrating_cream'],
         'savings': 41.97,
         'popular': False,
-        'image': '🌙'
+        'image': 'https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop'
     },
     'complete_routine': {
         'id': 'complete_routine',
@@ -191,7 +191,7 @@ BUNDLES = {
         'products': ['cleansing_balm', 'toner', 'glow_serum', 'hydrating_cream', 'sunscreen_spf', 'eye_cream'],
         'savings': 63.94,
         'popular': True,
-        'image': '💎'
+        'image': 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop'
     }
 }
 
@@ -202,7 +202,6 @@ BUNDLES = {
 @app.route('/')
 def index():
     """Allison Beauty Homepage"""
-    # Get products by badge
     best_sellers = []
     new_arrivals = []
     trending = []
