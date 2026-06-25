@@ -29,16 +29,16 @@
             cursor: pointer;
             border: 1px solid rgba(0,0,0,0.04);
             background: white;
-            position: relative;   /* ← required for badge absolute positioning */
-            overflow: visible;    /* ← allow badge to sit above, not clip image */
+            position: relative;
+            overflow: visible;
         }
         .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #e91e63, #9c27b0, #f6c445); opacity: 0; transition: opacity 0.4s ease; border-radius: 24px 24px 0 0; }
         .product-card:hover::before { opacity: 1; }
         .product-card:hover { transform: translateY(-12px) scale(1.01); box-shadow: 0 30px 70px rgba(233,30,99,0.10); border-color: rgba(233,30,99,0.08); }
 
-        /* ── IMAGE CONTAINER ── keeps images inside, badge sits outside ── */
+        /* ── IMAGE CONTAINER ── */
         .product-image-wrapper {
-            position: relative;          /* badge anchors here */
+            position: relative;
             width: 100%;
             margin-bottom: 1rem;
         }
@@ -47,7 +47,7 @@
             border-radius: 16px;
             background: linear-gradient(135deg, #f8f9fa, #f1f3f5);
             width: 100%;
-            height: 220px;               /* fixed height so images never collapse */
+            height: 220px;
         }
         .product-image-container.tall { height: 260px; }
         .product-image {
@@ -59,7 +59,7 @@
         }
         .product-card:hover .product-image { transform: scale(1.08); }
 
-        /* ── BADGE — sits above the image, not overlapping product text ── */
+        /* ── BADGE ── */
         .product-badge {
             position: absolute;
             top: 10px;
@@ -67,11 +67,12 @@
             z-index: 10;
             font-size: 0.7rem;
             font-weight: 700;
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 999px;
             color: white;
             white-space: nowrap;
             pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         .badge-best    { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
         .badge-new     { background: linear-gradient(135deg, #48dbfb, #0abde3); }
@@ -116,8 +117,6 @@
         .footer-link { color: rgba(255,255,255,0.4); transition: all 0.3s ease; text-decoration: none; font-size: 0.875rem; }
         .footer-link:hover { color: white; transform: translateX(4px); }
         .hero-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; }
-
-        /* fallback gradient shown while image loads */
         .img-fallback { background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%); }
     </style>
 </head>
@@ -130,7 +129,7 @@
     </div>
 
     <!-- ===== NAVIGATION ===== -->
-    <nav class="glass-nav fixed top-8 left-0 right-0 z-50" id="navbar">
+    <nav class="glass-nav fixed top-0 left-0 right-0 z-50" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <a href="/" class="flex items-center gap-3 group">
@@ -190,11 +189,7 @@
                     <div class="grid grid-cols-2 gap-5">
                         <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-5 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
                             <div class="product-image-container img-fallback mb-4">
-                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&auto=format"
-                                     alt="Glow Serum"
-                                     class="product-image"
-                                     loading="lazy"
-                                     onerror="this.style.display='none'">
+                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&auto=format" alt="Glow Serum" class="product-image" loading="lazy" onerror="this.style.display='none'">
                             </div>
                             <p class="font-bold text-gray-800">Glow Serum</p>
                             <p class="text-gray-400 text-sm">Vitamin C + Hyaluronic</p>
@@ -206,11 +201,7 @@
                         </div>
                         <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-5 shadow-2xl border border-white/30 mt-10 hover:shadow-3xl transition-all duration-300 hover:scale-105">
                             <div class="product-image-container img-fallback mb-4">
-                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format"
-                                     alt="Retinol Night"
-                                     class="product-image"
-                                     loading="lazy"
-                                     onerror="this.style.display='none'">
+                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format" alt="Retinol Night" class="product-image" loading="lazy" onerror="this.style.display='none'">
                             </div>
                             <p class="font-bold text-gray-800">Retinol Night</p>
                             <p class="text-gray-400 text-sm">Anti-Aging Treatment</p>
@@ -258,10 +249,9 @@
                 <!-- Glow Serum -->
                 <div class="product-card rounded-3xl p-6 text-center">
                     <div class="product-image-wrapper">
-                        <span class="product-badge badge-best">🏆 Best Seller</span>
+                        <span class="product-badge badge-best">⭐ Best Seller</span>
                         <div class="product-image-container tall img-fallback">
-                            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&auto=format"
-                                 alt="Glow Serum" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&auto=format" alt="Glow Serum" class="product-image" loading="lazy" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Glow Repair Serum</h3>
@@ -277,10 +267,9 @@
                 <!-- Retinol Night -->
                 <div class="product-card rounded-3xl p-6 text-center">
                     <div class="product-image-wrapper">
-                        <span class="product-badge badge-editor">✨ Editor's Choice</span>
+                        <span class="product-badge badge-editor">⭐ Editor's Choice</span>
                         <div class="product-image-container tall img-fallback">
-                            <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format"
-                                 alt="Retinol Night" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                            <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format" alt="Retinol Night" class="product-image" loading="lazy" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Retinol Night Treatment</h3>
@@ -296,10 +285,9 @@
                 <!-- Niacinamide -->
                 <div class="product-card rounded-3xl p-6 text-center">
                     <div class="product-image-wrapper">
-                        <span class="product-badge badge-best">🏆 Best Seller</span>
+                        <span class="product-badge badge-best">⭐ Best Seller</span>
                         <div class="product-image-container tall img-fallback">
-                            <img src="https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop&auto=format"
-                                 alt="Niacinamide" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                            <img src="https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop&auto=format" alt="Niacinamide" class="product-image" loading="lazy" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Niacinamide Serum</h3>
@@ -317,8 +305,7 @@
                     <div class="product-image-wrapper">
                         <span class="product-badge badge-trending">🔥 Trending</span>
                         <div class="product-image-container tall img-fallback">
-                            <img src="https://images.unsplash.com/photo-1556228454-1243a6c2f0c5?w=400&h=400&fit=crop&auto=format"
-                                 alt="Eye Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                            <img src="https://images.unsplash.com/photo-1556228454-1243a6c2f0c5?w=400&h=400&fit=crop&auto=format" alt="Eye Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
                         </div>
                     </div>
                     <h3 class="font-bold text-gray-800 text-lg">Brightening Eye Cream</h3>
@@ -348,8 +335,7 @@
                 <!-- Hydrating Cream -->
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
                     <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop&auto=format"
-                             alt="Hydrating Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop&auto=format" alt="Hydrating Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <h3 class="font-bold text-gray-800">Hydrating Moisture Cream</h3>
                     <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
@@ -363,8 +349,7 @@
                 <!-- Sunscreen -->
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
                     <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop&auto=format"
-                             alt="Sunscreen" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop&auto=format" alt="Sunscreen" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <h3 class="font-bold text-gray-800">SPF 50 Sunscreen</h3>
                     <p class="text-gray-400 text-xs mt-1">Sun Care</p>
@@ -378,8 +363,7 @@
                 <!-- Face Mask -->
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
                     <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop&auto=format"
-                             alt="Face Mask" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop&auto=format" alt="Face Mask" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <h3 class="font-bold text-gray-800">Detox Clay Mask</h3>
                     <p class="text-gray-400 text-xs mt-1">Masks</p>
@@ -393,8 +377,7 @@
                 <!-- Cleansing Balm -->
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
                     <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop&auto=format"
-                             alt="Cleansing Balm" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop&auto=format" alt="Cleansing Balm" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <h3 class="font-bold text-gray-800">Cleansing Balm</h3>
                     <p class="text-gray-400 text-xs mt-1">Cleansers</p>
@@ -408,8 +391,7 @@
                 <!-- Toner -->
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
                     <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop&auto=format"
-                             alt="Toner" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop&auto=format" alt="Toner" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <h3 class="font-bold text-gray-800">Hydrating Facial Toner</h3>
                     <p class="text-gray-400 text-xs mt-1">Toners</p>
@@ -423,8 +405,7 @@
                 <!-- Peptide Cream -->
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
                     <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop&auto=format"
-                             alt="Peptide Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop&auto=format" alt="Peptide Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <h3 class="font-bold text-gray-800">Peptide Firming Cream</h3>
                     <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
