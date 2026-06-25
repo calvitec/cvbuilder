@@ -143,6 +143,31 @@ BUNDLES = {
 }
 
 # ============================================
+# HELPER FUNCTION - Convert old cart format
+# ============================================
+
+def get_cart():
+    """Get cart and convert from old list format to dict if needed"""
+    cart = session.get('cart', {})
+    
+    # If cart is a list (old format), convert to dict
+    if isinstance(cart, list):
+        new_cart = {}
+        for item_id in cart:
+            new_cart[item_id] = new_cart.get(item_id, 0) + 1
+        session['cart'] = new_cart
+        session.modified = True
+        return new_cart
+    
+    # If cart is None or not a dict, return empty dict
+    if not isinstance(cart, dict):
+        session['cart'] = {}
+        session.modified = True
+        return {}
+    
+    return cart
+
+# ============================================
 # ROUTES
 # ============================================
 
@@ -180,7 +205,7 @@ def index():
 @app.route('/cart')
 def cart():
     try:
-        cart = session.get('cart', {})
+        cart = get_cart()
         cart_items = []
         subtotal = 0
         total_items = 0
@@ -238,10 +263,7 @@ def cart():
 @app.route('/add-to-cart/<item_id>', methods=['POST'])
 def add_to_cart(item_id):
     try:
-        if 'cart' not in session:
-            session['cart'] = {}
-        
-        cart = session['cart']
+        cart = get_cart()
         
         if item_id in PRODUCTS or item_id in BUNDLES:
             # Check stock for products
@@ -254,6 +276,7 @@ def add_to_cart(item_id):
                     })
             
             cart[item_id] = cart.get(item_id, 0) + 1
+            session['cart'] = cart
             session.modified = True
             
             total_items = sum(cart.values())
@@ -272,9 +295,10 @@ def add_to_cart(item_id):
 @app.route('/remove-from-cart/<item_id>', methods=['POST'])
 def remove_from_cart(item_id):
     try:
-        cart = session.get('cart', {})
+        cart = get_cart()
         if item_id in cart:
             del cart[item_id]
+            session['cart'] = cart
             session.modified = True
             total_items = sum(cart.values())
             return jsonify({
@@ -290,10 +314,7 @@ def remove_from_cart(item_id):
 @app.route('/update-cart/<item_id>/<action>', methods=['POST'])
 def update_cart(item_id, action):
     try:
-        if 'cart' not in session:
-            session['cart'] = {}
-        
-        cart = session['cart']
+        cart = get_cart()
         
         if action == 'increase':
             if item_id in PRODUCTS:
@@ -322,6 +343,7 @@ def update_cart(item_id, action):
         else:
             return jsonify({'success': False, 'message': 'Invalid action'})
         
+        session['cart'] = cart
         session.modified = True
         
         # Calculate updated totals
@@ -358,7 +380,7 @@ def update_cart(item_id, action):
 @app.route('/checkout')
 def checkout():
     try:
-        cart = session.get('cart', {})
+        cart = get_cart()
         if not cart:
             return redirect(url_for('index'))
         
@@ -417,7 +439,7 @@ def checkout():
 @app.route('/place-order', methods=['POST'])
 def place_order():
     try:
-        cart = session.get('cart', {})
+        cart = get_cart()
         if not cart:
             return jsonify({'success': False, 'message': 'Cart is empty'})
         
@@ -451,6 +473,13 @@ def place_order():
 @app.route('/order-confirmation/<order_id>')
 def order_confirmation(order_id):
     return render_template('confirmation.html', order_id=order_id)
+
+@app.route('/clear-cart', methods=['POST'])
+def clear_cart():
+    """Utility route to clear the cart"""
+    session['cart'] = {}
+    session.modified = True
+    return jsonify({'success': True, 'message': 'Cart cleared'})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
