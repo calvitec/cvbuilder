@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'allison-beauty-secret-2026'
 
 # ============================================
-# ONLY WORKING PRODUCTS - REMOVED BROKEN ONES
+# PRODUCTS - NIACINAMIDE REMOVED
 # ============================================
 PRODUCTS = {
     'glow_serum': {
@@ -95,20 +95,6 @@ PRODUCTS = {
         'badge': '',
         'stock': 90
     },
-    'niacinamide': {
-        'id': 'niacinamide',
-        'name': 'Niacinamide Serum',
-        'price': 29.99,
-        'image': 'https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop&q=80',
-        'category': 'Serums',
-        'description': 'Brightening serum with 10% niacinamide to minimize pores and even skin tone.',
-        'features': ['Niacinamide', 'Pore Minimizing', 'Brightening', 'Oil Control'],
-        'rating': 4.7,
-        'reviews': 203,
-        'popular': True,
-        'badge': 'Best Seller',
-        'stock': 50
-    },
     'peptide_cream': {
         'id': 'peptide_cream',
         'name': 'Peptide Firming Cream',
@@ -122,11 +108,25 @@ PRODUCTS = {
         'popular': False,
         'badge': 'New',
         'stock': 35
+    },
+    'rose_toner': {
+        'id': 'rose_toner',
+        'name': 'Rose Hydrating Toner',
+        'price': 21.99,
+        'image': 'https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop&q=80',
+        'category': 'Toners',
+        'description': 'Gentle rose-infused toner that hydrates and soothes sensitive skin.',
+        'features': ['Rose Water', 'Hydrating', 'Soothing', 'Alcohol-Free'],
+        'rating': 4.6,
+        'reviews': 145,
+        'popular': True,
+        'badge': 'Trending',
+        'stock': 50
     }
 }
 
 # ============================================
-# BUNDLES
+# BUNDLES - UPDATED
 # ============================================
 BUNDLES = {
     'skincare_starter': {
@@ -142,7 +142,7 @@ BUNDLES = {
         'id': 'glow_bundle',
         'name': 'Glow Getter Bundle',
         'price': 69.99,
-        'products': ['glow_serum', 'niacinamide', 'sunscreen_spf'],
+        'products': ['glow_serum', 'rose_toner', 'sunscreen_spf'],
         'savings': 28.98,
         'popular': True,
         'image': 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop&q=80'
@@ -151,16 +151,16 @@ BUNDLES = {
         'id': 'night_renewal',
         'name': 'Night Renewal Bundle',
         'price': 89.99,
-        'products': ['cleansing_balm', 'niacinamide', 'peptide_cream', 'hydrating_cream'],
+        'products': ['cleansing_balm', 'peptide_cream', 'hydrating_cream'],
         'savings': 41.97,
         'popular': False,
-        'image': 'https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop&q=80'
+        'image': 'https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop&q=80'
     },
     'complete_routine': {
         'id': 'complete_routine',
         'name': 'Complete Skincare Routine',
         'price': 129.99,
-        'products': ['cleansing_balm', 'toner', 'glow_serum', 'hydrating_cream', 'sunscreen_spf', 'niacinamide'],
+        'products': ['cleansing_balm', 'toner', 'glow_serum', 'hydrating_cream', 'sunscreen_spf', 'rose_toner'],
         'savings': 63.94,
         'popular': True,
         'image': 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop&q=80'
