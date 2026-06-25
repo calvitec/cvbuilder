@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'beauty-shop-secret-2026'
+app.config['SECRET_KEY'] = 'allison-beauty-secret-2026'
 
 # ============================================
 # BEAUTY PRODUCTS CATALOG
@@ -22,7 +22,8 @@ PRODUCTS = {
         'rating': 4.8,
         'reviews': 234,
         'popular': True,
-        'badge': 'Best Seller'
+        'badge': 'Best Seller',
+        'stock': 45
     },
     'hydrating_cream': {
         'id': 'hydrating_cream',
@@ -35,7 +36,8 @@ PRODUCTS = {
         'rating': 4.6,
         'reviews': 189,
         'popular': False,
-        'badge': 'New'
+        'badge': 'New',
+        'stock': 60
     },
     'retinol_night': {
         'id': 'retinol_night',
@@ -48,7 +50,8 @@ PRODUCTS = {
         'rating': 4.9,
         'reviews': 312,
         'popular': True,
-        'badge': "Editor's Choice"
+        'badge': "Editor's Choice",
+        'stock': 30
     },
     'sunscreen_spf': {
         'id': 'sunscreen_spf',
@@ -61,7 +64,8 @@ PRODUCTS = {
         'rating': 4.5,
         'reviews': 156,
         'popular': False,
-        'badge': ''
+        'badge': '',
+        'stock': 80
     },
     'face_mask': {
         'id': 'face_mask',
@@ -74,7 +78,8 @@ PRODUCTS = {
         'rating': 4.4,
         'reviews': 98,
         'popular': False,
-        'badge': ''
+        'badge': '',
+        'stock': 55
     },
     'eye_cream': {
         'id': 'eye_cream',
@@ -87,7 +92,8 @@ PRODUCTS = {
         'rating': 4.7,
         'reviews': 145,
         'popular': True,
-        'badge': 'Trending'
+        'badge': 'Trending',
+        'stock': 40
     },
     'cleansing_balm': {
         'id': 'cleansing_balm',
@@ -100,7 +106,8 @@ PRODUCTS = {
         'rating': 4.3,
         'reviews': 78,
         'popular': False,
-        'badge': ''
+        'badge': '',
+        'stock': 70
     },
     'toner': {
         'id': 'toner',
@@ -113,7 +120,36 @@ PRODUCTS = {
         'rating': 4.2,
         'reviews': 67,
         'popular': False,
-        'badge': ''
+        'badge': '',
+        'stock': 90
+    },
+    'niacinamide': {
+        'id': 'niacinamide',
+        'name': 'Niacinamide Serum',
+        'price': 29.99,
+        'image': '🌟',
+        'category': 'Serums',
+        'description': 'Brightening serum with 10% niacinamide to minimize pores and even skin tone.',
+        'features': ['Niacinamide', 'Pore Minimizing', 'Brightening', 'Oil Control'],
+        'rating': 4.7,
+        'reviews': 203,
+        'popular': True,
+        'badge': 'Best Seller',
+        'stock': 50
+    },
+    'peptide_cream': {
+        'id': 'peptide_cream',
+        'name': 'Peptide Firming Cream',
+        'price': 38.99,
+        'image': '🔬',
+        'category': 'Moisturizers',
+        'description': 'Advanced peptide cream that firms and lifts skin for a youthful appearance.',
+        'features': ['Peptides', 'Firming', 'Anti-Wrinkle', 'Collagen Boost'],
+        'rating': 4.8,
+        'reviews': 167,
+        'popular': False,
+        'badge': 'New',
+        'stock': 35
     }
 }
 
@@ -127,7 +163,8 @@ BUNDLES = {
         'price': 49.99,
         'products': ['cleansing_balm', 'toner', 'hydrating_cream'],
         'savings': 20.98,
-        'popular': True
+        'popular': True,
+        'image': '🎁'
     },
     'glow_bundle': {
         'id': 'glow_bundle',
@@ -135,7 +172,8 @@ BUNDLES = {
         'price': 69.99,
         'products': ['glow_serum', 'hydrating_cream', 'sunscreen_spf'],
         'savings': 28.98,
-        'popular': True
+        'popular': True,
+        'image': '✨'
     },
     'night_renewal': {
         'id': 'night_renewal',
@@ -143,7 +181,17 @@ BUNDLES = {
         'price': 89.99,
         'products': ['cleansing_balm', 'retinol_night', 'eye_cream', 'hydrating_cream'],
         'savings': 41.97,
-        'popular': False
+        'popular': False,
+        'image': '🌙'
+    },
+    'complete_routine': {
+        'id': 'complete_routine',
+        'name': 'Complete Skincare Routine',
+        'price': 129.99,
+        'products': ['cleansing_balm', 'toner', 'glow_serum', 'hydrating_cream', 'sunscreen_spf', 'eye_cream'],
+        'savings': 63.94,
+        'popular': True,
+        'image': '💎'
     }
 }
 
@@ -153,10 +201,18 @@ BUNDLES = {
 
 @app.route('/')
 def index():
-    """Beauty Shop Homepage"""
-    # Get top products
-    featured = [p for p in PRODUCTS.values() if p.get('popular', False)][:4]
-    return render_template('shop.html', products=PRODUCTS, bundles=BUNDLES, featured=featured)
+    """Allison Beauty Homepage"""
+    best_sellers = [p for p in PRODUCTS.values() if p.get('badge') == 'Best Seller']
+    new_arrivals = [p for p in PRODUCTS.values() if p.get('badge') == 'New']
+    trending = [p for p in PRODUCTS.values() if p.get('badge') == 'Trending']
+    
+    return render_template('shop.html', 
+        products=PRODUCTS, 
+        bundles=BUNDLES, 
+        best_sellers=best_sellers,
+        new_arrivals=new_arrivals,
+        trending=trending
+    )
 
 @app.route('/product/<product_id>')
 def product_detail(product_id):
@@ -164,9 +220,8 @@ def product_detail(product_id):
     if product_id not in PRODUCTS:
         return redirect(url_for('index'))
     
-    # Get related products (same category)
     product = PRODUCTS[product_id]
-    related = [p for p in PRODUCTS.values() if p['category'] == product['category'] and p['id'] != product_id][:3]
+    related = [p for p in PRODUCTS.values() if p['category'] == product['category'] and p['id'] != product_id][:4]
     
     return render_template('product.html', product=product, related=related)
 
@@ -194,7 +249,7 @@ def cart():
                 'id': item_id,
                 'name': bundle['name'],
                 'price': bundle['price'],
-                'image': '🎁',
+                'image': bundle['image'],
                 'type': 'bundle',
                 'products': bundle['products']
             })
@@ -212,9 +267,9 @@ def add_to_cart(item_id):
         if item_id not in session['cart']:
             session['cart'].append(item_id)
             session.modified = True
-            return jsonify({'success': True, 'message': 'Added to cart!'})
+            return jsonify({'success': True, 'message': 'Added to bag!'})
         else:
-            return jsonify({'success': False, 'message': 'Already in cart'})
+            return jsonify({'success': False, 'message': 'Already in bag'})
     
     return jsonify({'success': False, 'message': 'Product not found'})
 
@@ -225,8 +280,8 @@ def remove_from_cart(item_id):
         if item_id in session['cart']:
             session['cart'].remove(item_id)
             session.modified = True
-            return jsonify({'success': True, 'message': 'Removed from cart!'})
-    return jsonify({'success': False, 'message': 'Item not in cart'})
+            return jsonify({'success': True, 'message': 'Removed from bag!'})
+    return jsonify({'success': False, 'message': 'Item not in bag'})
 
 @app.route('/checkout')
 def checkout():
@@ -242,7 +297,7 @@ def checkout():
             cart_data.append({'id': item_id, 'name': PRODUCTS[item_id]['name'], 'price': PRODUCTS[item_id]['price'], 'image': PRODUCTS[item_id]['image']})
             total += PRODUCTS[item_id]['price']
         elif item_id in BUNDLES:
-            cart_data.append({'id': item_id, 'name': BUNDLES[item_id]['name'], 'price': BUNDLES[item_id]['price'], 'image': '🎁'})
+            cart_data.append({'id': item_id, 'name': BUNDLES[item_id]['name'], 'price': BUNDLES[item_id]['price'], 'image': BUNDLES[item_id]['image']})
             total += BUNDLES[item_id]['price']
     
     return render_template('checkout.html', cart_items=cart_data, total=total)
@@ -254,7 +309,7 @@ def place_order():
     if not cart_items:
         return jsonify({'success': False, 'message': 'Cart is empty'})
     
-    order_id = f"BEAUTY-{uuid.uuid4().hex[:8].upper()}"
+    order_id = f"AB-{uuid.uuid4().hex[:8].upper()}"
     
     session['cart'] = []
     session.modified = True
