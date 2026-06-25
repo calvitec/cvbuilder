@@ -169,128 +169,235 @@ def index():
         all_products=PRODUCTS
     )
 
+# ============================================
+# CART - WITH QUANTITY SUPPORT
+# ============================================
+
 @app.route('/cart')
 def cart():
-    cart_items = session.get('cart', [])
-    cart_data = []
-    total = 0
+    """Display cart with quantities and totals"""
+    cart = session.get('cart', {})
+    cart_items = []
+    subtotal = 0
+    total_items = 0
     
-    for item_id in cart_items:
+    for item_id, quantity in cart.items():
+        if quantity <= 0:
+            continue
+            
         if item_id in PRODUCTS:
             product = PRODUCTS[item_id]
-            cart_data.append({
+            item_total = product['price'] * quantity
+            cart_items.append({
                 'id': item_id,
                 'name': product['name'],
                 'price': product['price'],
                 'image': product['image'],
-                'type': 'product'
+                'type': 'product',
+                'quantity': quantity,
+                'item_total': round(item_total, 2),
+                'stock': product['stock']
             })
-            total += product['price']
+            subtotal += item_total
+            total_items += quantity
+            
         elif item_id in BUNDLES:
             bundle = BUNDLES[item_id]
-            cart_data.append({
+            item_total = bundle['price'] * quantity
+            cart_items.append({
                 'id': item_id,
                 'name': bundle['name'],
                 'price': bundle['price'],
                 'image': bundle['image'],
                 'type': 'bundle',
+                'quantity': quantity,
+                'item_total': round(item_total, 2),
                 'products': bundle['products']
             })
-            total += bundle['price']
+            subtotal += item_total
+            total_items += quantity
     
-    return render_template('cart.html', cart_items=cart_data, total=total)
+    shipping = 0 if subtotal >= 35 else 5.99
+    total = subtotal + shipping
+    
+    return render_template('cart.html', 
+        cart_items=cart_items, 
+        subtotal=round(subtotal, 2),
+        shipping=round(shipping, 2),
+        total=round(total, 2),
+        total_items=total_items
+    )
 
 @app.route('/add-to-cart/<item_id>', methods=['POST'])
 def add_to_cart(item_id):
+    """Add item to cart (increment quantity)"""
     if 'cart' not in session:
-        session['cart'] = []
+        session['cart'] = {}
+    
+    cart = session['cart']
     
     if item_id in PRODUCTS or item_id in BUNDLES:
-        if item_id not in session['cart']:
-            session['cart'].append(item_id)
-            session.modified = True
-            return jsonify({'success': True, 'message': 'Added to bag!', 'count': len(session['cart'])})
-        else:
-            return jsonify({'success': False, 'message': 'Already in bag'})
+        # Check stock for products
+        if item_id in PRODUCTS:
+            current_qty = cart.get(item_id, 0)
+            if current_qty >= PRODUCTS[item_id]['stock']:
+                return jsonify({
+                    'success': False, 
+                    'message': 'Not enough stock available!'
+                })
+        
+        cart[item_id] = cart.get(item_id, 0) + 1
+        session.modified = True
+        
+        total_items = sum(cart.values())
+        return jsonify({
+            'success': True, 
+            'message': 'Added to bag!', 
+            'count': total_items,
+            'quantity': cart[item_id]
+        })
     
     return jsonify({'success': False, 'message': 'Product not found'})
 
 @app.route('/remove-from-cart/<item_id>', methods=['POST'])
 def remove_from_cart(item_id):
-    if 'cart' in session:
-        if item_id in session['cart']:
-            session['cart'].remove(item_id)
-            session.modified = True
-            return jsonify({'success': True, 'message': 'Removed from bag!'})
+    """Remove item completely from cart"""
+    cart = session.get('cart', {})
+    if item_id in cart:
+        del cart[item_id]
+        session.modified = True
+        total_items = sum(cart.values())
+        return jsonify({
+            'success': True, 
+            'message': 'Removed from bag!',
+            'count': total_items
+        })
     return jsonify({'success': False, 'message': 'Item not in bag'})
 
 @app.route('/update-cart/<item_id>/<action>', methods=['POST'])
 def update_cart(item_id, action):
+    """Update quantity: increase, decrease, or remove"""
     if 'cart' not in session:
-        session['cart'] = []
+        session['cart'] = {}
+    
+    cart = session['cart']
     
     if action == 'increase':
-        session['cart'].append(item_id)
+        if item_id in PRODUCTS:
+            current = cart.get(item_id, 0)
+            if current >= PRODUCTS[item_id]['stock']:
+                return jsonify({
+                    'success': False, 
+                    'message': 'Not enough stock available!'
+                })
+        cart[item_id] = cart.get(item_id, 0) + 1
+        
     elif action == 'decrease':
-        if item_id in session['cart']:
-            session['cart'].remove(item_id)
+        if item_id in cart:
+            if cart[item_id] <= 1:
+                del cart[item_id]
+            else:
+                cart[item_id] -= 1
+        else:
+            return jsonify({'success': False, 'message': 'Item not in cart'})
+    
+    elif action == 'remove':
+        if item_id in cart:
+            del cart[item_id]
+        else:
+            return jsonify({'success': False, 'message': 'Item not in cart'})
     
     session.modified = True
-    return jsonify({'success': True})
+    
+    # Calculate updated totals
+    subtotal = 0
+    for item_id, quantity in cart.items():
+        if item_id in PRODUCTS:
+            subtotal += PRODUCTS[item_id]['price'] * quantity
+        elif item_id in BUNDLES:
+            subtotal += BUNDLES[item_id]['price'] * quantity
+    
+    shipping = 0 if subtotal >= 35 else 5.99
+    total = subtotal + shipping
+    
+    return jsonify({
+        'success': True,
+        'quantity': cart.get(item_id, 0),
+        'subtotal': round(subtotal, 2),
+        'shipping': round(shipping, 2),
+        'total': round(total + shipping, 2),
+        'total_items': sum(cart.values()),
+        'item_total': round((PRODUCTS.get(item_id, {}).get('price', 0) or BUNDLES.get(item_id, {}).get('price', 0)) * cart.get(item_id, 0), 2)
+    })
 
 @app.route('/checkout')
 def checkout():
-    cart_items = session.get('cart', [])
-    if not cart_items:
+    cart = session.get('cart', {})
+    if not cart:
         return redirect(url_for('index'))
     
-    cart_data = []
+    cart_items = []
     subtotal = 0
-    for item_id in cart_items:
+    total_items = 0
+    
+    for item_id, quantity in cart.items():
+        if quantity <= 0:
+            continue
+            
         if item_id in PRODUCTS:
             product = PRODUCTS[item_id]
-            cart_data.append({
-                'id': item_id, 
-                'name': product['name'], 
-                'price': product['price'], 
+            item_total = product['price'] * quantity
+            cart_items.append({
+                'id': item_id,
+                'name': product['name'],
+                'price': product['price'],
                 'image': product['image'],
-                'type': 'product'
+                'type': 'product',
+                'quantity': quantity,
+                'item_total': round(item_total, 2)
             })
-            subtotal += product['price']
+            subtotal += item_total
+            total_items += quantity
+            
         elif item_id in BUNDLES:
             bundle = BUNDLES[item_id]
-            cart_data.append({
-                'id': item_id, 
-                'name': bundle['name'], 
-                'price': bundle['price'], 
+            item_total = bundle['price'] * quantity
+            cart_items.append({
+                'id': item_id,
+                'name': bundle['name'],
+                'price': bundle['price'],
                 'image': bundle['image'],
-                'type': 'bundle'
+                'type': 'bundle',
+                'quantity': quantity,
+                'item_total': round(item_total, 2)
             })
-            subtotal += bundle['price']
+            subtotal += item_total
+            total_items += quantity
     
     shipping = 0 if subtotal >= 35 else 5.99
     total = subtotal + shipping
     
     return render_template('checkout.html', 
-        cart_items=cart_data, 
-        subtotal=subtotal, 
-        shipping=shipping,
-        total=total
+        cart_items=cart_items, 
+        subtotal=round(subtotal, 2),
+        shipping=round(shipping, 2),
+        total=round(total, 2),
+        total_items=total_items
     )
 
 @app.route('/place-order', methods=['POST'])
 def place_order():
-    cart_items = session.get('cart', [])
-    if not cart_items:
+    cart = session.get('cart', {})
+    if not cart:
         return jsonify({'success': False, 'message': 'Cart is empty'})
     
     # Calculate totals
     subtotal = 0
-    for item_id in cart_items:
+    for item_id, quantity in cart.items():
         if item_id in PRODUCTS:
-            subtotal += PRODUCTS[item_id]['price']
+            subtotal += PRODUCTS[item_id]['price'] * quantity
         elif item_id in BUNDLES:
-            subtotal += BUNDLES[item_id]['price']
+            subtotal += BUNDLES[item_id]['price'] * quantity
     
     shipping = 0 if subtotal >= 35 else 5.99
     total = subtotal + shipping
@@ -298,13 +405,13 @@ def place_order():
     order_id = f"AB-{uuid.uuid4().hex[:8].upper()}"
     
     # Clear cart
-    session['cart'] = []
+    session['cart'] = {}
     session.modified = True
     
     return jsonify({
         'success': True,
         'order_id': order_id,
-        'total': total,
+        'total': round(total, 2),
         'message': 'Order placed successfully!'
     })
 
