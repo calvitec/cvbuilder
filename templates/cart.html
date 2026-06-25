@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Cart - CV Pro Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-hero { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); }
+        .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-card-white { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 10px 40px rgba(102,126,234,0.4); }
+        .btn-outline { border: 2px solid #667eea; color: #667eea; transition: all 0.3s ease; }
+        .btn-outline:hover { background: #667eea; color: white; }
+        .cart-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 0; }
+        .cart-item:last-child { border-bottom: none; }
+        .toast { position: fixed; bottom: 30px; right: 30px; z-index: 9999; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { 0% { transform: translateX(100px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+    </style>
+</head>
+<body class="gradient-hero min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <a href="/" class="text-white/60 hover:text-white transition">
+                <i class="fas fa-arrow-left mr-2"></i> Continue Shopping
+            </a>
+            <h1 class="text-2xl font-bold text-white">Your Cart</h1>
+            <span class="text-white/40 text-sm" id="itemCount">0 items</span>
+        </div>
+
+        <!-- Cart Content -->
+        <div class="glass-card rounded-2xl p-6">
+            {% if cart_items %}
+                {% for item_id in cart_items %}
+                    {% if item_id in products %}
+                        {% set product = products[item_id] %}
+                        <div class="cart-item flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <span class="text-3xl">{{ product.image }}</span>
+                                <div>
+                                    <h3 class="text-white font-semibold">{{ product.name }}</h3>
+                                    <p class="text-white/40 text-sm">{{ product.description[:50] }}...</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-white font-bold">${{ product.price }}</span>
+                                <button onclick="removeFromCart('{{ item_id }}')" class="text-red-400 hover:text-red-300 transition">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    {% elif item_id in bundles %}
+                        {% set bundle = bundles[item_id] %}
+                        <div class="cart-item flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <span class="text-3xl">🎁</span>
+                                <div>
+                                    <h3 class="text-white font-semibold">{{ bundle.name }}</h3>
+                                    <p class="text-white/40 text-sm">{{ bundle.products|length }} templates included</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-white font-bold">${{ bundle.price }}</span>
+                                <button onclick="removeFromCart('{{ item_id }}')" class="text-red-400 hover:text-red-300 transition">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Cart Total -->
+                <div class="mt-6 pt-6 border-t border-white/10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-white/60">Subtotal</span>
+                        <span class="text-2xl font-bold text-white">${{ total }}</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-2 text-white/40 text-sm">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-white/10">
+                        <span class="text-white font-semibold">Total</span>
+                        <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">${{ total }}</span>
+                    </div>
+                </div>
+
+                <!-- Checkout Button -->
+                <a href="/checkout" class="mt-6 w-full py-4 rounded-xl btn-primary text-white font-bold text-center block transition">
+                    <i class="fas fa-lock mr-2"></i> Proceed to Checkout
+                </a>
+            {% else %}
+                <div class="text-center py-12">
+                    <i class="fas fa-shopping-cart text-6xl text-white/20 mb-4"></i>
+                    <h3 class="text-white text-xl font-semibold">Your cart is empty</h3>
+                    <p class="text-white/40 mt-2">Browse our templates and find the perfect CV</p>
+                    <a href="/" class="mt-6 inline-block px-8 py-3 rounded-xl btn-primary text-white font-semibold transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Start Shopping
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function removeFromCart(productId) {
+            fetch('/remove-from-cart/' + productId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        }
+
+        // Update item count
+        document.getElementById('itemCount').textContent = '{{ cart_items|length }} items';
+    </script>
+</body>
+</html>
