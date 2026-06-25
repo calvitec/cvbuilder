@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'allison-beauty-secret-2026'
 
 # ============================================
-# BEAUTY PRODUCTS WITH REAL IMAGES
+# ALL PRODUCTS WITH UNIQUE IMAGES
 # ============================================
 PRODUCTS = {
     'glow_serum': {
@@ -127,7 +127,7 @@ PRODUCTS = {
         'id': 'niacinamide',
         'name': 'Niacinamide Serum',
         'price': 29.99,
-        'image': 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
+        'image': 'https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop',
         'category': 'Serums',
         'description': 'Brightening serum with 10% niacinamide to minimize pores and even skin tone.',
         'features': ['Niacinamide', 'Pore Minimizing', 'Brightening', 'Oil Control'],
@@ -141,7 +141,7 @@ PRODUCTS = {
         'id': 'peptide_cream',
         'name': 'Peptide Firming Cream',
         'price': 38.99,
-        'image': 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
+        'image': 'https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop',
         'category': 'Moisturizers',
         'description': 'Advanced peptide cream that firms and lifts skin for a youthful appearance.',
         'features': ['Peptides', 'Firming', 'Anti-Wrinkle', 'Collagen Boost'],
@@ -214,7 +214,6 @@ def index():
         elif product.get('badge') == 'Trending':
             trending.append(product)
     
-    # If no products in a category, add some defaults
     if not best_sellers:
         best_sellers = list(PRODUCTS.values())[:4]
     if not new_arrivals:
@@ -233,7 +232,6 @@ def index():
 
 @app.route('/product/<product_id>')
 def product_detail(product_id):
-    """Product detail page"""
     if product_id not in PRODUCTS:
         return redirect(url_for('index'))
     
@@ -244,7 +242,6 @@ def product_detail(product_id):
 
 @app.route('/cart')
 def cart():
-    """Shopping cart page"""
     cart_items = session.get('cart', [])
     cart_data = []
     total = 0
@@ -276,7 +273,6 @@ def cart():
 
 @app.route('/add-to-cart/<item_id>', methods=['POST'])
 def add_to_cart(item_id):
-    """Add item to cart"""
     if 'cart' not in session:
         session['cart'] = []
     
@@ -292,7 +288,6 @@ def add_to_cart(item_id):
 
 @app.route('/remove-from-cart/<item_id>', methods=['POST'])
 def remove_from_cart(item_id):
-    """Remove item from cart"""
     if 'cart' in session:
         if item_id in session['cart']:
             session['cart'].remove(item_id)
@@ -302,7 +297,6 @@ def remove_from_cart(item_id):
 
 @app.route('/checkout')
 def checkout():
-    """Checkout page"""
     cart_items = session.get('cart', [])
     if not cart_items:
         return redirect(url_for('index'))
@@ -333,7 +327,6 @@ def checkout():
 
 @app.route('/place-order', methods=['POST'])
 def place_order():
-    """Place order (simulated)"""
     cart_items = session.get('cart', [])
     if not cart_items:
         return jsonify({'success': False, 'message': 'Cart is empty'})
@@ -351,7 +344,6 @@ def place_order():
 
 @app.route('/order-confirmation/<order_id>')
 def order_confirmation(order_id):
-    """Order confirmation page"""
     return render_template('confirmation.html', order_id=order_id)
 
 if __name__ == '__main__':
