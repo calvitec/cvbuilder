@@ -23,7 +23,6 @@
         .btn-primary::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%); transform: rotate(45deg) translateX(-100%); transition: all 0.6s ease; }
         .btn-primary:hover::after { transform: rotate(45deg) translateX(100%); }
 
-        /* ── PRODUCT CARD ── */
         .product-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
@@ -36,7 +35,6 @@
         .product-card:hover::before { opacity: 1; }
         .product-card:hover { transform: translateY(-12px) scale(1.01); box-shadow: 0 30px 70px rgba(233,30,99,0.10); border-color: rgba(233,30,99,0.08); }
 
-        /* ── IMAGE CONTAINER ── */
         .product-image-wrapper {
             position: relative;
             width: 100%;
@@ -59,7 +57,6 @@
         }
         .product-card:hover .product-image { transform: scale(1.08); }
 
-        /* ── BADGE ── */
         .product-badge {
             position: absolute;
             top: 10px;
@@ -201,15 +198,15 @@
                         </div>
                         <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-5 shadow-2xl border border-white/30 mt-10 hover:shadow-3xl transition-all duration-300 hover:scale-105">
                             <div class="product-image-container img-fallback mb-4">
-                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format" alt="Retinol Night" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format" alt="Vitamin C Serum" class="product-image" loading="lazy" onerror="this.style.display='none'">
                             </div>
-                            <p class="font-bold text-gray-800">Retinol Night</p>
-                            <p class="text-gray-400 text-sm">Anti-Aging Treatment</p>
+                            <p class="font-bold text-gray-800">Vitamin C Serum</p>
+                            <p class="text-gray-400 text-sm">Brightening + Anti-Aging</p>
                             <div class="flex items-center gap-2 mt-2">
-                                <span class="text-xl font-bold text-gray-800">$42.99</span>
+                                <span class="text-xl font-bold text-gray-800">$36.99</span>
                                 <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-semibold">Editor's Choice</span>
                             </div>
-                            <button onclick="addToCart('retinol_night')" class="mt-3 w-full py-3 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
+                            <button onclick="addToCart('vitamin_c_serum')" class="mt-3 w-full py-3 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                         </div>
                     </div>
                     <div class="absolute -bottom-6 -left-6 bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-xl border border-white/50">
@@ -231,7 +228,7 @@
                 <span class="category-pill px-6 py-2.5 rounded-full text-sm">Treatments</span>
                 <span class="category-pill px-6 py-2.5 rounded-full text-sm">Sun Care</span>
                 <span class="category-pill px-6 py-2.5 rounded-full text-sm">Masks</span>
-                <span class="category-pill px-6 py-2.5 rounded-full text-sm">Eye Care</span>
+                <span class="category-pill px-6 py-2.5 rounded-full text-sm">Toners</span>
             </div>
         </div>
     </section>
@@ -264,22 +261,22 @@
                     <button onclick="addToCart('glow_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
 
-                <!-- Retinol Night -->
+                <!-- Vitamin C Serum (replaces Retinol) -->
                 <div class="product-card rounded-3xl p-6 text-center">
                     <div class="product-image-wrapper">
                         <span class="product-badge badge-editor">⭐ Editor's Choice</span>
                         <div class="product-image-container tall img-fallback">
-                            <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format" alt="Retinol Night" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                            <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop&auto=format" alt="Vitamin C Serum" class="product-image" loading="lazy" onerror="this.style.display='none'">
                         </div>
                     </div>
-                    <h3 class="font-bold text-gray-800 text-lg">Retinol Night Treatment</h3>
-                    <p class="text-gray-400 text-sm mt-2">Advanced retinol for overnight skin renewal</p>
+                    <h3 class="font-bold text-gray-800 text-lg">Vitamin C Brightening Serum</h3>
+                    <p class="text-gray-400 text-sm mt-2">Brightens and evens skin tone</p>
                     <div class="flex items-center justify-center gap-1 mt-3 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
-                        <span class="text-gray-400 text-xs ml-1">(312)</span>
+                        <span class="text-gray-400 text-xs ml-1">(178)</span>
                     </div>
-                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$42.99</span></div>
-                    <button onclick="addToCart('retinol_night')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$36.99</span></div>
+                    <button onclick="addToCart('vitamin_c_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
 
                 <!-- Niacinamide -->
@@ -300,22 +297,22 @@
                     <button onclick="addToCart('niacinamide')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
 
-                <!-- Eye Cream -->
+                <!-- Rose Toner (replaces Eye Cream) -->
                 <div class="product-card rounded-3xl p-6 text-center">
                     <div class="product-image-wrapper">
                         <span class="product-badge badge-trending">🔥 Trending</span>
                         <div class="product-image-container tall img-fallback">
-                            <img src="https://images.unsplash.com/photo-1556228454-1243a6c2f0c5?w=400&h=400&fit=crop&auto=format" alt="Eye Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                            <img src="https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop&auto=format" alt="Rose Toner" class="product-image" loading="lazy" onerror="this.style.display='none'">
                         </div>
                     </div>
-                    <h3 class="font-bold text-gray-800 text-lg">Brightening Eye Cream</h3>
-                    <p class="text-gray-400 text-sm mt-2">Targets dark circles, puffiness, and fine lines</p>
+                    <h3 class="font-bold text-gray-800 text-lg">Rose Hydrating Toner</h3>
+                    <p class="text-gray-400 text-sm mt-2">Gentle rose-infused hydrating toner</p>
                     <div class="flex items-center justify-center gap-1 mt-3 text-sm">
                         <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
                         <span class="text-gray-400 text-xs ml-1">(145)</span>
                     </div>
-                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$32.99</span></div>
-                    <button onclick="addToCart('eye_cream')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$21.99</span></div>
+                    <button onclick="addToCart('rose_toner')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
 
             </div>
@@ -331,91 +328,26 @@
                 <p class="text-gray-400 mt-3">Every product designed for your best skin</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                <!-- Hydrating Cream -->
+                {% for id, product in all_products.items() %}
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
                     <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop&auto=format" alt="Hydrating Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
+                        <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                    <h3 class="font-bold text-gray-800">Hydrating Moisture Cream</h3>
-                    <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
+                    <h3 class="font-bold text-gray-800">{{ product.name }}</h3>
+                    <p class="text-gray-400 text-xs mt-1">{{ product.category }}</p>
                     <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
+                        {% for i in range(5) %}
+                            {% if i < product.rating|round(0, 'floor') %}
+                                <i class="fas fa-star text-yellow-400"></i>
+                            {% else %}
+                                <i class="far fa-star text-gray-300"></i>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$28.99</span></div>
-                    <button onclick="addToCart('hydrating_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
+                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">${{ product.price }}</span></div>
+                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
                 </div>
-
-                <!-- Sunscreen -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop&auto=format" alt="Sunscreen" class="product-image" loading="lazy" onerror="this.style.display='none'">
-                    </div>
-                    <h3 class="font-bold text-gray-800">SPF 50 Sunscreen</h3>
-                    <p class="text-gray-400 text-xs mt-1">Sun Care</p>
-                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
-                    </div>
-                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$24.99</span></div>
-                    <button onclick="addToCart('sunscreen_spf')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
-                </div>
-
-                <!-- Face Mask -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop&auto=format" alt="Face Mask" class="product-image" loading="lazy" onerror="this.style.display='none'">
-                    </div>
-                    <h3 class="font-bold text-gray-800">Detox Clay Mask</h3>
-                    <p class="text-gray-400 text-xs mt-1">Masks</p>
-                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
-                    </div>
-                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$19.99</span></div>
-                    <button onclick="addToCart('face_mask')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
-                </div>
-
-                <!-- Cleansing Balm -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop&auto=format" alt="Cleansing Balm" class="product-image" loading="lazy" onerror="this.style.display='none'">
-                    </div>
-                    <h3 class="font-bold text-gray-800">Cleansing Balm</h3>
-                    <p class="text-gray-400 text-xs mt-1">Cleansers</p>
-                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
-                    </div>
-                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$22.99</span></div>
-                    <button onclick="addToCart('cleansing_balm')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
-                </div>
-
-                <!-- Toner -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop&auto=format" alt="Toner" class="product-image" loading="lazy" onerror="this.style.display='none'">
-                    </div>
-                    <h3 class="font-bold text-gray-800">Hydrating Facial Toner</h3>
-                    <p class="text-gray-400 text-xs mt-1">Toners</p>
-                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
-                    </div>
-                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$18.99</span></div>
-                    <button onclick="addToCart('toner')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
-                </div>
-
-                <!-- Peptide Cream -->
-                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-50 hover:border-pink-200">
-                    <div class="product-image-container img-fallback mb-4">
-                        <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop&auto=format" alt="Peptide Cream" class="product-image" loading="lazy" onerror="this.style.display='none'">
-                    </div>
-                    <h3 class="font-bold text-gray-800">Peptide Firming Cream</h3>
-                    <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
-                    <div class="flex items-center justify-center gap-0.5 mt-2 text-sm">
-                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
-                    </div>
-                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$38.99</span></div>
-                    <button onclick="addToCart('peptide_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-1"></i> Add to Bag</button>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
     </section>
@@ -502,7 +434,7 @@
                 </div>
                 <div class="testimonial-card bg-gray-50 rounded-3xl p-8">
                     <div class="flex text-yellow-400 text-sm mb-3">★★★★★</div>
-                    <p class="text-gray-600 italic leading-relaxed">"The retinol night treatment is a game-changer. My fine lines have visibly reduced in just 4 weeks!"</p>
+                    <p class="text-gray-600 italic leading-relaxed">"The vitamin C serum is amazing! My skin is brighter and more even-toned."</p>
                     <div class="mt-4 flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-200 to-purple-300 flex items-center justify-center font-bold text-purple-600 text-lg flex-shrink-0">JK</div>
                         <div><p class="font-semibold text-gray-800">Jessica K.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
@@ -510,7 +442,7 @@
                 </div>
                 <div class="testimonial-card bg-gray-50 rounded-3xl p-8">
                     <div class="flex text-yellow-400 text-sm mb-3">★★★★★</div>
-                    <p class="text-gray-600 italic leading-relaxed">"Finally found a sunscreen that doesn't feel greasy. I use it every single day!"</p>
+                    <p class="text-gray-600 italic leading-relaxed">"The rose toner is so gentle and hydrating. My skin feels amazing!"</p>
                     <div class="mt-4 flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 flex items-center justify-center font-bold text-blue-600 text-lg flex-shrink-0">AL</div>
                         <div><p class="font-semibold text-gray-800">Amanda L.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
