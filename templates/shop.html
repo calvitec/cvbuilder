@@ -9,339 +9,68 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
         * { font-family: 'Inter', sans-serif; }
-        
-        /* ===== PREMIUM COLOR SCHEME ===== */
         :root {
             --rose: #fce4ec;
-            --rose-dark: #f8bbd0;
             --pink: #e91e63;
-            --pink-light: #f06292;
-            --pink-dark: #c2185b;
             --purple: #9c27b0;
-            --purple-light: #ce93d8;
             --gold: #f6c445;
-            --cream: #fff8f0;
-            --dark: #1a1a2e;
         }
-        
-        /* ===== HERO GRADIENT ===== */
-        .gradient-hero { 
-            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 25%, #e8eaf6 55%, #e0f7fa 85%, #fce4ec 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .gradient-hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 80%;
-            height: 150%;
-            background: radial-gradient(ellipse, rgba(233,30,99,0.06) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .gradient-hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 60%;
-            height: 100%;
-            background: radial-gradient(ellipse, rgba(156,39,176,0.05) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        
-        /* ===== GLASS NAVIGATION ===== */
-        .glass-nav { 
-            background: rgba(255,255,255,0.88); 
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.04);
-            transition: all 0.3s ease;
-        }
-        .glass-nav.scrolled {
-            background: rgba(255,255,255,0.96);
-            box-shadow: 0 4px 40px rgba(0,0,0,0.08);
-        }
-        
-        /* ===== PREMIUM BUTTONS ===== */
-        .btn-primary { 
-            background: linear-gradient(135deg, #e91e63 0%, #9c27b0 100%); 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            position: relative;
-            overflow: hidden;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-primary:hover { 
-            transform: translateY(-3px) scale(1.02); 
-            box-shadow: 0 20px 50px rgba(233,30,99,0.35);
-        }
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
-            transform: rotate(45deg) translateX(-100%);
-            transition: all 0.6s ease;
-        }
+        .gradient-hero { background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 25%, #e8eaf6 55%, #e0f7fa 85%, #fce4ec 100%); position: relative; overflow: hidden; }
+        .glass-nav { background: rgba(255,255,255,0.88); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.2); transition: all 0.3s ease; }
+        .glass-nav.scrolled { background: rgba(255,255,255,0.96); box-shadow: 0 4px 40px rgba(0,0,0,0.08); }
+        .btn-primary { background: linear-gradient(135deg, #e91e63 0%, #9c27b0 100%); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 50px rgba(233,30,99,0.35); }
+        .btn-primary::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%); transform: rotate(45deg) translateX(-100%); transition: all 0.6s ease; }
         .btn-primary:hover::after { transform: rotate(45deg) translateX(100%); }
-        
-        .btn-outline { 
-            border: 2px solid #e91e63; 
-            color: #e91e63; 
-            background: transparent;
-            transition: all 0.3s ease; 
-            cursor: pointer;
-        }
-        .btn-outline:hover { background: #e91e63; color: white; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(233,30,99,0.2); }
-        
-        /* ===== PRODUCT CARDS ===== */
-        .product-card { 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            cursor: pointer; 
-            border: 1px solid rgba(0,0,0,0.04);
-            background: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #e91e63, #9c27b0, #f6c445);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
+        .product-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border: 1px solid rgba(0,0,0,0.04); background: white; position: relative; overflow: hidden; }
+        .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #e91e63, #9c27b0, #f6c445); opacity: 0; transition: opacity 0.4s ease; }
         .product-card:hover::before { opacity: 1; }
-        .product-card:hover { 
-            transform: translateY(-12px) scale(1.01); 
-            box-shadow: 0 30px 70px rgba(233,30,99,0.10);
-            border-color: rgba(233,30,99,0.08);
-        }
-        
-        /* ===== PRODUCT IMAGE ===== */
-        .product-image {
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .product-card:hover .product-image {
-            transform: scale(1.08);
-        }
-        .product-image-container {
-            overflow: hidden;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #f8f9fa, #f1f3f5);
-        }
-        
-        /* ===== BADGES ===== */
+        .product-card:hover { transform: translateY(-12px) scale(1.01); box-shadow: 0 30px 70px rgba(233,30,99,0.10); border-color: rgba(233,30,99,0.08); }
+        .product-image { transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .product-card:hover .product-image { transform: scale(1.08); }
+        .product-image-container { overflow: hidden; border-radius: 16px; background: linear-gradient(135deg, #f8f9fa, #f1f3f5); }
         .badge-best { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
         .badge-new { background: linear-gradient(135deg, #48dbfb, #0abde3); }
         .badge-trending { background: linear-gradient(135deg, #f6c445, #f093fb); }
         .badge-editor { background: linear-gradient(135deg, #7c4dff, #651fff); }
-        .badge-popular { background: linear-gradient(135deg, #f6c445, #f093fb); }
-        
-        /* ===== CART COUNT ===== */
-        .cart-count { 
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            color: white; 
-            border-radius: 50%; 
-            padding: 2px 8px; 
-            font-size: 10px; 
-            font-weight: 700;
-            min-width: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(233,30,99,0.3);
-        }
-        
-        /* ===== SECTION TITLES ===== */
+        .cart-count { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; border-radius: 50%; padding: 2px 8px; font-size: 10px; font-weight: 700; min-width: 20px; text-align: center; box-shadow: 0 2px 10px rgba(233,30,99,0.3); }
         .section-title { font-family: 'Playfair Display', serif; }
         .hero-title { font-family: 'Playfair Display', serif; font-size: 4.5rem; line-height: 1.05; }
-        @media (max-width: 768px) { 
-            .hero-title { font-size: 2.8rem; } 
-            .section-title { font-size: 2.5rem; }
-        }
-        
-        /* ===== ANIMATIONS ===== */
+        @media (max-width: 768px) { .hero-title { font-size: 2.8rem; } .section-title { font-size: 2.5rem; } }
         .animate-float { animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
-        
-        .animate-float-slow { animation: floatSlow 8s ease-in-out infinite; }
-        @keyframes floatSlow { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
-        
         .fade-slide { opacity: 0; transform: translateY(30px); animation: fadeSlide 0.8s ease-out forwards; }
         @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-        
-        /* ===== TOAST ===== */
-        .toast { 
-            position: fixed; 
-            bottom: 30px; 
-            right: 30px; 
-            z-index: 9999; 
-            background: white; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15); 
-            border-radius: 20px; 
-            padding: 16px 24px;
-            animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-        @keyframes slideIn { 
-            0% { transform: translateX(100px); opacity: 0; } 
-            100% { transform: translateX(0); opacity: 1; } 
-        }
+        .toast { position: fixed; bottom: 30px; right: 30px; z-index: 9999; background: white; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border-radius: 20px; padding: 16px 24px; animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid rgba(0,0,0,0.04); }
+        @keyframes slideIn { 0% { transform: translateX(100px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
         .hidden { display: none; }
-        
-        /* ===== MARQUEE ===== */
         .marquee-text { animation: marquee 25s linear infinite; white-space: nowrap; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        
-        /* ===== NAV LINKS ===== */
         .nav-link { position: relative; font-weight: 500; color: #4a5568; transition: color 0.3s; }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            width: 0;
-            height: 2.5px;
-            background: linear-gradient(90deg, #e91e63, #9c27b0);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
+        .nav-link::after { content: ''; position: absolute; bottom: -6px; left: 50%; width: 0; height: 2.5px; background: linear-gradient(90deg, #e91e63, #9c27b0); transition: all 0.3s ease; transform: translateX(-50%); border-radius: 2px; }
         .nav-link:hover { color: #e91e63; }
         .nav-link:hover::after { width: 80%; }
-        .nav-link.active { color: #e91e63; }
-        .nav-link.active::after { width: 80%; }
-        
-        /* ===== CATEGORY PILLS ===== */
-        .category-pill {
-            background: rgba(233,30,99,0.04);
-            border: 1px solid rgba(233,30,99,0.06);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-weight: 500;
-            color: #4a5568;
-        }
-        .category-pill:hover {
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            color: white;
-            border-color: transparent;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(233,30,99,0.2);
-        }
-        .category-pill.active {
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            color: white;
-            border-color: transparent;
-        }
-        
-        /* ===== BUNDLE CARDS ===== */
-        .bundle-card { 
-            border: 2px solid transparent; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            cursor: pointer;
-        }
-        .bundle-card:hover { 
-            border-color: #e91e63; 
-            transform: translateY(-8px);
-            box-shadow: 0 25px 60px rgba(233,30,99,0.08);
-        }
+        .category-pill { background: rgba(233,30,99,0.04); border: 1px solid rgba(233,30,99,0.06); transition: all 0.3s ease; cursor: pointer; font-weight: 500; color: #4a5568; }
+        .category-pill:hover { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; border-color: transparent; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(233,30,99,0.2); }
+        .category-pill.active { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; border-color: transparent; }
+        .bundle-card { border: 2px solid transparent; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        .bundle-card:hover { border-color: #e91e63; transform: translateY(-8px); box-shadow: 0 25px 60px rgba(233,30,99,0.08); }
         .bundle-card.popular { border-color: #f6c445; background: linear-gradient(135deg, rgba(246,196,69,0.04), rgba(246,196,69,0.01)); }
-        
-        /* ===== SOCIAL ICONS ===== */
-        .social-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.3s ease;
-            color: rgba(255,255,255,0.5);
-        }
-        .social-icon:hover {
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            color: white;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(233,30,99,0.3);
-        }
-        
-        /* ===== SCROLLBAR ===== */
+        .social-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; color: rgba(255,255,255,0.5); }
+        .social-icon:hover { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; transform: translateY(-4px); box-shadow: 0 10px 30px rgba(233,30,99,0.3); }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #e91e63, #9c27b0); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #e91e63; }
-        
-        /* ===== TESTIMONIAL CARD ===== */
-        .testimonial-card {
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-        .testimonial-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
-        }
-        
-        /* ===== NEWSLETTER INPUT ===== */
-        .newsletter-input {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 50px;
-            padding: 12px 20px;
-            color: white;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
+        .testimonial-card { transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.04); }
+        .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.06); }
+        .newsletter-input { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 50px; padding: 12px 20px; color: white; transition: all 0.3s ease; width: 100%; }
         .newsletter-input::placeholder { color: rgba(255,255,255,0.3); }
-        .newsletter-input:focus { 
-            outline: none; 
-            border-color: #e91e63; 
-            box-shadow: 0 0 0 4px rgba(233,30,99,0.1);
-        }
-        .newsletter-btn {
-            background: linear-gradient(135deg, #e91e63, #9c27b0);
-            border-radius: 50px;
-            padding: 12px 28px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        .newsletter-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(233,30,99,0.3);
-        }
-        
-        /* ===== FOOTER LINKS ===== */
-        .footer-link {
-            color: rgba(255,255,255,0.4);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-        .footer-link:hover {
-            color: white;
-            transform: translateX(4px);
-        }
-        
-        /* ===== HERO DECORATIVE ===== */
-        .hero-blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            pointer-events: none;
-        }
+        .newsletter-input:focus { outline: none; border-color: #e91e63; box-shadow: 0 0 0 4px rgba(233,30,99,0.1); }
+        .newsletter-btn { background: linear-gradient(135deg, #e91e63, #9c27b0); border-radius: 50px; padding: 12px 28px; color: white; border: none; cursor: pointer; transition: all 0.3s ease; font-weight: 600; }
+        .newsletter-btn:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(233,30,99,0.3); }
+        .footer-link { color: rgba(255,255,255,0.4); transition: all 0.3s ease; text-decoration: none; font-size: 0.875rem; }
+        .footer-link:hover { color: white; transform: translateX(4px); }
+        .hero-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -356,20 +85,13 @@
     <nav class="glass-nav fixed top-0 left-0 right-0 z-50" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
                 <a href="/" class="flex items-center gap-3 group">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
-                        AB
-                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">AB</div>
                     <div>
-                        <div class="text-2xl font-bold tracking-tight text-gray-800">
-                            allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">beauty</span>
-                        </div>
+                        <div class="text-2xl font-bold tracking-tight text-gray-800">allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">beauty</span></div>
                         <div class="text-[10px] text-gray-400 tracking-[0.2em] uppercase font-medium">Premium Skincare</div>
                     </div>
                 </a>
-
-                <!-- Desktop Nav -->
                 <div class="hidden lg:flex items-center gap-8">
                     <a href="#shop" class="nav-link active">Shop</a>
                     <a href="#bundles" class="nav-link">Bundles</a>
@@ -377,23 +99,14 @@
                     <a href="#about" class="nav-link">About</a>
                     <a href="#reviews" class="nav-link">Reviews</a>
                 </div>
-
-                <!-- Right Actions -->
                 <div class="flex items-center gap-4">
-                    <button class="hidden md:block text-gray-400 hover:text-pink-500 transition text-lg">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button class="hidden md:block text-gray-400 hover:text-pink-500 transition text-lg relative">
-                        <i class="far fa-heart"></i>
-                        <span class="absolute -top-1 -right-2 text-[8px] bg-pink-500 text-white rounded-full px-1.5 py-0.5">3</span>
-                    </button>
+                    <button class="hidden md:block text-gray-400 hover:text-pink-500 transition text-lg"><i class="fas fa-search"></i></button>
+                    <button class="hidden md:block text-gray-400 hover:text-pink-500 transition text-lg relative"><i class="far fa-heart"></i><span class="absolute -top-1 -right-2 text-[8px] bg-pink-500 text-white rounded-full px-1.5 py-0.5">3</span></button>
                     <a href="/cart" class="relative text-gray-700 hover:text-pink-500 transition text-xl">
                         <i class="fas fa-shopping-bag"></i>
                         <span class="cart-count absolute -top-2 -right-3 text-xs" id="cartCount">0</span>
                     </a>
-                    <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="hidden md:block px-6 py-2.5 rounded-full btn-primary text-white font-semibold text-sm shadow-md hover:shadow-xl">
-                        Shop Now
-                    </button>
+                    <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="hidden md:block px-6 py-2.5 rounded-full btn-primary text-white font-semibold text-sm shadow-md hover:shadow-xl">Shop Now</button>
                 </div>
             </div>
         </div>
@@ -403,27 +116,17 @@
     <section class="gradient-hero min-h-[85vh] flex items-center pt-24 relative">
         <div class="hero-blob w-[600px] h-[600px] bg-pink-300 top-[-200px] right-[-100px]"></div>
         <div class="hero-blob w-[400px] h-[400px] bg-purple-300 bottom-[-100px] left-[-100px]"></div>
-        
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="fade-slide">
                     <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-5 py-2.5 rounded-full text-sm text-pink-600 font-semibold mb-6 border border-pink-100 shadow-sm">
-                        <span class="w-2.5 h-2.5 bg-pink-500 rounded-full animate-pulse"></span>
-                        Discover Your Glow
+                        <span class="w-2.5 h-2.5 bg-pink-500 rounded-full animate-pulse"></span> Discover Your Glow
                     </div>
-                    <h1 class="hero-title text-gray-800 leading-[1.05]">
-                        Radiant <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-500 to-pink-400">Skin Starts Here</span>
-                    </h1>
-                    <p class="text-gray-500 text-lg mt-4 max-w-md leading-relaxed">
-                        Clean, effective skincare formulated with love. Every product is dermatologist-tested, cruelty-free, and made to make you glow.
-                    </p>
+                    <h1 class="hero-title text-gray-800 leading-[1.05]">Radiant <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-500 to-pink-400">Skin Starts Here</span></h1>
+                    <p class="text-gray-500 text-lg mt-4 max-w-md leading-relaxed">Clean, effective skincare formulated with love. Every product is dermatologist-tested, cruelty-free, and made to make you glow.</p>
                     <div class="flex flex-wrap gap-4 mt-8">
-                        <a href="#shop" class="px-8 py-4 rounded-full btn-primary text-white font-bold shadow-lg flex items-center gap-2">
-                            <i class="fas fa-shopping-bag"></i> Shop Now
-                        </a>
-                        <a href="#bundles" class="px-8 py-4 rounded-full border-2 border-gray-200 text-gray-600 font-bold hover:border-pink-400 hover:text-pink-500 transition-all flex items-center gap-2">
-                            <i class="fas fa-gift"></i> View Bundles
-                        </a>
+                        <a href="#shop" class="px-8 py-4 rounded-full btn-primary text-white font-bold shadow-lg flex items-center gap-2"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+                        <a href="#bundles" class="px-8 py-4 rounded-full border-2 border-gray-200 text-gray-600 font-bold hover:border-pink-400 hover:text-pink-500 transition-all flex items-center gap-2"><i class="fas fa-gift"></i> View Bundles</a>
                     </div>
                     <div class="flex items-center gap-8 mt-8 text-gray-400 text-sm">
                         <div class="flex items-center gap-2"><span class="text-2xl">🌟</span> 50K+ Happy Customers</div>
@@ -433,12 +136,9 @@
                 </div>
                 <div class="relative animate-float hidden lg:block">
                     <div class="grid grid-cols-2 gap-5">
-                        <!-- Hero Product 1 -->
                         <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                            <div class="relative w-full h-48 rounded-xl overflow-hidden bg-gray-100 mb-4">
-                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" 
-                                     alt="Glow Serum" 
-                                     class="w-full h-full object-cover">
+                            <div class="product-image-container relative w-full h-48 rounded-xl overflow-hidden bg-gray-100 mb-4">
+                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" alt="Glow Serum" class="product-image w-full h-full object-cover">
                             </div>
                             <p class="font-bold text-gray-800 text-lg">Glow Serum</p>
                             <p class="text-gray-400 text-sm">Vitamin C + Hyaluronic</p>
@@ -446,16 +146,11 @@
                                 <span class="text-2xl font-bold text-gray-800">$34.99</span>
                                 <span class="text-xs bg-green-100 text-green-600 px-2.5 py-1 rounded-full font-semibold">Best Seller</span>
                             </div>
-                            <button onclick="addToCart('glow_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold text-sm">
-                                <i class="fas fa-plus mr-2"></i> Add to Bag
-                            </button>
+                            <button onclick="addToCart('glow_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                         </div>
-                        <!-- Hero Product 2 -->
                         <div class="bg-white/85 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 mt-10 hover:shadow-3xl transition-all duration-300 hover:scale-105">
-                            <div class="relative w-full h-48 rounded-xl overflow-hidden bg-gray-100 mb-4">
-                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop" 
-                                     alt="Retinol Night" 
-                                     class="w-full h-full object-cover">
+                            <div class="product-image-container relative w-full h-48 rounded-xl overflow-hidden bg-gray-100 mb-4">
+                                <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop" alt="Retinol Night" class="product-image w-full h-full object-cover">
                             </div>
                             <p class="font-bold text-gray-800 text-lg">Retinol Night</p>
                             <p class="text-gray-400 text-sm">Anti-Aging Treatment</p>
@@ -463,17 +158,11 @@
                                 <span class="text-2xl font-bold text-gray-800">$42.99</span>
                                 <span class="text-xs bg-purple-100 text-purple-600 px-2.5 py-1 rounded-full font-semibold">Editor's Choice</span>
                             </div>
-                            <button onclick="addToCart('retinol_night')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold text-sm">
-                                <i class="fas fa-plus mr-2"></i> Add to Bag
-                            </button>
+                            <button onclick="addToCart('retinol_night')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                         </div>
                     </div>
                     <div class="absolute -bottom-6 -left-6 bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-xl border border-white/50">
-                        <div class="flex items-center gap-2">
-                            <span class="text-yellow-400 text-sm">★★★★★</span>
-                            <span class="text-gray-800 font-bold text-sm">4.9</span>
-                            <span class="text-gray-400 text-xs">(50K+ reviews)</span>
-                        </div>
+                        <div class="flex items-center gap-2"><span class="text-yellow-400 text-sm">★★★★★</span><span class="text-gray-800 font-bold text-sm">4.9</span><span class="text-gray-400 text-xs">(50K+ reviews)</span></div>
                         <p class="text-gray-600 text-sm font-medium">"Best skincare I've ever used!"</p>
                     </div>
                 </div>
@@ -505,44 +194,66 @@
                 <p class="text-gray-400 mt-3 max-w-md mx-auto">The products our customers can't stop raving about</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {% for id, product in all_products.items() %}
-                    {% if loop.index <= 4 %}
-                    <div class="product-card rounded-3xl p-6 text-center">
-                        {% if product.badge == 'Best Seller' %}
-                        <span class="absolute top-3 left-3 badge-best text-white text-xs font-bold px-3 py-1.5 rounded-full">🏆 Best Seller</span>
-                        {% elif product.badge == 'New' %}
-                        <span class="absolute top-3 left-3 badge-new text-white text-xs font-bold px-3 py-1.5 rounded-full">✨ New</span>
-                        {% elif product.badge == 'Trending' %}
-                        <span class="absolute top-3 left-3 badge-trending text-white text-xs font-bold px-3 py-1.5 rounded-full">🔥 Trending</span>
-                        {% endif %}
-                        
-                        <!-- REAL PRODUCT IMAGE -->
-                        <div class="product-image-container relative w-full h-64 mb-4">
-                            <img src="{{ product.image }}" alt="{{ product.name }}" 
-                                 class="product-image w-full h-full object-cover">
-                        </div>
-                        
-                        <h3 class="font-bold text-gray-800 text-lg">{{ product.name }}</h3>
-                        <p class="text-gray-400 text-sm mt-2">{{ product.description[:45] }}...</p>
-                        <div class="flex items-center justify-center gap-1 mt-3 text-sm">
-                            {% for i in range(5) %}
-                                {% if i < product.rating|round(0, 'floor') %}
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                {% else %}
-                                    <i class="far fa-star text-gray-300"></i>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="text-gray-400 text-xs ml-1">({{ product.reviews }})</span>
-                        </div>
-                        <div class="mt-4">
-                            <span class="text-2xl font-bold text-gray-800">${{ product.price }}</span>
-                        </div>
-                        <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition">
-                            <i class="fas fa-plus mr-2"></i> Add to Bag
-                        </button>
+                <!-- Glow Serum -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <span class="absolute top-3 left-3 badge-best text-white text-xs font-bold px-3 py-1.5 rounded-full">🏆 Best Seller</span>
+                    <div class="product-image-container relative w-full h-64 mb-4">
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" alt="Glow Serum" class="product-image w-full h-full object-cover">
                     </div>
-                    {% endif %}
-                {% endfor %}
+                    <h3 class="font-bold text-gray-800 text-lg">Glow Repair Serum</h3>
+                    <p class="text-gray-400 text-sm mt-2">Powerful vitamin C serum for radiant skin...</p>
+                    <div class="flex items-center justify-center gap-1 mt-3 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
+                        <span class="text-gray-400 text-xs ml-1">(234)</span>
+                    </div>
+                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$34.99</span></div>
+                    <button onclick="addToCart('glow_serum')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
+                <!-- Retinol Night -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <span class="absolute top-3 left-3 badge-editor text-white text-xs font-bold px-3 py-1.5 rounded-full">🏆 Editor's Choice</span>
+                    <div class="product-image-container relative w-full h-64 mb-4">
+                        <img src="https://images.unsplash.com/photo-1596462502278-8a2d9de6f6fc?w=400&h=400&fit=crop" alt="Retinol Night" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Retinol Night Treatment</h3>
+                    <p class="text-gray-400 text-sm mt-2">Advanced retinol for overnight skin renewal...</p>
+                    <div class="flex items-center justify-center gap-1 mt-3 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
+                        <span class="text-gray-400 text-xs ml-1">(312)</span>
+                    </div>
+                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$42.99</span></div>
+                    <button onclick="addToCart('retinol_night')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
+                <!-- Niacinamide -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <span class="absolute top-3 left-3 badge-best text-white text-xs font-bold px-3 py-1.5 rounded-full">🏆 Best Seller</span>
+                    <div class="product-image-container relative w-full h-64 mb-4">
+                        <img src="https://images.unsplash.com/photo-1631730359588-8c5d0f7cad7e?w=400&h=400&fit=crop" alt="Niacinamide" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Niacinamide Serum</h3>
+                    <p class="text-gray-400 text-sm mt-2">Brightening serum with 10% niacinamide...</p>
+                    <div class="flex items-center justify-center gap-1 mt-3 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
+                        <span class="text-gray-400 text-xs ml-1">(203)</span>
+                    </div>
+                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$29.99</span></div>
+                    <button onclick="addToCart('niacinamide')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
+                <!-- Eye Cream -->
+                <div class="product-card rounded-3xl p-6 text-center">
+                    <span class="absolute top-3 left-3 badge-trending text-white text-xs font-bold px-3 py-1.5 rounded-full">🔥 Trending</span>
+                    <div class="product-image-container relative w-full h-64 mb-4">
+                        <img src="https://images.unsplash.com/photo-1556228454-1243a6c2f0c5?w=400&h=400&fit=crop" alt="Eye Cream" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Brightening Eye Cream</h3>
+                    <p class="text-gray-400 text-sm mt-2">Targets dark circles, puffiness, and fine lines...</p>
+                    <div class="flex items-center justify-center gap-1 mt-3 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
+                        <span class="text-gray-400 text-xs ml-1">(145)</span>
+                    </div>
+                    <div class="mt-4"><span class="text-2xl font-bold text-gray-800">$32.99</span></div>
+                    <button onclick="addToCart('eye_cream')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
             </div>
         </div>
     </section>
@@ -556,32 +267,84 @@
                 <p class="text-gray-400 mt-3">Every product designed for your best skin</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {% for id, product in all_products.items() %}
+                <!-- Hydrating Cream -->
                 <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
-                    <!-- REAL PRODUCT IMAGE -->
                     <div class="product-image-container relative w-full h-56 mb-4">
-                        <img src="{{ product.image }}" alt="{{ product.name }}" 
-                             class="product-image w-full h-full object-cover">
+                        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop" alt="Hydrating Cream" class="product-image w-full h-full object-cover">
                     </div>
-                    <h3 class="font-bold text-gray-800 text-sm">{{ product.name }}</h3>
-                    <p class="text-gray-400 text-xs mt-1">{{ product.category }}</p>
+                    <h3 class="font-bold text-gray-800 text-sm">Hydrating Moisture Cream</h3>
+                    <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
                     <div class="flex items-center justify-center gap-1 mt-2 text-sm">
-                        {% for i in range(5) %}
-                            {% if i < product.rating|round(0, 'floor') %}
-                                <i class="fas fa-star text-yellow-400"></i>
-                            {% else %}
-                                <i class="far fa-star text-gray-300"></i>
-                            {% endif %}
-                        {% endfor %}
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
                     </div>
-                    <div class="mt-3">
-                        <span class="text-xl font-bold text-gray-800">${{ product.price }}</span>
-                    </div>
-                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm">
-                        <i class="fas fa-plus mr-2"></i> Add to Bag
-                    </button>
+                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$28.99</span></div>
+                    <button onclick="addToCart('hydrating_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
                 </div>
-                {% endfor %}
+                <!-- Sunscreen -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container relative w-full h-56 mb-4">
+                        <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop" alt="Sunscreen" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm">SPF 50 Sunscreen</h3>
+                    <p class="text-gray-400 text-xs mt-1">Sun Care</p>
+                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
+                    </div>
+                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$24.99</span></div>
+                    <button onclick="addToCart('sunscreen_spf')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
+                <!-- Face Mask -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container relative w-full h-56 mb-4">
+                        <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop" alt="Face Mask" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm">Detox Clay Mask</h3>
+                    <p class="text-gray-400 text-xs mt-1">Masks</p>
+                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
+                    </div>
+                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$19.99</span></div>
+                    <button onclick="addToCart('face_mask')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
+                <!-- Cleansing Balm -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container relative w-full h-56 mb-4">
+                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&h=400&fit=crop" alt="Cleansing Balm" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm">Cleansing Balm</h3>
+                    <p class="text-gray-400 text-xs mt-1">Cleansers</p>
+                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
+                    </div>
+                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$22.99</span></div>
+                    <button onclick="addToCart('cleansing_balm')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
+                <!-- Toner -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container relative w-full h-56 mb-4">
+                        <img src="https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=400&fit=crop" alt="Toner" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm">Hydrating Facial Toner</h3>
+                    <p class="text-gray-400 text-xs mt-1">Toners</p>
+                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-gray-300"></i>
+                    </div>
+                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$18.99</span></div>
+                    <button onclick="addToCart('toner')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
+                <!-- Peptide Cream -->
+                <div class="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-2xl transition-all duration-400 border border-gray-50 hover:border-pink-200">
+                    <div class="product-image-container relative w-full h-56 mb-4">
+                        <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop" alt="Peptide Cream" class="product-image w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm">Peptide Firming Cream</h3>
+                    <p class="text-gray-400 text-xs mt-1">Moisturizers</p>
+                    <div class="flex items-center justify-center gap-1 mt-2 text-sm">
+                        <i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i><i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <div class="mt-3"><span class="text-xl font-bold text-gray-800">$38.99</span></div>
+                    <button onclick="addToCart('peptide_cream')" class="mt-4 w-full py-2.5 rounded-xl bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-600 font-semibold transition text-sm"><i class="fas fa-plus mr-2"></i> Add to Bag</button>
+                </div>
             </div>
         </div>
     </section>
@@ -600,13 +363,9 @@
                     {% if bundle.popular %}
                     <span class="text-xs font-bold text-yellow-600 bg-yellow-50 px-3 py-1.5 rounded-full inline-block mb-2 border border-yellow-200">⭐ Best Value</span>
                     {% endif %}
-                    
-                    <!-- BUNDLE IMAGE -->
                     <div class="product-image-container relative w-full h-48 mb-4">
-                        <img src="{{ bundle.image }}" alt="{{ bundle.name }}" 
-                             class="product-image w-full h-full object-cover">
+                        <img src="{{ bundle.image }}" alt="{{ bundle.name }}" class="product-image w-full h-full object-cover">
                     </div>
-                    
                     <h3 class="font-bold text-gray-800 text-lg">{{ bundle.name }}</h3>
                     <div class="flex justify-center gap-1 my-3">
                         {% for pid in bundle.products %}
@@ -619,9 +378,7 @@
                         <span class="text-gray-400 text-sm line-through ml-2">${{ bundle.price + bundle.savings }}</span>
                         <span class="text-green-500 text-sm ml-2 font-semibold">Save ${{ bundle.savings }}</span>
                     </div>
-                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition">
-                        <i class="fas fa-plus mr-2"></i> Add Bundle
-                    </button>
+                    <button onclick="addToCart('{{ id }}')" class="mt-4 w-full py-3.5 rounded-xl btn-primary text-white font-semibold transition"><i class="fas fa-plus mr-2"></i> Add Bundle</button>
                 </div>
                 {% endfor %}
             </div>
@@ -637,30 +394,22 @@
             </div>
             <div class="grid md:grid-cols-4 gap-8">
                 <div class="text-center group">
-                    <div class="w-20 h-20 mx-auto rounded-2xl bg-pink-50 group-hover:bg-pink-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                        🌿
-                    </div>
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-pink-50 group-hover:bg-pink-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">🌿</div>
                     <h3 class="font-bold text-gray-800 text-lg">Clean Ingredients</h3>
                     <p class="text-gray-400 text-sm mt-2 leading-relaxed">Paraben-free, sulfate-free, and cruelty-free formulas</p>
                 </div>
                 <div class="text-center group">
-                    <div class="w-20 h-20 mx-auto rounded-2xl bg-purple-50 group-hover:bg-purple-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                        🔬
-                    </div>
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-purple-50 group-hover:bg-purple-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">🔬</div>
                     <h3 class="font-bold text-gray-800 text-lg">Dermatologist Tested</h3>
                     <p class="text-gray-400 text-sm mt-2 leading-relaxed">Clinically tested for safety and efficacy</p>
                 </div>
                 <div class="text-center group">
-                    <div class="w-20 h-20 mx-auto rounded-2xl bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                        ❤️
-                    </div>
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">❤️</div>
                     <h3 class="font-bold text-gray-800 text-lg">Loved by Thousands</h3>
                     <p class="text-gray-400 text-sm mt-2 leading-relaxed">Over 50,000 happy customers worldwide</p>
                 </div>
                 <div class="text-center group">
-                    <div class="w-20 h-20 mx-auto rounded-2xl bg-yellow-50 group-hover:bg-yellow-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                        ♻️
-                    </div>
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-yellow-50 group-hover:bg-yellow-100 flex items-center justify-center text-4xl mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">♻️</div>
                     <h3 class="font-bold text-gray-800 text-lg">Sustainable</h3>
                     <p class="text-gray-400 text-sm mt-2 leading-relaxed">Eco-friendly packaging and responsible sourcing</p>
                 </div>
@@ -681,10 +430,7 @@
                     <p class="text-gray-600 italic leading-relaxed">"This serum completely transformed my skin! I've never felt more confident without makeup."</p>
                     <div class="mt-4 flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-200 to-pink-300 flex items-center justify-center font-bold text-pink-600 text-lg">SM</div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Sarah M.</p>
-                            <p class="text-gray-400 text-xs">Verified Buyer</p>
-                        </div>
+                        <div><p class="font-semibold text-gray-800">Sarah M.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
                     </div>
                 </div>
                 <div class="testimonial-card bg-gray-50 rounded-3xl p-8">
@@ -692,10 +438,7 @@
                     <p class="text-gray-600 italic leading-relaxed">"The retinol night treatment is a game-changer. My fine lines have visibly reduced in just 4 weeks!"</p>
                     <div class="mt-4 flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-200 to-purple-300 flex items-center justify-center font-bold text-purple-600 text-lg">JK</div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Jessica K.</p>
-                            <p class="text-gray-400 text-xs">Verified Buyer</p>
-                        </div>
+                        <div><p class="font-semibold text-gray-800">Jessica K.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
                     </div>
                 </div>
                 <div class="testimonial-card bg-gray-50 rounded-3xl p-8">
@@ -703,10 +446,7 @@
                     <p class="text-gray-600 italic leading-relaxed">"Finally found a sunscreen that doesn't feel greasy. I use it every single day!"</p>
                     <div class="mt-4 flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 flex items-center justify-center font-bold text-blue-600 text-lg">AL</div>
-                        <div>
-                            <p class="font-semibold text-gray-800">Amanda L.</p>
-                            <p class="text-gray-400 text-xs">Verified Buyer</p>
-                        </div>
+                        <div><p class="font-semibold text-gray-800">Amanda L.</p><p class="text-gray-400 text-xs">Verified Buyer</p></div>
                     </div>
                 </div>
             </div>
@@ -721,9 +461,7 @@
             <span class="text-white/80 text-sm font-semibold tracking-[0.2em] uppercase">Join the Glow Community</span>
             <h2 class="section-title text-5xl font-bold text-white mt-2">Ready to Glow?</h2>
             <p class="text-white/80 text-lg mt-4 max-w-2xl mx-auto">Join thousands of happy customers and discover your best skin yet.</p>
-            <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="mt-8 px-12 py-4.5 rounded-full bg-white text-pink-600 font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 flex items-center gap-3 mx-auto">
-                <i class="fas fa-shopping-bag"></i> Shop Now
-            </button>
+            <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" class="mt-8 px-12 py-4.5 rounded-full bg-white text-pink-600 font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 flex items-center gap-3 mx-auto"><i class="fas fa-shopping-bag"></i> Shop Now</button>
         </div>
     </section>
 
@@ -731,12 +469,9 @@
     <footer class="bg-gray-900 text-white/60 pt-16 pb-8 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-4 gap-12">
-                <!-- Brand -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                            AB
-                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">AB</div>
                         <span class="text-2xl font-bold text-white">allison<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">beauty</span></span>
                     </div>
                     <p class="text-sm leading-relaxed text-gray-400 max-w-xs">Premium skincare for radiant, healthy skin. Clean, effective, and cruelty-free.</p>
@@ -748,7 +483,6 @@
                         <a href="#" class="social-icon"><i class="fab fa-pinterest-p"></i></a>
                     </div>
                 </div>
-                <!-- Shop -->
                 <div>
                     <h4 class="text-white font-semibold text-lg mb-4">Shop</h4>
                     <ul class="space-y-3 text-sm">
@@ -759,7 +493,6 @@
                         <li><a href="#" class="footer-link">Gift Cards</a></li>
                     </ul>
                 </div>
-                <!-- Support -->
                 <div>
                     <h4 class="text-white font-semibold text-lg mb-4">Support</h4>
                     <ul class="space-y-3 text-sm">
@@ -770,7 +503,6 @@
                         <li><a href="#" class="footer-link">Contact Us</a></li>
                     </ul>
                 </div>
-                <!-- Newsletter -->
                 <div>
                     <h4 class="text-white font-semibold text-lg mb-4">Stay Glowing</h4>
                     <p class="text-sm text-gray-400 mb-4">Get 15% off your first order + exclusive updates</p>
@@ -781,8 +513,6 @@
                     <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime.</p>
                 </div>
             </div>
-            
-            <!-- Bottom Bar -->
             <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-6 text-xs text-gray-500">
                     <a href="#" class="hover:text-white transition">Privacy Policy</a>
@@ -806,14 +536,12 @@
 
     <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ===== Cart Count =====
         function updateCartCount() {
             const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
             document.getElementById('cartCount').textContent = cart.length;
         }
         updateCartCount();
 
-        // ===== Add to Cart =====
         function addToCart(itemId) {
             fetch('/add-to-cart/' + itemId, {
                 method: 'POST',
@@ -833,7 +561,6 @@
             });
         }
 
-        // ===== Toast =====
         function showToast(message) {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
@@ -845,7 +572,6 @@
             }, 3000);
         }
 
-        // ===== Navbar Scroll =====
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -855,7 +581,6 @@
             }
         });
 
-        // ===== Category Pills =====
         document.querySelectorAll('.category-pill').forEach(pill => {
             pill.addEventListener('click', function() {
                 document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
@@ -863,7 +588,6 @@
             });
         });
 
-        // ===== Smooth Scroll =====
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
